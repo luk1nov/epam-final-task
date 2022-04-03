@@ -9,5 +9,7 @@ public class PagePath {
     public static final String SIGNIN_PAGE = "pages/signin.jsp";
     public static final String ADMIN_ALL_USERS = "pages/admin/users/all-users.jsp";
     public static final String ADMIN_EDIT_USER = "pages/admin/users/edit-user.jsp";
+    public static final String SUCCESS_PAGE = "pages/admin/util/success-page.jsp";
+    public static final String FAIL_PAGE = "pages/admin/util/fail-page.jsp";
 
 }
