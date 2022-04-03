@@ -1,1 +1,4 @@
 /.idea/
+/resources/
+/target/
+/src/main/webapp/resources/
