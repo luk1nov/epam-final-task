@@ -1,7 +1,6 @@
 package by.lukanov.final_task.service.impl;
 
 import by.lukanov.final_task.command.ParameterAndAttribute;
-import by.lukanov.final_task.dao.UserDao;
 import by.lukanov.final_task.dao.impl.UserDaoImpl;
 import by.lukanov.final_task.entity.User;
 import by.lukanov.final_task.exception.DaoException;
@@ -112,5 +111,40 @@ public class UserServiceImpl implements UserService {
             user = Optional.empty();
         }
         return user;
+    }
+
+    @Override
+    public boolean updateUser(Map<String, String> userData) throws ServiceException {
+        boolean updated;
+        String userId = userData.get(ParameterAndAttribute.USER_ID.getAttr());
+        String name = userData.get(ParameterAndAttribute.USER_NAME.getAttr());
+        String surname = userData.get(ParameterAndAttribute.USER_SURNAME.getAttr());
+        String email = userData.get(ParameterAndAttribute.USER_EMAIL.getAttr());
+        String role = userData.get(ParameterAndAttribute.USER_ROLE.getAttr()).toUpperCase();
+        String status = userData.get(ParameterAndAttribute.USER_STATUS.getAttr()).toUpperCase();
+        logger.info(userData.toString());
+        if(UserValidator.isValidId(userId) && UserValidator.isValidName(name) && UserValidator.isValidSurname(surname) && UserValidator.isValidEmail(email)){
+            try{
+                User user = new User.UserBuilder()
+                        .id(Long.parseLong(userId))
+                        .name(name)
+                        .surname(surname)
+                        .email(email)
+                        .role(User.Role.valueOf(role))
+                        .status(User.Status.valueOf(status))
+                        .build();
+                updated = userDao.update(user);
+            } catch (IllegalArgumentException ex) {
+                logger.error("Service exception in updateUser non-existent role or status");
+                throw new ServiceException(ex);
+            } catch (DaoException e) {
+                logger.error("Service exception trying update user");
+                throw new ServiceException(e);
+            }
+        } else {
+            logger.info("Provided invalid user data");
+            updated = false;
+        }
+        return updated;
     }
 }
