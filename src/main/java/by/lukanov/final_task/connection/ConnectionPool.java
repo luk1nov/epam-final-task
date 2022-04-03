@@ -116,6 +116,8 @@ public class ConnectionPool {
     }
 
     public void destroyPool(){
+        logger.info("free connections " + freeConnections.size());
+        logger.info("used connections " + usedConnections.size());
         for (int i = 0; i < POOL_SIZE; i++) {
             try{
                 freeConnections.take().close();
@@ -127,6 +129,7 @@ public class ConnectionPool {
             }
         }
         deregisterDrivers();
+        logger.info("Pool destroyed successfully");
     }
 
     private void deregisterDrivers() {
