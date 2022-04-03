@@ -6,8 +6,11 @@
                     <li class="nav-item">
                         <a class="nav-link hide-sidebar-toggle-button" href="#"><i class="material-icons">first_page</i></a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link hide-sidebar-toggle-button" href="#">Back to site</a>
+                    <li class="nav-item admin-home-link">
+                        <form action="/controller" method="POST">
+                            <input type="hidden" name="command" value="default">
+                            <input type="submit" value="Back to site">
+                        </form>
                     </li>
                 </ul>
             </div>
