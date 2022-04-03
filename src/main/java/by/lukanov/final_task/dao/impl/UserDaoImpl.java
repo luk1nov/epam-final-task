@@ -20,7 +20,7 @@ public class UserDaoImpl implements UserDao {
     private static final String SQL_AUTHENTICATE_USER_BY_EMAIL_AND_PASS = "SELECT * FROM users WHERE email = ? AND password = ?";
     private static final String SQL_FIND_ALL_USERS = "SELECT * FROM users";
     private static final String SQL_FIND_USER_BY_ID = "SELECT * FROM users WHERE user_id = ?";
-    private static final String SQL_EDIT_USER_BY_ID = "UPDATE users SET email = ?, name = ?, surname = ?, user_status = ?, user_role = ? WHERE users_id = ?";
+    private static final String SQL_EDIT_USER_BY_ID = "UPDATE users SET email = ?, name = ?, surname = ?, user_status = ?, user_role = ? WHERE user_id = ?";
     private static UserDaoImpl instance;
 
     private UserDaoImpl() {
@@ -71,8 +71,9 @@ public class UserDaoImpl implements UserDao {
     public List<User> findAllUsers() throws DaoException {
         List<User> users = new ArrayList<>();
         ConnectionPool pool = ConnectionPool.getInstance();
+        ProxyConnection connection = null;
         try{
-            ProxyConnection connection = pool.getConnection();
+            connection = pool.getConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_FIND_ALL_USERS);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()){
@@ -90,6 +91,8 @@ public class UserDaoImpl implements UserDao {
         } catch (SQLException e) {
             logger.error("SQL exception trying authenticate user by email & pass", e);
             throw new DaoException(e);
+        } finally {
+            pool.releaseConnection(connection);
         }
         return users;
     }
@@ -111,7 +114,7 @@ public class UserDaoImpl implements UserDao {
             int updatedLines = statement.executeUpdate();
             if (updatedLines != 0){
                 result = true;
-                logger.info("found user in db " + user);
+                logger.info("updated user " + user);
             } else {
                 result = false;
             }
