@@ -7,6 +7,7 @@ public enum ParameterAndAttribute {
     REGISTRATION_EMAIL("register_email"),
     REGISTRATION_NAME("register_name"),
     REGISTRATION_SURNAME("register_surname"),
+    USER_ID("user_id"),
     USER_NAME("userName"),
     USER_SURNAME("userSurname"),
     USER_EMAIL("userEmail"),
@@ -18,7 +19,6 @@ public enum ParameterAndAttribute {
     LOGIN_EMAIL("login_email"),
     LOGIN_PASS("login_password"),
     ALL_USERS("all_users"),
-    USER_ID("user_id"),
     ADMIN_EDIT_USER("admin_edit_user");
 
     private final String attr;
