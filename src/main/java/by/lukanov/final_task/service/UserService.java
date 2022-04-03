@@ -18,5 +18,5 @@ public interface UserService {
 
     Optional<User> findUserById(String id) throws ServiceException;
 
-
+    boolean updateUser(Map<String, String> userData) throws ServiceException;
 }
