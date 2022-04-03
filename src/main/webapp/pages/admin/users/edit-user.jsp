@@ -45,19 +45,19 @@
                                         <form class="row g-3" action="controller" method="post">
                                             <div class="col-md-6">
                                                 <label for="inputName" class="form-label">Name</label>
-                                                <input type="email" class="form-control" id="inputName" value="${user.name}"/>
+                                                <input name="userName" type="text" class="form-control" id="inputName" value="${user.name}"/>
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="inputSurname" class="form-label">Surname</label>
-                                                <input type="text" class="form-control" id="inputSurname" value="${user.surname}"/>
+                                                <input name="userSurname" type="text" class="form-control" id="inputSurname" value="${user.surname}"/>
                                             </div>
                                             <div class="col-6">
                                                 <label for="inputEmail" class="form-label">Email</label>
-                                                <input type="text" class="form-control" id="inputEmail" value="${user.email}"/>
+                                                <input name="userEmail" type="email" class="form-control" id="inputEmail" value="${user.email}"/>
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="inputRole" class="form-label">Role</label>
-                                                <select id="inputRole" class="form-select">
+                                                <select name="userRole" id="inputRole" class="form-select">
                                                     <option <c:if test="${user.role == 'USER'}">selected</c:if>>User</option>
                                                     <option <c:if test="${user.role == 'MANAGER'}">selected</c:if>>Manager</option>
                                                     <option <c:if test="${user.role == 'ADMIN'}">selected</c:if>>Admin</option>
@@ -65,7 +65,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="inputStatus" class="form-label">Status</label>
-                                                <select id="inputStatus" class="form-select">
+                                                <select name="userStatus" id="inputStatus" class="form-select">
                                                     <option <c:if test="${user.status == 'ACTIVE'}">selected</c:if>>Active</option>
                                                     <option <c:if test="${user.status == 'INACTIVE'}">selected</c:if>>Inactive</option>
                                                     <option <c:if test="${user.status == 'BLOCKED'}">selected</c:if>>Blocked</option>
