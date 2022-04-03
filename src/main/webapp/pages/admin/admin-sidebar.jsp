@@ -1,6 +1,6 @@
 <div class="app-sidebar">
     <div class="logo">
-        <a href="index.html" class="logo-icon"><span class="logo-text">CarRental</span></a>
+        <div href="index.html" class="logo-icon"><span class="logo-text">CarRental</span></div>
     </div>
     <div class="app-menu">
         <ul class="accordion-menu">
@@ -23,7 +23,11 @@
                 <a href="../users/add-new-user.jsp"><i class="material-icons-two-tone">person_add</i>Add new user</a>
             </li>
             <li>
-                <a href="../users/all-users.jsp"><i class="material-icons-two-tone">people</i>All users</a>
+                <form action="/controller" method="POST">
+                    <input type="hidden" name="command" value="to_admin_all_users_page">
+                    <i class="material-icons-two-tone">people</i>
+                    <input type="submit" value="All users">
+                </form>
             </li>
             <li class="sidebar-title">
                 Cars
