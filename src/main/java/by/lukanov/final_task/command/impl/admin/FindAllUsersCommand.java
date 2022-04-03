@@ -29,6 +29,7 @@ public class FindAllUsersCommand implements Command {
             throw new CommandException(e);
         }
         request.setAttribute(ParameterAndAttribute.ALL_USERS.getAttr(), users);
+        router.setType(Router.Type.FORWARD);
         router.setPagePath(PagePath.ADMIN_ALL_USERS);
         return router;
     }
