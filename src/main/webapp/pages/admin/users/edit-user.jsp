@@ -75,7 +75,7 @@
                                                 <label for="formFile" class="form-label">Driver license</label>
                                                 <input class="form-control" type="file" id="formFile">
                                             </div>--%>
-                                            <input type="hidden" name="user_id" value="${user_id}">
+                                            <input type="hidden" name="user_id" value="${user.id}">
                                             <input type="hidden" name="command" value="admin_edit_user">
                                             <div class="col-12">
                                                 <button type="submit" class="btn btn-primary">Save</button>

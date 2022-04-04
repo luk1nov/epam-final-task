@@ -9,9 +9,14 @@
     background-size: cover;
 }
 
-.error-stacktrace{
+.error-card.error-stacktrace{
     max-height: 400px;
     overflow-y: scroll;
+}
+
+.error-card{
+    padding: 20px;
+    margin: 50px 0;
 }
 
 :root{
@@ -51,7 +56,7 @@ li form{
     margin: 0;
 }
 
-li.nav-item form input[type="submit"], .accordion-menu li form input[type="submit"]{
+li.admin-home-link form input[type="submit"], .accordion-menu li form input[type="submit"]{
     border: none;
     background: none;
     padding: 0;
