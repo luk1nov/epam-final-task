@@ -1,0 +1,101 @@
+/* Your Custom CSS Goes here */
+.table{
+    vertical-align: baseline;
+}
+
+.app-auth-sign-up .app-auth-background{
+    background: url("../images/backgrounds/background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.error-stacktrace{
+    max-height: 400px;
+    overflow-y: scroll;
+}
+
+:root{
+    --primary-color: #94A675;
+    --secondary-color: #8B1224;
+}
+
+.logo{
+    font-family: 'Audiowide';
+    font-style: normal;
+    font-weight: normal;
+    font-size: 32px;
+    color: #000000;
+    margin: 0;
+}
+
+.navbar-light .navbar-nav .nav-link{
+    color: #000;
+}
+
+input[type="submit"].dropdown-item{
+    color: #40475c;
+    padding: 5px 10px;
+    margin: 5px 0;
+    display: block;
+    font-size: 13px;
+    font-weight: 400;
+    position: relative;
+}
+
+input[type="submit"].dropdown-item:focus, input[type="submit"].dropdown-item:hover{
+    background: 0 0;
+    font-weight: 500;
+}
+
+li form{
+    margin: 0;
+}
+
+li.nav-item form input[type="submit"], .accordion-menu li form input[type="submit"]{
+    border: none;
+    background: none;
+    padding: 0;
+}
+
+.admin-home-link{
+    align-self: center;
+}
+
+.accordion-menu li form{
+    text-decoration: none;
+    color: #40475c;
+    font-size: 14px;
+    margin: 3px 15px;
+    padding: 10px 15px;
+    display: block;
+    border-radius: 3px;
+    line-height: 20px;
+}
+
+.accordion-menu li form, .accordion-menu li form input, .accordion-menu li form i{
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+
+.accordion-menu li form i{
+    margin-right: 13px;
+    vertical-align: top;
+    line-height: 20px;
+    filter: invert(41%) sepia(17%) saturate(674%) hue-rotate(182deg) brightness(95%) contrast(89%);
+}
+
+.accordion-menu li form:hover{
+    padding-left: 20px;
+}
+
+.accordion-menu li form:hover input{
+    color: #2269F5;
+}
+
+.accordion-menu li form:hover i{
+    filter: invert(34%) sepia(23%) saturate(3309%) hue-rotate(195deg) brightness(109%) contrast(115%);
+}
+
+
