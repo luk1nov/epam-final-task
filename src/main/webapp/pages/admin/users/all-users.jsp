@@ -51,6 +51,7 @@
                                             <th scope="col">Role</th>
                                             <th scope="col">Status</th>
                                             <th scope="col">Email</th>
+                                            <th scope="col">Balance</th>
                                             <th scope="col">Actions</th>
                                         </tr>
                                         </thead>
@@ -80,6 +81,7 @@
                                                          </span>
                                                     </td>
                                                 <td>${user.email}</td>
+                                                <td>$${user.balance}</td>
                                                 <td>
                                                     <div class="btn-group dropstart">
                                                         <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -93,7 +95,13 @@
                                                                     <input type="submit" class="dropdown-item" value="Edit">
                                                                 </form>
                                                             </li>
-                                                            <li><a class="dropdown-item" href="#">Delete</a></li>
+                                                            <li>
+                                                                <form action="/controller" method="POST">
+                                                                    <input type="hidden" name="user_id" value="${user.id}">
+                                                                    <input type="hidden" name="command" value="admin_delete_user">
+                                                                    <input type="submit" class="dropdown-item" value="Delete">
+                                                                </form>
+                                                            </li>
                                                         </ul>
                                                     </div>
                                                 </td>
