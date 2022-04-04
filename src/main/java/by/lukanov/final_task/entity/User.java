@@ -1,11 +1,14 @@
 package by.lukanov.final_task.entity;
 
+import java.math.BigDecimal;
+
 public class User extends AbstractEntity{
     private long id;
     private String email;
     private String password;
     private String name;
     private String surname;
+    private BigDecimal balance;
     private Role role;
     private Status status;
 
@@ -74,6 +77,14 @@ public class User extends AbstractEntity{
         this.surname = surname;
     }
 
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
     public Role getRole() {
         return role;
     }
@@ -100,6 +111,7 @@ public class User extends AbstractEntity{
         if (password != null ? !password.equals(user.password) : user.password != null) return false;
         if (name != null ? !name.equals(user.name) : user.name != null) return false;
         if (surname != null ? !surname.equals(user.surname) : user.surname != null) return false;
+        if (balance != null ? !balance.equals(user.balance) : user.balance != null) return false;
         if (role != user.role) return false;
         return status == user.status;
     }
@@ -111,6 +123,7 @@ public class User extends AbstractEntity{
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (surname != null ? surname.hashCode() : 0);
+        result = 31 * result + (balance != null ? balance.hashCode() : 0);
         result = 31 * result + (role != null ? role.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         return result;
@@ -124,6 +137,7 @@ public class User extends AbstractEntity{
         sb.append(", password='").append(password).append('\'');
         sb.append(", name='").append(name).append('\'');
         sb.append(", surname='").append(surname).append('\'');
+        sb.append(", balance=").append(balance);
         sb.append(", role=").append(role);
         sb.append(", status=").append(status);
         sb.append('}');
@@ -159,6 +173,11 @@ public class User extends AbstractEntity{
 
         public UserBuilder password(String password){
             user.password = password;
+            return this;
+        }
+
+        public UserBuilder balance(BigDecimal balance){
+            user.balance = balance;
             return this;
         }
 
