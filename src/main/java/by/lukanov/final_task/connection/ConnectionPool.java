@@ -102,6 +102,7 @@ public class ConnectionPool {
             logger.error(Message.GET_CON_EXCEPT);
             Thread.currentThread().interrupt();
         }
+        logger.debug("availible " + freeConnections.size());
         return connection;
     }
 
@@ -113,6 +114,7 @@ public class ConnectionPool {
             logger.error(Message.RELEASE_CON_EXCEPT);
             Thread.currentThread().interrupt();
         }
+        logger.debug("availible " + freeConnections.size());
     }
 
     public void destroyPool(){
@@ -120,7 +122,7 @@ public class ConnectionPool {
         logger.info("used connections " + usedConnections.size());
         for (int i = 0; i < POOL_SIZE; i++) {
             try{
-                freeConnections.take().close();
+                freeConnections.take().reallyClose();
             } catch (InterruptedException e) {
                 logger.error(Message.DESTROY_POOL_INTERRUPTED);
                 Thread.currentThread().interrupt();
