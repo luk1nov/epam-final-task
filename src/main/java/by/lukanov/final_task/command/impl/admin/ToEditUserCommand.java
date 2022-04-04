@@ -18,24 +18,24 @@ public class ToEditUserCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         Router router = new Router();
-        String userId = request.getParameter(ParameterAndAttribute.USER_ID.getAttr());
-        Optional<User> optionalUser;
-        User user;
+        String userId = request.getParameter(ParameterAndAttribute.USER_ID.getAttr()).strip();
+        logger.debug("request id " + userId);
         try {
-            optionalUser = userService.findUserById(userId);
+            Optional<User> optionalUser = userService.findUserById(userId);
             if (optionalUser.isPresent()){
-                user = optionalUser.get();
+                User user = optionalUser.get();
+                logger.debug("user found " + user.getId());
+                router.setPagePath(PagePath.ADMIN_EDIT_USER);
                 request.setAttribute(ParameterAndAttribute.USER.getAttr(), user);
-                request.setAttribute(ParameterAndAttribute.USER_ID.getAttr(), userId);
             } else{
-                router.setPagePath(PagePath.ADMIN_ALL_USERS);
+                logger.debug("user not found");
+                router.setPagePath(PagePath.FAIL_PAGE);
                 request.setAttribute(ParameterAndAttribute.MESSAGE.getAttr(), Message.CAN_NOT_EDIT_USER);
             }
         } catch (ServiceException e) {
             logger.error("Command exception trying find usr by id");
             throw new CommandException(e);
         }
-        router.setPagePath(PagePath.ADMIN_EDIT_USER);
         return router;
     }
 }
