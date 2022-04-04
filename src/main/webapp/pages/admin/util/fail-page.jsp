@@ -26,10 +26,9 @@
             <div class="content-wrapper">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="alert alert-custom" role="alert">
-                            <div class="custom-alert-icon icon-success"><i class="material-icons-outlined">done</i></div>
+                        <div class="alert alert-custom alert-indicator-top indicator-danger" role="alert">
                             <div class="alert-content">
-                                <span class="alert-title">Fail</span>
+                                <span class="alert-title">Failed!</span>
                                 <span class="alert-text">${message}</span>
                             </div>
                         </div>
