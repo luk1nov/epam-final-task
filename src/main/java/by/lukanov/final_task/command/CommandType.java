@@ -1,6 +1,7 @@
 package by.lukanov.final_task.command;
 
 import by.lukanov.final_task.command.impl.DefaultCommand;
+import by.lukanov.final_task.command.impl.admin.DeleteUserCommand;
 import by.lukanov.final_task.command.impl.admin.EditUserCommand;
 import by.lukanov.final_task.command.impl.admin.ToEditUserCommand;
 import by.lukanov.final_task.command.impl.login.LogOutCommand;
@@ -19,7 +20,8 @@ public enum CommandType {
     TO_SIGNUP_PAGE(new ToSignUpCommand()),
     TO_ADMIN_ALL_USERS_PAGE(new FindAllUsersCommand()),
     TO_ADMIN_EDIT_USER_PAGE(new ToEditUserCommand()),
-    ADMIN_EDIT_USER(new EditUserCommand());
+    ADMIN_EDIT_USER(new EditUserCommand()),
+    ADMIN_DELETE_USER(new DeleteUserCommand());
 
     private final Command command;
 
