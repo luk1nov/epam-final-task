@@ -39,6 +39,14 @@
                     </div>
                     <div class="d-flex">
                         <ul class="navbar-nav">
+                            <c:if test="${sessionScope.user.role == 'ADMIN' || sessionScope.user.role == 'MANAGER'}" >
+                                <li class="nav-item hidden-on-mobile" style="align-self: center;padding: 0 10px;">
+                                    <form action="/controller" method="POST">
+                                        <input type="hidden" name="command" value="to_admin_all_users_page">
+                                        <input type="submit" class="btn btn-outline-info" value="Admin panel">
+                                    </form>
+                                </li>
+                            </c:if>
                             <c:if test="${empty sessionScope.user}" >
                                 <li class="nav-item hidden-on-mobile">
                                     <a class="nav-link" href="${pageContext.request.contextPath}/controller?command=to_signup_page">Sign Up</a>
