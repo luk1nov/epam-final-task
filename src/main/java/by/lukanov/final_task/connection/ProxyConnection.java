@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-public class ProxyConnection {
+public class ProxyConnection implements Connection{
     private final Connection connection;
 
     public ProxyConnection(Connection connection) {
@@ -45,6 +45,10 @@ public class ProxyConnection {
     }
 
     public void close() throws SQLException {
+        ConnectionPool.getInstance().releaseConnection(this);
+    }
+
+    public void reallyClose() throws SQLException {
         connection.close();
     }
 
