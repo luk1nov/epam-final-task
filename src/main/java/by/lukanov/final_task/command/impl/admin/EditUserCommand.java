@@ -19,12 +19,12 @@ public class EditUserCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         boolean updated;
         Router router = new Router();
-        String userId = request.getParameter(ParameterAndAttribute.USER_ID.getAttr());
-        String name = request.getParameter(ParameterAndAttribute.USER_NAME.getAttr());
-        String surname = request.getParameter(ParameterAndAttribute.USER_SURNAME.getAttr());
-        String email = request.getParameter(ParameterAndAttribute.USER_EMAIL.getAttr());
-        String role = request.getParameter(ParameterAndAttribute.USER_ROLE.getAttr());
-        String status = request.getParameter(ParameterAndAttribute.USER_STATUS.getAttr());
+        String userId = request.getParameter(ParameterAndAttribute.USER_ID.getAttr()).strip();
+        String name = request.getParameter(ParameterAndAttribute.USER_NAME.getAttr()).strip();
+        String surname = request.getParameter(ParameterAndAttribute.USER_SURNAME.getAttr()).strip();
+        String email = request.getParameter(ParameterAndAttribute.USER_EMAIL.getAttr()).strip();
+        String role = request.getParameter(ParameterAndAttribute.USER_ROLE.getAttr()).strip();
+        String status = request.getParameter(ParameterAndAttribute.USER_STATUS.getAttr()).strip();
 
         Map<String, String> userData = new HashMap<>();
         userData.put(ParameterAndAttribute.USER_ID.getAttr(), userId);
@@ -42,10 +42,11 @@ public class EditUserCommand implements Command {
         }
         if (updated){
             router.setPagePath(PagePath.SUCCESS_PAGE);
+            router.setType(Router.Type.REDIRECT);
         } else {
+            request.setAttribute(ParameterAndAttribute.MESSAGE.getAttr(), Message.USER_NOT_UPDATED);
             router.setPagePath(PagePath.FAIL_PAGE);
         }
-        router.setType(Router.Type.REDIRECT);
         return router;
     }
 }
