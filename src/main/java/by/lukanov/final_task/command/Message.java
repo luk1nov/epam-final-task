@@ -15,8 +15,8 @@ public class Message {
     public static final String DEREGISTER_DRIVER_SQL = "SQL exception in deregister driver method";
     public static final String INCORRECT_EMAIL_OR_LOGIN = "Incorrect password or login";
     public static final String CAN_NOT_EDIT_USER = "Can not edit this user";
-    public static final String USER_UPDATED = "User updated successfully";
     public static final String USER_NOT_UPDATED = "User update failed";
+    public static final String USER_NOT_DELETED = "User not deleted";
 
 
 }
