@@ -12,6 +12,8 @@ public interface UserService {
 
     boolean addUser(Map<String, String> userData) throws ServiceException;
 
+    boolean deleteUser(String userId) throws ServiceException;
+
     Optional<User> findUserByEmail(String email) throws ServiceException;
 
     List<User> findAllUsers() throws ServiceException;

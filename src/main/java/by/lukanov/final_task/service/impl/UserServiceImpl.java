@@ -70,6 +70,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean deleteUser(String userId) throws ServiceException {
+        boolean result = false;
+        try {
+            if(UserValidator.isValidId(userId)){
+                Optional<User> optionalUser = userDao.findUserById(userId);
+                if(optionalUser.isPresent()){
+                    User user = optionalUser.get();
+                    result = userDao.delete(user);
+                } else {
+                    logger.info("User not exists in deleteUser method");
+                }
+            } else {
+                logger.info("Provided invalid userId in deleteUser method");
+            }
+        } catch (DaoException e) {
+            logger.error("Service exception trying delete user");
+            throw new ServiceException();
+        }
+        return result;
+    }
+
+    @Override
     public Optional<User> findUserByEmail(String email) throws ServiceException {
         Optional<User> user;
         try {
