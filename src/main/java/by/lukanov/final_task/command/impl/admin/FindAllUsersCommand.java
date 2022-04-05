@@ -7,7 +7,7 @@ import by.lukanov.final_task.command.Router;
 import by.lukanov.final_task.entity.User;
 import by.lukanov.final_task.exception.CommandException;
 import by.lukanov.final_task.exception.ServiceException;
-import by.lukanov.final_task.service.impl.UserServiceImpl;
+import by.lukanov.final_task.model.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,7 +28,7 @@ public class FindAllUsersCommand implements Command {
             logger.error("Command exception trying find all users", e);
             throw new CommandException(e);
         }
-        request.setAttribute(ParameterAndAttribute.ALL_USERS.getAttr(), users);
+        request.setAttribute(ParameterAndAttribute.ALL_USERS, users);
         router.setType(Router.Type.FORWARD);
         router.setPagePath(PagePath.ADMIN_ALL_USERS);
         return router;

@@ -14,7 +14,7 @@ public class LogOutCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         Router router = new Router();
         HttpSession session = request.getSession();
-        session.invalidate();
+        session.removeAttribute(ParameterAndAttribute.LOGGED_USER);
         router.setPagePath(PagePath.MAIN_PAGE);
         return router;
     }

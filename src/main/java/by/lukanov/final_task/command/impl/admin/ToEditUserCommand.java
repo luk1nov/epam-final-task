@@ -4,12 +4,14 @@ import by.lukanov.final_task.command.*;
 import by.lukanov.final_task.entity.User;
 import by.lukanov.final_task.exception.CommandException;
 import by.lukanov.final_task.exception.ServiceException;
-import by.lukanov.final_task.service.impl.UserServiceImpl;
+import by.lukanov.final_task.model.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
+
+import static by.lukanov.final_task.command.Message.*;
 
 public class ToEditUserCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -18,7 +20,7 @@ public class ToEditUserCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         Router router = new Router();
-        String userId = request.getParameter(ParameterAndAttribute.USER_ID.getAttr()).strip();
+        String userId = request.getParameter(ParameterAndAttribute.USER_ID).strip();
         logger.debug("request id " + userId);
         try {
             Optional<User> optionalUser = userService.findUserById(userId);
@@ -26,11 +28,11 @@ public class ToEditUserCommand implements Command {
                 User user = optionalUser.get();
                 logger.debug("user found " + user.getId());
                 router.setPagePath(PagePath.ADMIN_EDIT_USER);
-                request.setAttribute(ParameterAndAttribute.USER.getAttr(), user);
+                request.setAttribute(ParameterAndAttribute.USER, user);
             } else{
                 logger.debug("user not found");
                 router.setPagePath(PagePath.FAIL_PAGE);
-                request.setAttribute(ParameterAndAttribute.MESSAGE.getAttr(), Message.CAN_NOT_EDIT_USER);
+                request.setAttribute(ParameterAndAttribute.MESSAGE, CAN_NOT_EDIT_USER);
             }
         } catch (ServiceException e) {
             logger.error("Command exception trying find usr by id");
