@@ -1,4 +1,4 @@
-package by.lukanov.final_task.connection;
+package by.lukanov.final_task.model.connection;
 
 import java.sql.*;
 import java.util.Map;
