@@ -1,6 +1,6 @@
 package by.lukanov.final_task.command;
 
-public class Message {
+public final class Message {
     public static final String PASSWORD_MISMATCH = "Password doesn't match";
     public static final String USER_NOT_ADDED = "User not added";
     public static final String USER_EXISTS = "User already exists";

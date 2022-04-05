@@ -1,6 +1,6 @@
 package by.lukanov.final_task.command;
 
-public class PagePath {
+public final class PagePath {
     public static final String MAIN_PAGE = "index.jsp";
     public static final String RESULT_PAGE = "pages/result.jsp";
     public static final String SIGNUP_PAGE = "pages/signup.jsp";
