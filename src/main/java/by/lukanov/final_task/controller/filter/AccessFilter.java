@@ -27,10 +27,10 @@ public class AccessFilter implements Filter {
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         HttpSession session = httpServletRequest.getSession(false);
 
-        boolean loggedIn = session != null && session.getAttribute(ParameterAndAttribute.USER.getAttr()) != null;
+        boolean loggedIn = session != null && session.getAttribute(ParameterAndAttribute.LOGGED_USER) != null;
 
         if(loggedIn){
-            User user = (User) session.getAttribute(ParameterAndAttribute.USER.getAttr());
+            User user = (User) session.getAttribute(ParameterAndAttribute.LOGGED_USER);
             if(user.getRole() == User.Role.ADMIN || user.getRole() == User.Role.MANAGER){
                 chain.doFilter(request, response);
             } else {
