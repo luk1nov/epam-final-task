@@ -17,6 +17,7 @@ public final class Message {
     public static final String CAN_NOT_EDIT_USER = "Can not edit this user";
     public static final String USER_NOT_UPDATED = "User update failed";
     public static final String USER_NOT_DELETED = "User not deleted";
+    public static final String READ_PROPERTIES_ERROR = "Error reading properties for db";
 
     private Message() {
     }
