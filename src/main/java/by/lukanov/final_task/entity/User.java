@@ -1,14 +1,10 @@
 package by.lukanov.final_task.entity;
 
-import java.math.BigDecimal;
-
-public class User extends AbstractEntity{
-    private long id;
+public final class User extends AbstractEntity{
     private String email;
     private String password;
     private String name;
     private String surname;
-    private BigDecimal balance;
     private Role role;
     private Status status;
 
@@ -35,14 +31,6 @@ public class User extends AbstractEntity{
         ACTIVE,
         INACTIVE,
         BLOCKED
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getEmail() {
@@ -77,14 +65,6 @@ public class User extends AbstractEntity{
         this.surname = surname;
     }
 
-    public BigDecimal getBalance() {
-        return balance;
-    }
-
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
-    }
-
     public Role getRole() {
         return role;
     }
@@ -101,29 +81,28 @@ public class User extends AbstractEntity{
         this.status = status;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        if (id != user.id) return false;
+        if (! super.equals(o)) return false;
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
         if (password != null ? !password.equals(user.password) : user.password != null) return false;
         if (name != null ? !name.equals(user.name) : user.name != null) return false;
         if (surname != null ? !surname.equals(user.surname) : user.surname != null) return false;
-        if (balance != null ? !balance.equals(user.balance) : user.balance != null) return false;
         if (role != user.role) return false;
         return status == user.status;
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
+        int result = super.hashCode();
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (surname != null ? surname.hashCode() : 0);
-        result = 31 * result + (balance != null ? balance.hashCode() : 0);
         result = 31 * result + (role != null ? role.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         return result;
@@ -132,12 +111,11 @@ public class User extends AbstractEntity{
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("User{");
-        sb.append("id=").append(id);
+        sb.append("id='").append(getId()).append('\'');
         sb.append(", email='").append(email).append('\'');
         sb.append(", password='").append(password).append('\'');
         sb.append(", name='").append(name).append('\'');
         sb.append(", surname='").append(surname).append('\'');
-        sb.append(", balance=").append(balance);
         sb.append(", role=").append(role);
         sb.append(", status=").append(status);
         sb.append('}');
@@ -152,7 +130,7 @@ public class User extends AbstractEntity{
         }
 
         public UserBuilder id(long id){
-            user.id = id;
+            user.setId(id);
             return this;
         }
 
@@ -173,11 +151,6 @@ public class User extends AbstractEntity{
 
         public UserBuilder password(String password){
             user.password = password;
-            return this;
-        }
-
-        public UserBuilder balance(BigDecimal balance){
-            user.balance = balance;
             return this;
         }
 
