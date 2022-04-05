@@ -41,7 +41,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="example-content">
-                                        <c:set var="user" value="${user}" />
+<%--                                        <c:set var="user" value="${user}" />--%>
                                         <form class="row g-3" action="controller" method="post">
                                             <div class="col-md-6">
                                                 <label for="inputName" class="form-label">Name</label>
@@ -75,7 +75,7 @@
                                                 <label for="formFile" class="form-label">Driver license</label>
                                                 <input class="form-control" type="file" id="formFile">
                                             </div>--%>
-                                            <input type="hidden" name="user_id" value="${user.id}">
+                                            <input type="hidden" name="userId" value="${user.id}">
                                             <input type="hidden" name="command" value="admin_edit_user">
                                             <div class="col-12">
                                                 <button type="submit" class="btn btn-primary">Save</button>
