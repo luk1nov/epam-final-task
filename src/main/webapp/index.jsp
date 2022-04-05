@@ -39,7 +39,7 @@
                     </div>
                     <div class="d-flex">
                         <ul class="navbar-nav">
-                            <c:if test="${sessionScope.user.role == 'ADMIN' || sessionScope.user.role == 'MANAGER'}" >
+                            <c:if test="${sessionScope.user.role eq 'ADMIN' or sessionScope.user.role eq 'MANAGER'}" >
                                 <li class="nav-item hidden-on-mobile" style="align-self: center;padding: 0 10px;">
                                     <form action="/controller" method="POST">
                                         <input type="hidden" name="command" value="to_admin_all_users_page">

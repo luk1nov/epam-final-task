@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -19,9 +20,9 @@
 </head>
 <body>
 <div class="app align-content-stretch d-flex flex-wrap">
-    <%@include file="../admin-sidebar.jsp"%>
+    <c:import url="../admin-sidebar.jsp"/>
     <div class="app-container">
-        <%@include file="../admin-header.jsp"%>
+        <c:import url="../admin-header.jsp"/>
         <div class="app-content">
             <div class="content-wrapper">
                 <div class="container-fluid">
