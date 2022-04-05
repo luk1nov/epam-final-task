@@ -1,12 +1,15 @@
-package by.lukanov.final_task.connection;
+package by.lukanov.final_task.model.connection;
 
-import by.lukanov.final_task.command.Message;
+import static by.lukanov.final_task.command.Message.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -15,26 +18,33 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ConnectionPool {
     private static final Logger logger = LogManager.getLogger();
-    private static final String URL = "jdbc:mysql://localhost:3306/car_rental";
-    private static final String LOGIN = "root";
-    private static final String PASS = "root";
     private static final Lock locker = new ReentrantLock();
     private static final int POOL_SIZE = 8;
-    /*private static final String DB_URL;
+    private static final String DB_URL;
     private static final String DB_PASSWORD;
     private static final String DB_USER;
-    private static final String DB_DRIVER;*/
+    private static final String DB_DRIVER;
+    private static final Properties properties = new Properties();
     private static final AtomicBoolean isInstanceInitialized = new AtomicBoolean(false);
     private static ConnectionPool instance;
     private final BlockingQueue<ProxyConnection> freeConnections;
     private final BlockingQueue<ProxyConnection> usedConnections;
 
     static {
-        try {
-            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
-        } catch (SQLException e) {
-            logger.error(Message.DRIVER_NOT_REGISTER);
-            throw new ExceptionInInitializerError(e.getMessage());
+        try (InputStream inputStream = ConnectionPool.class.getClassLoader()
+                .getResourceAsStream("database.properties")) {
+            properties.load(inputStream);
+            DB_URL = properties.getProperty("db.url");
+            DB_USER = properties.getProperty("db.user");
+            DB_PASSWORD = properties.getProperty("db.password");
+            DB_DRIVER = properties.getProperty("db.driver");
+            Class.forName(DB_DRIVER);
+        } catch (IOException e) {
+            logger.fatal(DRIVER_PROPERTIES_ERROR, e);
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            logger.fatal(DRIVER_NOT_REGISTER, e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -51,7 +61,7 @@ public class ConnectionPool {
             }
         }
         if(freeConnections.size() != POOL_SIZE){
-            logger.error(Message.POOL_NOT_FULL);
+            logger.error(POOL_NOT_FULL);
             for (int i = freeConnections.size(); i < POOL_SIZE; i++) {
                 try {
                     Connection connection = createConnection();
@@ -63,7 +73,7 @@ public class ConnectionPool {
             }
         }
         if(freeConnections.size() != POOL_SIZE){
-            throw new ExceptionInInitializerError(Message.POOL_FILL_ERROR);
+            throw new ExceptionInInitializerError(POOL_FILL_ERROR);
         }
         logger.info("Connection pool init " + freeConnections.size());
     }
@@ -85,9 +95,9 @@ public class ConnectionPool {
     private Connection createConnection(){
         Connection connection;
         try {
-            connection = DriverManager.getConnection(URL, LOGIN, PASS);
+            connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
         } catch (SQLException e) {
-            logger.fatal(Message.POOL_INIT_ERROR, e);
+            logger.fatal(POOL_INIT_ERROR, e);
             throw new RuntimeException();
         }
         return connection;
@@ -99,7 +109,7 @@ public class ConnectionPool {
             connection = freeConnections.take();
             usedConnections.put(connection);
         } catch (InterruptedException e) {
-            logger.error(Message.GET_CON_EXCEPT);
+            logger.error(GET_CON_EXCEPT);
             Thread.currentThread().interrupt();
         }
         logger.debug("availible " + freeConnections.size());
@@ -111,7 +121,7 @@ public class ConnectionPool {
             usedConnections.remove(connection);
             freeConnections.put(connection);
         } catch (InterruptedException e) {
-            logger.error(Message.RELEASE_CON_EXCEPT);
+            logger.error(RELEASE_CON_EXCEPT);
             Thread.currentThread().interrupt();
         }
         logger.debug("availible " + freeConnections.size());
@@ -124,10 +134,10 @@ public class ConnectionPool {
             try{
                 freeConnections.take().reallyClose();
             } catch (InterruptedException e) {
-                logger.error(Message.DESTROY_POOL_INTERRUPTED);
+                logger.error(DESTROY_POOL_INTERRUPTED);
                 Thread.currentThread().interrupt();
             } catch (SQLException e) {
-                logger.error(Message.DESTROY_POOL_SQL);
+                logger.error(DESTROY_POOL_SQL);
             }
         }
         deregisterDrivers();
@@ -139,7 +149,7 @@ public class ConnectionPool {
             try {
                 DriverManager.deregisterDriver(driver);
             } catch (SQLException e) {
-                logger.error(Message.DEREGISTER_DRIVER_SQL);
+                logger.error(DEREGISTER_DRIVER_SQL);
             }
         });
     }
