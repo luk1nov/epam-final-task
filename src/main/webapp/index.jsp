@@ -39,7 +39,7 @@
                     </div>
                     <div class="d-flex">
                         <ul class="navbar-nav">
-                            <c:if test="${sessionScope.user.role eq 'ADMIN' or sessionScope.user.role eq 'MANAGER'}" >
+                            <c:if test="${sessionScope.loggedUser.role eq 'ADMIN' or sessionScope.loggedUser.role eq 'MANAGER'}" >
                                 <li class="nav-item hidden-on-mobile" style="align-self: center;padding: 0 10px;">
                                     <form action="/controller" method="POST">
                                         <input type="hidden" name="command" value="to_admin_all_users_page">
@@ -47,7 +47,7 @@
                                     </form>
                                 </li>
                             </c:if>
-                            <c:if test="${empty sessionScope.user}" >
+                            <c:if test="${empty sessionScope.loggedUser}" >
                                 <li class="nav-item hidden-on-mobile">
                                     <a class="nav-link" href="${pageContext.request.contextPath}/controller?command=to_signup_page">Sign Up</a>
                                 </li>
@@ -55,7 +55,7 @@
                                     <a class="nav-link" href="${pageContext.request.contextPath}/controller?command=to_signin_page">Log In</a>
                                 </li>
                             </c:if>
-                            <c:if test="${not empty sessionScope.user}" >
+                            <c:if test="${not empty sessionScope.loggedUser}" >
                                 <li class="nav-item hidden-on-mobile">
                                     <a class="nav-link" href="${pageContext.request.contextPath}/controller?command=log_out">Log Out</a>
                                 </li>
