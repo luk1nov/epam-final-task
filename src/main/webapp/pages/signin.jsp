@@ -28,16 +28,15 @@
         <form action="/controller" method="post">
             <div class="auth-credentials m-b-xxl">
                 <label for="signInEmail" class="form-label">Email address</label>
-                <input type="email" name="login_email" class="form-control m-b-md" id="signInEmail" aria-describedby="signUpEmail" >
+                <input type="email" name="userEmail" class="form-control m-b-md" id="signInEmail" aria-describedby="signUpEmail" >
 
                 <label for="signUpPassword" class="form-label">Password</label>
-                <input type="password" name="login_password" class="form-control m-b-md" id="signUpPassword" aria-describedby="signUpPassword">
+                <input type="password" name="userPass" class="form-control m-b-md" id="signUpPassword" aria-describedby="signUpPassword">
             </div>
-
+            <input type="hidden" name="command" value="signin">
             <div class="auth-submit">
                 <input type="submit" class="btn btn-primary" value="Sign In">
             </div>
-            <input type="hidden" name="command" value="signin">
         </form>
 
         <div class="divider"></div>

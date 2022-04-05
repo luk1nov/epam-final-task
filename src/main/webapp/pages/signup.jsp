@@ -28,19 +28,19 @@
         <form action="/controller" method="post">
             <div class="auth-credentials m-b-xxl">
                 <label for="signUpName" class="form-label">Name</label>
-                <input type="text" name="register_name" class="form-control m-b-md" id="signUpName" aria-describedby="signUpName">
+                <input type="text" name="userName" class="form-control m-b-md" id="signUpName" aria-describedby="signUpName">
 
                 <label for="signUpSurname" class="form-label">Surname</label>
-                <input type="text" name="register_surname" class="form-control m-b-md" id="signUpSurname" aria-describedby="signUpSurname">
+                <input type="text" name="userSurname" class="form-control m-b-md" id="signUpSurname" aria-describedby="signUpSurname">
 
                 <label for="signUpEmail" class="form-label">Email address</label>
-                <input type="email" name="register_email" class="form-control m-b-md" id="signUpEmail" aria-describedby="signUpEmail" >
+                <input type="email" name="userEmail" class="form-control m-b-md" id="signUpEmail" aria-describedby="signUpEmail" >
 
                 <label for="signUpPassword" class="form-label">Password</label>
-                <input type="password" name="register_password" class="form-control m-b-md" id="signUpPassword" aria-describedby="signUpPassword">
+                <input type="password" name="userPass" class="form-control m-b-md" id="signUpPassword" aria-describedby="signUpPassword">
 
                 <label for="signUpRepPassword" class="form-label">Repeat password</label>
-                <input type="password" name="register_repeated_password" class="form-control" id="signUpRepPassword" aria-describedby="signUpRepPassword">
+                <input type="password" name="userRepeatPass" class="form-control" id="signUpRepPassword" aria-describedby="signUpRepPassword">
             </div>
 
             <div class="auth-submit">
