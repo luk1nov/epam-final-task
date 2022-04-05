@@ -1,15 +1,12 @@
 package by.lukanov.final_task.command;
 
 import by.lukanov.final_task.command.impl.DefaultCommand;
-import by.lukanov.final_task.command.impl.admin.DeleteUserCommand;
-import by.lukanov.final_task.command.impl.admin.EditUserCommand;
-import by.lukanov.final_task.command.impl.admin.ToEditUserCommand;
+import by.lukanov.final_task.command.impl.admin.*;
 import by.lukanov.final_task.command.impl.login.LogOutCommand;
 import by.lukanov.final_task.command.impl.login.SignInCommand;
 import by.lukanov.final_task.command.impl.login.SignUpCommand;
 import by.lukanov.final_task.command.impl.navigation.ToSignInCommand;
 import by.lukanov.final_task.command.impl.navigation.ToSignUpCommand;
-import by.lukanov.final_task.command.impl.admin.FindAllUsersCommand;
 
 public enum CommandType {
     DEFAULT(new DefaultCommand()),
@@ -21,7 +18,8 @@ public enum CommandType {
     TO_ADMIN_ALL_USERS_PAGE(new FindAllUsersCommand()),
     TO_ADMIN_EDIT_USER_PAGE(new ToEditUserCommand()),
     ADMIN_EDIT_USER(new EditUserCommand()),
-    ADMIN_DELETE_USER(new DeleteUserCommand());
+    ADMIN_DELETE_USER(new DeleteUserCommand()),
+    TO_ADMIN_ALL_CARS_PAGE(new FindAllCarsCommand());
 
     private final Command command;
 
