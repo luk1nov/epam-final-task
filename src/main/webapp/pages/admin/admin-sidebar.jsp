@@ -36,7 +36,11 @@
                 <a href="../cars/add-new-car.jsp"><i class="material-icons-two-tone">directions_car</i>Add new car</a>
             </li>
             <li>
-                <a href="../cars/all-cars.jsp" class="active"><i class="material-icons-two-tone">garage</i>All cars</a>
+                <form action="/controller" method="POST">
+                    <input type="hidden" name="command" value="to_admin_all_cars_page">
+                    <i class="material-icons-two-tone">garage</i>
+                    <input type="submit" value="All cars">
+                </form>
             </li>
             <li>
                 <a href="../cars/repairing-cars.jsp"><i class="material-icons-two-tone">car_crash</i>Repairing cars<span class="badge rounded-pill badge-danger float-end">5</span></a>
