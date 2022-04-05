@@ -1,4 +1,4 @@
-package by.lukanov.final_task.service;
+package by.lukanov.final_task.model.service;
 
 import by.lukanov.final_task.entity.User;
 import by.lukanov.final_task.exception.ServiceException;

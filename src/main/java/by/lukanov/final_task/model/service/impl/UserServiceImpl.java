@@ -1,11 +1,11 @@
-package by.lukanov.final_task.service.impl;
+package by.lukanov.final_task.model.service.impl;
 
 import by.lukanov.final_task.command.ParameterAndAttribute;
-import by.lukanov.final_task.dao.impl.UserDaoImpl;
+import by.lukanov.final_task.model.dao.impl.UserDaoImpl;
 import by.lukanov.final_task.entity.User;
 import by.lukanov.final_task.exception.DaoException;
 import by.lukanov.final_task.exception.ServiceException;
-import by.lukanov.final_task.service.UserService;
+import by.lukanov.final_task.model.service.UserService;
 import by.lukanov.final_task.util.PasswordEncoder;
 import by.lukanov.final_task.validation.UserValidator;
 import org.apache.logging.log4j.LogManager;
@@ -39,10 +39,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean addUser(Map<String, String> userData) throws ServiceException {
         PasswordEncoder encoder = PasswordEncoder.getInstance();
-        String name = userData.get(ParameterAndAttribute.USER_NAME.getAttr());
-        String surname = userData.get(ParameterAndAttribute.USER_SURNAME.getAttr());
-        String email = userData.get(ParameterAndAttribute.USER_EMAIL.getAttr());
-        String pass = userData.get(ParameterAndAttribute.USER_PASS.getAttr());
+        String name = userData.get(ParameterAndAttribute.USER_NAME);
+        String surname = userData.get(ParameterAndAttribute.USER_SURNAME);
+        String email = userData.get(ParameterAndAttribute.USER_EMAIL);
+        String pass = userData.get(ParameterAndAttribute.USER_PASS);
 
         boolean addUserResult;
 
@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
     public List<User> findAllUsers() throws ServiceException {
         List<User> users;
         try {
-            users = userDao.findAllUsers();
+            users = userDao.findAll();
         } catch (DaoException e) {
             logger.error("Service exception trying find all users");
             throw new ServiceException(e);
@@ -138,12 +138,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean updateUser(Map<String, String> userData) throws ServiceException {
         boolean updated;
-        String userId = userData.get(ParameterAndAttribute.USER_ID.getAttr());
-        String name = userData.get(ParameterAndAttribute.USER_NAME.getAttr());
-        String surname = userData.get(ParameterAndAttribute.USER_SURNAME.getAttr());
-        String email = userData.get(ParameterAndAttribute.USER_EMAIL.getAttr());
-        String role = userData.get(ParameterAndAttribute.USER_ROLE.getAttr()).toUpperCase();
-        String status = userData.get(ParameterAndAttribute.USER_STATUS.getAttr()).toUpperCase();
+        String userId = userData.get(ParameterAndAttribute.USER_ID);
+        String name = userData.get(ParameterAndAttribute.USER_NAME);
+        String surname = userData.get(ParameterAndAttribute.USER_SURNAME);
+        String email = userData.get(ParameterAndAttribute.USER_EMAIL);
+        String role = userData.get(ParameterAndAttribute.USER_ROLE).toUpperCase();
+        String status = userData.get(ParameterAndAttribute.USER_STATUS).toUpperCase();
         logger.info(userData.toString());
         if(UserValidator.isValidId(userId) && UserValidator.isValidName(name) && UserValidator.isValidSurname(surname) && UserValidator.isValidEmail(email)){
             try{

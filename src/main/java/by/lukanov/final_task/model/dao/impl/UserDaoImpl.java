@@ -1,13 +1,12 @@
-package by.lukanov.final_task.dao.impl;
+package by.lukanov.final_task.model.dao.impl;
 
-import by.lukanov.final_task.dao.UserDao;
+import by.lukanov.final_task.model.dao.UserDao;
 import by.lukanov.final_task.entity.User;
 import by.lukanov.final_task.exception.DaoException;
-import by.lukanov.final_task.connection.ConnectionPool;
+import by.lukanov.final_task.model.connection.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +15,10 @@ import java.util.Optional;
 public class UserDaoImpl implements UserDao {
     private static final Logger logger = LogManager.getLogger();
     private static final String SQL_ADD_USER = "INSERT INTO users (email,password,name,surname,user_status,user_role) values(?,?,?,?,?,?)";
-    private static final String SQL_FIND_USER_BY_EMAIL = "SELECT * FROM users WHERE email = ?";
-    private static final String SQL_AUTHENTICATE_USER_BY_EMAIL_AND_PASS = "SELECT * FROM users WHERE email = ? AND password = ?";
-    private static final String SQL_FIND_ALL_USERS = "SELECT * FROM users";
-    private static final String SQL_FIND_USER_BY_ID = "SELECT * FROM users WHERE user_id = ?";
+    private static final String SQL_FIND_USER_BY_EMAIL = "SELECT users.user_id, users.email, users.password, users.name, users.surname, users.user_status, users.user_role, users.driver_license_photo FROM users WHERE email = ?";
+    private static final String SQL_AUTHENTICATE_USER_BY_EMAIL_AND_PASS = "SELECT users.user_id, users.email, users.name, users.surname, users.user_status, users.user_role FROM users WHERE email = ? AND password = ?";
+    private static final String SQL_FIND_ALL_USERS = "SELECT users.user_id, users.email, users.name, users.surname , users.user_status , users.user_role FROM users";
+    private static final String SQL_FIND_USER_BY_ID = "SELECT users.user_id, users.email, users.password, users.name, users.surname, users.user_status, users.user_role, users.driver_license_photo FROM users WHERE user_id = ?";
     private static final String SQL_EDIT_USER_BY_ID = "UPDATE users SET email = ?, name = ?, surname = ?, user_status = ?, user_role = ? WHERE user_id = ?";
     private static final String SQL_DELETE_USER_BY_ID = "DELETE FROM users WHERE user_id = ?";
     private static UserDaoImpl instance;
@@ -77,7 +76,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> findAllUsers() throws DaoException {
+    public List<User> findAll() throws DaoException {
         List<User> users = new ArrayList<>();
         ConnectionPool pool = ConnectionPool.getInstance();
         try (Connection connection = pool.getConnection();
@@ -87,17 +86,15 @@ public class UserDaoImpl implements UserDao {
                 User user = new User.UserBuilder()
                         .id(Long.parseLong(resultSet.getString(1)))
                         .email(resultSet.getString(2))
-                        .password(resultSet.getString(3))
-                        .name(resultSet.getString(4))
-                        .surname(resultSet.getString(5))
-                        .status(User.Status.valueOf(resultSet.getString(6)))
-                        .role(User.Role.valueOf(resultSet.getString(7)))
-                        .balance(BigDecimal.valueOf(Double.parseDouble(resultSet.getString(8))))
+                        .name(resultSet.getString(3))
+                        .surname(resultSet.getString(4))
+                        .status(User.Status.valueOf(resultSet.getString(5)))
+                        .role(User.Role.valueOf(resultSet.getString(6)))
                         .build();
                 users.add(user);
             }
         } catch (SQLException e) {
-            logger.error("SQL exception trying authenticate user by email & pass", e);
+            logger.error("SQL exception trying find all users", e);
             throw new DaoException(e);
         }
         return users;
@@ -142,11 +139,10 @@ public class UserDaoImpl implements UserDao {
                 User user = new User.UserBuilder()
                         .id(Long.parseLong(resultSet.getString(1)))
                         .email(resultSet.getString(2))
-                        .password(resultSet.getString(3))
-                        .name(resultSet.getString(4))
-                        .surname(resultSet.getString(5))
-                        .status(User.Status.valueOf(resultSet.getString(6)))
-                        .role(User.Role.valueOf(resultSet.getString(7)))
+                        .name(resultSet.getString(3))
+                        .surname(resultSet.getString(4))
+                        .status(User.Status.valueOf(resultSet.getString(5)))
+                        .role(User.Role.valueOf(resultSet.getString(6)))
                         .build();
                 logger.info("found user in db " + user.toString());
                 foundUser = Optional.of(user);
