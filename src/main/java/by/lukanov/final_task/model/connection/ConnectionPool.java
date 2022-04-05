@@ -40,7 +40,7 @@ public class ConnectionPool {
             DB_DRIVER = properties.getProperty("db.driver");
             Class.forName(DB_DRIVER);
         } catch (IOException e) {
-            logger.fatal(DRIVER_PROPERTIES_ERROR, e);
+            logger.fatal(READ_PROPERTIES_ERROR, e);
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
             logger.fatal(DRIVER_NOT_REGISTER, e);
