@@ -31,11 +31,6 @@
                             <div class="page-description">
                                 <h1>All users</h1>
                             </div>
-                            <c:if test="${not empty message}">
-                                <div class="alert alert-danger alert-style-light" role="alert">
-                                    <c:out value="${message}"/>
-                                </div>
-                            </c:if>
                         </div>
                     </div>
                     <div class="row">
@@ -51,7 +46,6 @@
                                             <th scope="col">Role</th>
                                             <th scope="col">Status</th>
                                             <th scope="col">Email</th>
-                                            <th scope="col">Balance</th>
                                             <th scope="col">Actions</th>
                                         </tr>
                                         </thead>
@@ -81,7 +75,6 @@
                                                          </span>
                                                     </td>
                                                 <td>${user.email}</td>
-                                                <td>$${user.balance}</td>
                                                 <td>
                                                     <div class="btn-group dropstart">
                                                         <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -90,14 +83,14 @@
                                                         <ul class="dropdown-menu">
                                                             <li>
                                                                 <form action="/controller" method="POST">
-                                                                    <input type="hidden" name="user_id" value="${user.id}">
+                                                                    <input type="hidden" name="userId" value="${user.id}">
                                                                     <input type="hidden" name="command" value="to_admin_edit_user_page">
                                                                     <input type="submit" class="dropdown-item" value="Edit">
                                                                 </form>
                                                             </li>
                                                             <li>
                                                                 <form action="/controller" method="POST">
-                                                                    <input type="hidden" name="user_id" value="${user.id}">
+                                                                    <input type="hidden" name="userId" value="${user.id}">
                                                                     <input type="hidden" name="command" value="admin_delete_user">
                                                                     <input type="submit" class="dropdown-item" value="Delete">
                                                                 </form>
