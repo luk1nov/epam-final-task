@@ -3,7 +3,7 @@ package by.lukanov.final_task.controller;
 import java.io.*;
 
 import by.lukanov.final_task.command.*;
-import by.lukanov.final_task.connection.ConnectionPool;
+import by.lukanov.final_task.model.connection.ConnectionPool;
 import by.lukanov.final_task.exception.CommandException;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
