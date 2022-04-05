@@ -18,5 +18,6 @@ public class Message {
     public static final String USER_NOT_UPDATED = "User update failed";
     public static final String USER_NOT_DELETED = "User not deleted";
 
-
+    private Message() {
+    }
 }
