@@ -1,10 +1,12 @@
 package by.lukanov.final_task.command.impl.admin;
 
 import by.lukanov.final_task.command.*;
+import by.lukanov.final_task.entity.User;
 import by.lukanov.final_task.exception.CommandException;
 import by.lukanov.final_task.exception.ServiceException;
 import by.lukanov.final_task.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,14 +18,17 @@ public class DeleteUserCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         Router router = new Router();
         String userId = request.getParameter(ParameterAndAttribute.USER_ID.getAttr()).strip();
-        boolean result;
-        try {
-            result = userService.deleteUser(userId);
-        } catch (ServiceException e) {
-            logger.error("Command exception trying delete user");
-            throw new CommandException(e);
+        HttpSession session = request.getSession(false);
+        User loggedUser = (User) session.getAttribute(ParameterAndAttribute.USER.getAttr());
+        boolean result = false;
+        if(loggedUser.getId() != Long.parseLong(userId)){
+            try {
+                result = userService.deleteUser(userId);
+            } catch (ServiceException e) {
+                logger.error("Command exception trying delete user");
+                throw new CommandException(e);
+            }
         }
-
         if(result){
             router.setPagePath(PagePath.SUCCESS_PAGE);
             router.setType(Router.Type.REDIRECT);
