@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class CarServiceImpl implements CarService {
     private static final Logger logger = LogManager.getLogger();
@@ -29,21 +30,20 @@ public class CarServiceImpl implements CarService {
         String acceleration = carData.get(CAR_INFO_ACCELERATION);
         String power = carData.get(CAR_INFO_POWER);
         String drivetrain = carData.get(CAR_INFO_DRIVETRAIN);
-
+        Optional<String> salePrice = Optional.ofNullable(carData.get(CAR_SALE_PRICE));
+        logger.info(salePrice);
         if (isOneWord(brand) && isValidCarModel(model) && isValidPrice(regularPrice) &&
-                isValidCarActive(isActive) && isValidAcceleration(acceleration) && isValidPower(power)){
+                isValidCarActive(isActive) && isValidAcceleration(acceleration) && isValidPower(power) &&
+                (salePrice.isEmpty() || isValidPrice(salePrice.get()))){
             CarInfo carInfo = new CarInfo(Double.parseDouble(acceleration), Integer.parseInt(power), CarInfo.Drivetrain.valueOf(drivetrain.toUpperCase()));
             Car car = new Car.CarBuilder()
                     .brand(brand)
                     .model(model)
                     .regularPrice(BigDecimal.valueOf(Double.parseDouble(regularPrice)))
+                    .salePrice(salePrice.isPresent() ? BigDecimal.valueOf(Double.valueOf(salePrice.get())) : null)
                     .active(Boolean.parseBoolean(isActive))
                     .carInfo(carInfo)
                     .build();
-
-            if(carData.containsKey(CAR_SALE_PRICE) && isValidPrice(carData.get(CAR_SALE_PRICE))){
-                car.setSalePrice(BigDecimal.valueOf(Double.parseDouble(carData.get(CAR_SALE_PRICE))));
-            }
             try {
                 result = carDao.insert(car);
             } catch (DaoException e) {
