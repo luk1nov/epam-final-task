@@ -43,7 +43,7 @@ public class Controller extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
+        logger.debug("process request");
         try {
             Command command = CommandProvider.defineCommand(request);
             Router router = command.execute(request);
