@@ -51,7 +51,7 @@ public class ConnectionPool {
     private ConnectionPool() {
         freeConnections = new LinkedBlockingQueue<>(POOL_SIZE);
         usedConnections = new LinkedBlockingQueue<>(POOL_SIZE);
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < POOL_SIZE; i++) {
             try {
                 Connection connection = createConnection();
                 ProxyConnection proxyConnection = new ProxyConnection(connection);
