@@ -20,7 +20,8 @@ public enum CommandType {
     ADMIN_EDIT_USER(new EditUserCommand()),
     ADMIN_DELETE_USER(new DeleteUserCommand()),
     TO_ADMIN_ALL_CARS_PAGE(new FindAllCarsCommand()),
-    ADD_NEW_CAR(new AddNewCarCommand());
+    ADD_NEW_CAR(new AddNewCarCommand()),
+    TO_ADMIN_ADD_NEW_CAR_PAGE(new ToAddNewCarCommand());
 
     private final Command command;
 
