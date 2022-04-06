@@ -77,11 +77,11 @@
                                                     <td>${car.info.power}</td>
                                                     <td>
                                                         <fmt:setLocale value="en_US"/>
-                                                        <c:if test="${car.salePrice == null}">
+                                                        <c:if test="${car.salePrice.isEmpty()}">
                                                             <fmt:formatNumber value = "${car.regularPrice}" type = "currency" maxFractionDigits = "2"/>
                                                         </c:if>
-                                                        <c:if test="${car.salePrice != null}">
-                                                            <del>${car.regularPrice}</del> <fmt:formatNumber value = "${car.salePrice}" type = "currency" maxFractionDigits = "2"/>
+                                                        <c:if test="${car.salePrice.isPresent()}">
+                                                            <del>${car.regularPrice}</del> <fmt:formatNumber value = "${car.salePrice.get()}" type = "currency" maxFractionDigits = "2"/>
                                                         </c:if>
                                                     </td>
                                                     <td>

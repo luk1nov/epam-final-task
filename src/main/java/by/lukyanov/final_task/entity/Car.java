@@ -1,6 +1,7 @@
 package by.lukyanov.final_task.entity;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 public final class Car extends AbstractEntity{
     private String brand;
@@ -38,8 +39,8 @@ public final class Car extends AbstractEntity{
         this.regularPrice = regularPrice;
     }
 
-    public BigDecimal getSalePrice() {
-        return salePrice;
+    public Optional<BigDecimal> getSalePrice() {
+        return Optional.ofNullable(salePrice);
     }
 
     public void setSalePrice(BigDecimal salePrice) {
