@@ -13,13 +13,12 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-@WebFilter(filterName = "AccessFilter", urlPatterns = {"/pages/admin/*"},
-dispatcherTypes = {DispatcherType.FORWARD, DispatcherType.REQUEST})
+/*@WebFilter(filterName = "AccessFilter", urlPatterns = {"/pages/admin/*"},
+dispatcherTypes = {DispatcherType.FORWARD, DispatcherType.REQUEST})*/
 public class AccessFilter implements Filter {
     private static final Logger logger = LogManager.getLogger();
 
     public void init(FilterConfig config) throws ServletException {
-        logger.debug("filter init");
     }
 
     @Override
@@ -31,7 +30,6 @@ public class AccessFilter implements Filter {
 
         boolean loggedIn = session != null && session.getAttribute(ParameterAndAttribute.LOGGED_USER) != null;
         final String redirectPage = httpServletRequest.getRequestURL().toString().replaceAll(httpServletRequest.getRequestURI(), "/" + PagePath.MAIN_PAGE);
-        logger.debug(redirectPage);
         if(loggedIn){
             logger.debug("logged");
             User user = (User) session.getAttribute(ParameterAndAttribute.LOGGED_USER);
@@ -49,7 +47,6 @@ public class AccessFilter implements Filter {
     }
 
     public void destroy() {
-        logger.debug("../index.jsp");
     }
 
 }
