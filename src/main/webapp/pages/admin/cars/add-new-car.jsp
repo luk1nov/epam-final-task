@@ -40,36 +40,36 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="example-content">
-                                        <form class="row g-3">
+                                        <form class="row g-3" action="/controller" method="POST">
                                             <div class="col-md-6">
                                                 <label for="inputBrand" class="form-label">Brand</label>
-                                                <select class="js-states form-control" tabindex="-1" id="inputBrand" style="display: none; width: 100%">
-                                                    <option value="CT">Audi</option>
-                                                    <option value="DE">BMW</option>
-                                                    <option value="FL">Mercedes</option>
-                                                    <option value="GA">Toyota</option>
-                                                    <option value="IN">Hyundai</option>
-                                                    <option value="ME">Mitsubishi</option>
-                                                    <option value="MD">Volkswagen</option>
-                                                    <option value="MA">Bentley</option>
-                                                    <option value="MI">Porsche</option>
+                                                <select name="carBrand" class="js-states form-control" tabindex="-1" id="inputBrand" style="display: none; width: 100%">
+                                                    <option value="Audi">Audi</option>
+                                                    <option value="BMW">BMW</option>
+                                                    <option value="Mercedes">Mercedes</option>
+                                                    <option value="Toyota">Toyota</option>
+                                                    <option value="Hyundai">Hyundai</option>
+                                                    <option value="Mitsubishi">Mitsubishi</option>
+                                                    <option value="Volkswagen">Volkswagen</option>
+                                                    <option value="Bentley">Bentley</option>
+                                                    <option value="Porsche">Porsche</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="inputModel" class="form-label">Model</label>
-                                                <input type="password" class="form-control" id="inputModel">
+                                                <input name="carModel" type="password" class="form-control" id="inputModel">
                                             </div>
                                             <div class="col-6">
                                                 <label for="inputPower" class="form-label">Power</label>
-                                                <input type="text" class="form-control" id="inputPower">
+                                                <input name="carInfoPower" type="text" class="form-control" id="inputPower">
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="inputAcceleration" class="form-label">Acceleration 0-100</label>
-                                                <input type="text" class="form-control" id="inputAcceleration">
+                                                <input name="carInfoAcceleration" type="text" class="form-control" id="inputAcceleration">
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="inputDrivetrain" class="form-label">Drivetrain</label>
-                                                <select id="inputDrivetrain" class="form-select">
+                                                <select name="carInfoDrivetrain" id="inputDrivetrain" class="form-select">
                                                     <option selected>AWD</option>
                                                     <option>RWD</option>
                                                     <option>FWD</option>
@@ -77,25 +77,26 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <label for="inputPrice" class="form-label">Price</label>
-                                                <input type="text" class="form-control" id="inputPrice">
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label for="inputOnSale" class="form-label">On sale</label>
-                                                <select id="inputOnSale" class="form-select">
-                                                    <option selected>No</option>
-                                                    <option>Yes</option>
-                                                </select>
+                                                <input name="carRegularPrice" type="text" class="form-control" id="inputPrice">
                                             </div>
                                             <div class="col-md-4">
                                                 <label for="inputSalePrice" class="form-label">Sale Price</label>
-                                                <input type="text" class="form-control" id="inputSalePrice">
+                                                <input name="carSalePrice" type="text" class="form-control" id="inputSalePrice">
                                             </div>
-                                            <div class="col-md-12">
+                                            <div class="col-md-4">
+                                                <label for="inputActive" class="form-label">Active</label>
+                                                <select name="carActive" id="inputActive" class="form-select">
+                                                    <option selected value="true">Active</option>
+                                                    <option value="false">Repair</option>
+                                                </select>
+                                            </div>
+                                            <%--<div class="col-md-12">
                                                 <label for="formFile" class="form-label">Photo</label>
                                                 <input class="form-control" type="file" id="formFile">
-                                            </div>
+                                            </div>--%>
+                                            <input type="hidden" name="command" value="add_new_car">
                                             <div class="col-12">
-                                                <button type="submit" class="btn btn-primary">Save</button>
+                                                <input type="submit" class="btn btn-primary" value="Save"/>
                                             </div>
                                         </form>
                                     </div>

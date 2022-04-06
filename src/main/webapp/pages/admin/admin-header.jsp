@@ -20,9 +20,9 @@
                         <a class="nav-link hide-sidebar-toggle-button" href="#">Log out</a>
                     </li>
                     <li class="nav-item hidden-on-mobile">
-                        <a class="nav-link language-dropdown-toggle" href="#" id="languageDropDown" data-bs-toggle="dropdown"><img src="${pageContext.request.contextPath}/resources/images/flags/us.png" alt=""></a>
+                        <a class="nav-link language-dropdown-toggle" href="#" id="languageDropDown" data-bs-toggle="dropdown"><img src="${pageContext.request.contextPath}/images/flags/us.png" alt=""></a>
                         <ul class="dropdown-menu dropdown-menu-end language-dropdown" aria-labelledby="languageDropDown">
-                            <li><a class="dropdown-item" href="#"><img src="${pageContext.request.contextPath}/resources/images/flags/russia.png" alt="">Russian</a></li>
+                            <li><a class="dropdown-item" href="#"><img src="${pageContext.request.contextPath}/images/flags/russia.png" alt="">Russian</a></li>
                         </ul>
                     </li>
                 </ul>

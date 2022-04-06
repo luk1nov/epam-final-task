@@ -41,7 +41,6 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="example-content">
-<%--                                        <c:set var="user" value="${user}" />--%>
                                         <form class="row g-3" action="controller" method="post">
                                             <div class="col-md-6">
                                                 <label for="inputName" class="form-label">Name</label>
