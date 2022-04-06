@@ -12,6 +12,7 @@ public final class PagePath {
     public static final String SUCCESS_PAGE = "pages/admin/util/success-page.jsp";
     public static final String FAIL_PAGE = "pages/admin/util/fail-page.jsp";
     public static final String ADMIN_ALL_CARS = "pages/admin/cars/all-cars.jsp";
+    public static final String ADMIN_ADD_NEW_CAR = "pages/admin/cars/add-new-car.jsp";
 
     private PagePath() {
     }
