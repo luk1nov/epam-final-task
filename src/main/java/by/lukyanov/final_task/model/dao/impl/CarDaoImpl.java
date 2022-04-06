@@ -35,17 +35,16 @@ public class CarDaoImpl implements CarDao {
     @Override
     public boolean insert(Car car) throws DaoException {
         boolean result = false;
-        Connection connection = pool.getConnection();
-        try (PreparedStatement addCarStatement = connection.prepareStatement(SQL_INSERT_NEW_CAR, Statement.RETURN_GENERATED_KEYS);
-             PreparedStatement addCarInfoStatement = connection.prepareStatement(SQL_INSERT_NEW_CAR_INFO)) {
-            connection.setAutoCommit(false); // 1
-            addCarStatement.setString(1, car.getBrand());
-            addCarStatement.setString(2, car.getModel());
-            addCarStatement.setString(3, String.valueOf(car.getRegularPrice()));
-            addCarStatement.setString(4, car.getSalePrice() != null ? String.valueOf(car.getSalePrice()) : null);
-            addCarStatement.setString(5, car.isActive() ? "1" : "0");
-            int resultSetCar = addCarStatement.executeUpdate(); // 2
-            if(resultSetCar != 0) {
+        try (Connection connection = pool.getConnection()){
+            try (PreparedStatement addCarStatement = connection.prepareStatement(SQL_INSERT_NEW_CAR, Statement.RETURN_GENERATED_KEYS);
+                 PreparedStatement addCarInfoStatement = connection.prepareStatement(SQL_INSERT_NEW_CAR_INFO)) {
+                connection.setAutoCommit(false); // 1
+                addCarStatement.setString(1, car.getBrand());
+                addCarStatement.setString(2, car.getModel());
+                addCarStatement.setString(3, car.getRegularPrice().toString());
+                addCarStatement.setString(4, car.getSalePrice().isPresent() ? car.getSalePrice().get().toString() : null);
+                addCarStatement.setString(5, car.isActive() ? "1" : "0");
+                addCarStatement.executeUpdate(); // 2
                 ResultSet resultSetCarId = addCarStatement.getGeneratedKeys();
                 if (resultSetCarId.next() && car.getInfo() != null) {
                     int carId = resultSetCarId.getInt(1);
@@ -58,28 +57,23 @@ public class CarDaoImpl implements CarDao {
                         result = true;
                         connection.commit();
                     } else {
+                        logger.info("Car didnt add since car info adding failed");
                         connection.rollback();
                     }
                 } else {
+                    logger.info("Car didnt add since car adding failed");
                     connection.rollback();
                 }
-            } else {
-                connection.rollback();
-            }
-        } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-            e.printStackTrace();
-        } finally {
-            try {
-                connection.setAutoCommit(true); // 4
-                connection.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error("Dao exception trying add new car", e);
+                connection.rollback();
+                throw new SQLException(e);
+            } finally {
+                connection.setAutoCommit(true); // 4
             }
+        } catch (SQLException e){
+            logger.error("Dao exception trying add new car", e);
+            throw new DaoException(e);
         }
         return result;
     }
