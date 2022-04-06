@@ -57,7 +57,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="inputModel" class="form-label">Model</label>
-                                                <input name="carModel" type="password" class="form-control" id="inputModel">
+                                                <input name="carModel" type="text" class="form-control" id="inputModel">
                                             </div>
                                             <div class="col-6">
                                                 <label for="inputPower" class="form-label">Power</label>
