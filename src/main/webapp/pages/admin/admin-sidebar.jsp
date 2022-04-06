@@ -33,7 +33,11 @@
                 Cars
             </li>
             <li>
-                <a href="cars/add-new-car.jsp"><i class="material-icons-two-tone">directions_car</i>Add new car</a>
+                <form action="/controller" method="POST">
+                    <input type="hidden" name="command" value="to_admin_add_new_car_page">
+                    <i class="material-icons-two-tone">directions_car</i>
+                    <input type="submit" value="Add new car">
+                </form>
             </li>
             <li>
                 <form action="/controller" method="POST">
