@@ -23,9 +23,6 @@ public class AddNewCarCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         Router router = new Router();
         boolean result;
-        //todo role access filter
-        //request executing, but filter filters only forward & redirects in the end of page
-
         String brand = request.getParameter(ParameterAndAttribute.CAR_BRAND).strip();
         String model = request.getParameter(ParameterAndAttribute.CAR_MODEL).strip();
         String regularPrice = request.getParameter(ParameterAndAttribute.CAR_REGULAR_PRICE).strip();
@@ -44,7 +41,7 @@ public class AddNewCarCommand implements Command {
         carData.put(ParameterAndAttribute.CAR_INFO_POWER, power);
         carData.put(ParameterAndAttribute.CAR_INFO_DRIVETRAIN, drivetrain);
         if(!salePrice.isBlank()){
-            carData.put(ParameterAndAttribute.CAR_SALE_PRICE, brand);
+            carData.put(ParameterAndAttribute.CAR_SALE_PRICE, salePrice);
         }
 
         try {
@@ -53,6 +50,7 @@ public class AddNewCarCommand implements Command {
             logger.error("Command exception trying add car", e);
             throw new CommandException(e);
         }
+
         if(result){
             router.setPagePath(PagePath.SUCCESS_PAGE);
             router.setType(Router.Type.REDIRECT);
