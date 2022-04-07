@@ -1,9 +1,9 @@
-package by.lukyanov.final_task.model.dao.impl;
+package by.lukyanov.finaltask.model.dao.impl;
 
-import by.lukyanov.final_task.model.dao.UserDao;
-import by.lukyanov.final_task.entity.User;
-import by.lukyanov.final_task.exception.DaoException;
-import by.lukyanov.final_task.model.connection.ConnectionPool;
+import by.lukyanov.finaltask.model.dao.UserDao;
+import by.lukyanov.finaltask.entity.User;
+import by.lukyanov.finaltask.exception.DaoException;
+import by.lukyanov.finaltask.model.connection.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -51,7 +51,7 @@ public class UserDaoImpl implements UserDao {
                 logger.info("user added - " + user);
             }
         } catch (SQLException e) {
-            logger.error("SQL exception trying insert the user", e);
+            logger.error("Dao exception trying insert the user", e);
             throw new DaoException(e);
         }
         return inserted;
@@ -94,7 +94,7 @@ public class UserDaoImpl implements UserDao {
                 users.add(user);
             }
         } catch (SQLException e) {
-            logger.error("SQL exception trying find all users", e);
+            logger.error("Dao exception trying find all users", e);
             throw new DaoException(e);
         }
         return users;
@@ -120,7 +120,7 @@ public class UserDaoImpl implements UserDao {
                 result = false;
             }
         } catch (SQLException e) {
-            logger.error("SQL exception trying authenticate user by email & pass", e);
+            logger.error("Dao exception trying authenticate user by email & pass", e);
             throw new DaoException(e);
         }
         return result;
@@ -134,23 +134,24 @@ public class UserDaoImpl implements UserDao {
              PreparedStatement statement = connection.prepareStatement(SQL_AUTHENTICATE_USER_BY_EMAIL_AND_PASS)){
             statement.setString(1, email);
             statement.setString(2, password);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()){
-                User user = new User.UserBuilder()
-                        .id(Long.parseLong(resultSet.getString(1)))
-                        .email(resultSet.getString(2))
-                        .name(resultSet.getString(3))
-                        .surname(resultSet.getString(4))
-                        .status(User.Status.valueOf(resultSet.getString(5)))
-                        .role(User.Role.valueOf(resultSet.getString(6)))
-                        .build();
-                logger.info("found user in db " + user.toString());
-                foundUser = Optional.of(user);
-            } else {
-                foundUser = Optional.empty();
+            try (ResultSet resultSet = statement.executeQuery()){
+                if (resultSet.next()){
+                    User user = new User.UserBuilder()
+                            .id(Long.parseLong(resultSet.getString(1)))
+                            .email(resultSet.getString(2))
+                            .name(resultSet.getString(3))
+                            .surname(resultSet.getString(4))
+                            .status(User.Status.valueOf(resultSet.getString(5)))
+                            .role(User.Role.valueOf(resultSet.getString(6)))
+                            .build();
+                    logger.info("found user in db " + user.toString());
+                    foundUser = Optional.of(user);
+                } else {
+                    foundUser = Optional.empty();
+                }
             }
         } catch (SQLException e) {
-            logger.error("SQL exception trying authenticate user by email & pass", e);
+            logger.error("Dao exception trying authenticate user by email & pass", e);
             throw new DaoException(e);
         }
         return foundUser;
@@ -163,23 +164,24 @@ public class UserDaoImpl implements UserDao {
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_FIND_USER_BY_EMAIL)){
             statement.setString(1, email);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()){
-                User user = new User.UserBuilder()
-                        .id(Long.parseLong(resultSet.getString(1)))
-                        .email(resultSet.getString(2))
-                        .password(resultSet.getString(3))
-                        .name(resultSet.getString(4))
-                        .surname(resultSet.getString(5))
-                        .status(User.Status.valueOf(resultSet.getString(6)))
-                        .role(User.Role.valueOf(resultSet.getString(7)))
-                        .build();
-                foundUser = Optional.of(user);
-            } else {
-                foundUser = Optional.empty();
+            try (ResultSet resultSet = statement.executeQuery()){
+                if (resultSet.next()){
+                    User user = new User.UserBuilder()
+                            .id(Long.parseLong(resultSet.getString(1)))
+                            .email(resultSet.getString(2))
+                            .password(resultSet.getString(3))
+                            .name(resultSet.getString(4))
+                            .surname(resultSet.getString(5))
+                            .status(User.Status.valueOf(resultSet.getString(6)))
+                            .role(User.Role.valueOf(resultSet.getString(7)))
+                            .build();
+                    foundUser = Optional.of(user);
+                } else {
+                    foundUser = Optional.empty();
+                }
             }
         } catch (SQLException e) {
-            logger.error("SQL exception trying find the user by email", e);
+            logger.error("Dao exception trying find the user by email", e);
             throw new DaoException(e);
         }
         return foundUser;
@@ -192,23 +194,24 @@ public class UserDaoImpl implements UserDao {
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_FIND_USER_BY_ID)){
             statement.setString(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()){
-                User user = new User.UserBuilder()
-                        .id(Long.parseLong(resultSet.getString(1)))
-                        .email(resultSet.getString(2))
-                        .password(resultSet.getString(3))
-                        .name(resultSet.getString(4))
-                        .surname(resultSet.getString(5))
-                        .status(User.Status.valueOf(resultSet.getString(6)))
-                        .role(User.Role.valueOf(resultSet.getString(7)))
-                        .build();
-                foundUser = Optional.of(user);
-            } else {
-                foundUser = Optional.empty();
+            try (ResultSet resultSet = statement.executeQuery()){
+                if (resultSet.next()){
+                    User user = new User.UserBuilder()
+                            .id(Long.parseLong(resultSet.getString(1)))
+                            .email(resultSet.getString(2))
+                            .password(resultSet.getString(3))
+                            .name(resultSet.getString(4))
+                            .surname(resultSet.getString(5))
+                            .status(User.Status.valueOf(resultSet.getString(6)))
+                            .role(User.Role.valueOf(resultSet.getString(7)))
+                            .build();
+                    foundUser = Optional.of(user);
+                } else {
+                    foundUser = Optional.empty();
+                }
             }
         } catch (SQLException e) {
-            logger.error("SQL exception trying find the user by id", e);
+            logger.error("Dao exception trying find the user by id", e);
             throw new DaoException(e);
         }
         return foundUser;
