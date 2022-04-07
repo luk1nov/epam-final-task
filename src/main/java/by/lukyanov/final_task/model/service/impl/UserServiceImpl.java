@@ -7,7 +7,7 @@ import by.lukyanov.final_task.exception.DaoException;
 import by.lukyanov.final_task.exception.ServiceException;
 import by.lukyanov.final_task.model.service.UserService;
 import by.lukyanov.final_task.util.PasswordEncoder;
-import by.lukyanov.final_task.validation.UserValidator;
+import by.lukyanov.final_task.validation.impl.ValidatorImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,12 +18,13 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private static final Logger logger = LogManager.getLogger();
     private static final UserDaoImpl userDao = UserDaoImpl.getInstance();
+    private static final ValidatorImpl validator = ValidatorImpl.getInstance();
 
     @Override
     public Optional<User> authenticate(String email, String password) throws ServiceException {
         Optional<User> user;
         String encodedPassword;
-        if(UserValidator.isValidEmail(email) && UserValidator.isValidPassword(password)){
+        if(validator.isValidEmail(email) && validator.isValidPassword(password)){
             try {
                 encodedPassword = PasswordEncoder.getInstance().encode(password);
                 user = userDao.authenticate(email, encodedPassword);
@@ -46,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
         boolean addUserResult;
 
-        if(UserValidator.isOneWord(name) && UserValidator.isValidSurname(surname) && UserValidator.isValidEmail(email) && UserValidator.isValidPassword(pass)){
+        if(validator.isOneWord(name) && validator.isValidSurname(surname) && validator.isValidEmail(email) && validator.isValidPassword(pass)){
             String encodedPass = encoder.encode(pass);
             User user = new User.UserBuilder()
                     .name(name)
@@ -73,7 +74,7 @@ public class UserServiceImpl implements UserService {
     public boolean deleteUser(String userId) throws ServiceException {
         boolean result = false;
         try {
-            if(UserValidator.isValidId(userId)){
+            if(validator.isValidId(userId)){
                 Optional<User> optionalUser = userDao.findUserById(userId);
                 if(optionalUser.isPresent()){
                     User user = optionalUser.get();
@@ -95,7 +96,7 @@ public class UserServiceImpl implements UserService {
     public Optional<User> findUserByEmail(String email) throws ServiceException {
         Optional<User> user;
         try {
-            if(UserValidator.isValidEmail(email)){
+            if(validator.isValidEmail(email)){
                 user = userDao.findUserByEmail(email);
             } else {
                 user = Optional.empty();
@@ -122,7 +123,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> findUserById(String id) throws ServiceException {
         Optional<User> user;
-        if (UserValidator.isValidId(id)){
+        if (validator.isValidId(id)){
             try {
                 user = userDao.findUserById(id);
             } catch (DaoException e) {
@@ -145,7 +146,7 @@ public class UserServiceImpl implements UserService {
         String role = userData.get(ParameterAndAttribute.USER_ROLE).toUpperCase();
         String status = userData.get(ParameterAndAttribute.USER_STATUS).toUpperCase();
         logger.info(userData.toString());
-        if(UserValidator.isValidId(userId) && UserValidator.isOneWord(name) && UserValidator.isValidSurname(surname) && UserValidator.isValidEmail(email)){
+        if(validator.isValidId(userId) && validator.isOneWord(name) && validator.isValidSurname(surname) && validator.isValidEmail(email)){
             try{
                 User user = new User.UserBuilder()
                         .id(Long.parseLong(userId))

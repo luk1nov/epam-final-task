@@ -1,9 +1,9 @@
-package by.lukyanov.final_task.validation;
+package by.lukyanov.final_task.validation.impl;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class UserValidator {
+public class ValidatorImpl {
     private static final String ONE_WORD_PATTERN = "^[A-Za-zА-Яа-яЁё]{2,40}$";
     private static final String SURNAME_PATTERN = "^[A-Za-zА-Яа-яЁё]{2,20}-[A-Za-zА-Яа-яЁё]{2,20}$|^[A-Za-zА-Яа-яЁё]{2,45}$";
     private static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,20}$";
@@ -13,38 +13,47 @@ public class UserValidator {
     private static final String PRICE_PATTERN = "^\\d{1,5}\\.\\d{1,2}$|^\\d{1,5}$";
     private static final String CAR_POWER_PATTERN = "^\\d{3}$";
     private static final String CAR_ACCELERATION_PATTERN = "^[1-5][0-9]?\\.[0-9]{1,2}$|^[1-5][0-9]?$";
+    private static ValidatorImpl instance;
 
-    public static boolean isOneWord(String name){
-        Pattern regex = Pattern.compile(ONE_WORD_PATTERN);
-        Matcher matcher = regex.matcher(name);
-        return matcher.matches();
+    private ValidatorImpl() {
     }
 
-    public static boolean isValidSurname(String surname){
+    public static ValidatorImpl getInstance(){
+        if(instance == null){
+            instance = new ValidatorImpl();
+        }
+        return instance;
+    }
+
+    public boolean isOneWord(String name){
+        return name != null ? name.matches(ONE_WORD_PATTERN) : false;
+    }
+
+    public boolean isValidSurname(String surname){
         Pattern regex = Pattern.compile(SURNAME_PATTERN);
         Matcher matcher = regex.matcher(surname);
         return matcher.matches();
     }
 
-    public static boolean isValidPassword(String password){
+    public boolean isValidPassword(String password){
         Pattern regex = Pattern.compile(PASSWORD_PATTERN);
         Matcher matcher = regex.matcher(password);
         return matcher.matches();
     }
 
-    public static boolean isValidEmail(String email){
+    public boolean isValidEmail(String email){
         Pattern regex = Pattern.compile(EMAIL_PATTERN);
         Matcher matcher = regex.matcher(email);
         return matcher.matches();
     }
 
-    public static boolean isValidId(String id){
+    public boolean isValidId(String id){
         Pattern regex = Pattern.compile(ID_PATTERN);
         Matcher matcher = regex.matcher(id);
         return matcher.matches();
     }
 
-    public static boolean isValidCarActive(String active){
+    public boolean isValidCarActive(String active){
         // todo null check
         if (active.equals("true") || active.equals("false")){
             return true;
@@ -52,25 +61,25 @@ public class UserValidator {
         return false;
     }
 
-    public static boolean isValidCarModel(String model){
+    public boolean isValidCarModel(String model){
         Pattern regex = Pattern.compile(CAR_MODEL_PATTERN);
         Matcher matcher = regex.matcher(model);
         return matcher.matches();
     }
 
-    public static boolean isValidPrice(String price){
+    public boolean isValidPrice(String price){
         Pattern regex = Pattern.compile(PRICE_PATTERN);
         Matcher matcher = regex.matcher(price);
         return matcher.matches();
     }
 
-    public static boolean isValidAcceleration(String acceleration){
+    public boolean isValidAcceleration(String acceleration){
         Pattern regex = Pattern.compile(CAR_ACCELERATION_PATTERN);
         Matcher matcher = regex.matcher(acceleration);
         return matcher.matches();
     }
 
-    public static boolean isValidPower(String power){
+    public boolean isValidPower(String power){
         Pattern regex = Pattern.compile(CAR_POWER_PATTERN);
         Matcher matcher = regex.matcher(power);
         return matcher.matches();

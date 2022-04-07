@@ -7,7 +7,9 @@ import by.lukyanov.final_task.exception.DaoException;
 import by.lukyanov.final_task.exception.ServiceException;
 import by.lukyanov.final_task.model.dao.impl.CarDaoImpl;
 import by.lukyanov.final_task.model.service.CarService;
-import static by.lukyanov.final_task.validation.UserValidator.*;
+import static by.lukyanov.final_task.validation.impl.ValidatorImpl.*;
+
+import by.lukyanov.final_task.validation.impl.ValidatorImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,6 +21,7 @@ import java.util.Optional;
 public class CarServiceImpl implements CarService {
     private static final Logger logger = LogManager.getLogger();
     private static final CarDaoImpl carDao = CarDaoImpl.getInstance();
+    private static final ValidatorImpl validator = ValidatorImpl.getInstance();
 
     @Override
     public boolean addCar(Map<String, String> carData) throws ServiceException {
@@ -32,15 +35,15 @@ public class CarServiceImpl implements CarService {
         String drivetrain = carData.get(CAR_INFO_DRIVETRAIN);
         Optional<String> salePrice = Optional.ofNullable(carData.get(CAR_SALE_PRICE));
         logger.info(salePrice);
-        if (isOneWord(brand) && isValidCarModel(model) && isValidPrice(regularPrice) &&
-                isValidCarActive(isActive) && isValidAcceleration(acceleration) && isValidPower(power) &&
-                (salePrice.isEmpty() || isValidPrice(salePrice.get()))){
+        if (validator.isOneWord(brand) && validator.isValidCarModel(model) && validator.isValidPrice(regularPrice) &&
+                validator.isValidCarActive(isActive) && validator.isValidAcceleration(acceleration) && validator.isValidPower(power) &&
+                (salePrice.isEmpty() || validator.isValidPrice(salePrice.get()))){
             CarInfo carInfo = new CarInfo(Double.parseDouble(acceleration), Integer.parseInt(power), CarInfo.Drivetrain.valueOf(drivetrain.toUpperCase()));
             Car car = new Car.CarBuilder()
                     .brand(brand)
                     .model(model)
                     .regularPrice(BigDecimal.valueOf(Double.parseDouble(regularPrice)))
-                    .salePrice(salePrice.isPresent() ? BigDecimal.valueOf(Double.valueOf(salePrice.get())) : null)
+                    .salePrice(salePrice.isPresent() ? BigDecimal.valueOf(Double.parseDouble(salePrice.get())) : null)
                     .active(Boolean.parseBoolean(isActive))
                     .carInfo(carInfo)
                     .build();
