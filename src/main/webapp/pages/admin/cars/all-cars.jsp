@@ -90,76 +90,19 @@
                                                                 Action
                                                             </button>
                                                             <ul class="dropdown-menu">
-                                                                <li><a class="dropdown-item" href="edit_car.html">Edit</a></li>
+                                                                <li>
+                                                                    <form action="/controller" method="POST">
+                                                                        <input type="hidden" name="carId" value="${car.id}">
+                                                                        <input type="hidden" name="command" value="to_edit_car_page">
+                                                                        <input type="submit" class="dropdown-item" value="Edit">
+                                                                    </form>
+                                                                </li>
                                                                 <li><a class="dropdown-item" href="#">Delete</a></li>
                                                                 <li><a class="dropdown-item" href="#">Send for repair</a></li>
                                                             </ul>
                                                         </div>
                                                     </td>
                                                 </tr>
-                                                <%--<tr>
-                                                    <td>Audi</td>
-                                                    <td>RS5 2019</td>
-                                                    <td><span class="badge badge-style-light rounded-pill badge-success">Active</span></td>
-                                                    <td>4.2s</td>
-                                                    <td>AWD</td>
-                                                    <td>637hp</td>
-                                                    <td>$499.00</td>
-                                                    <td>
-                                                        <div class="btn-group dropstart">
-                                                            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                Action
-                                                            </button>
-                                                            <ul class="dropdown-menu">
-                                                                <li><a class="dropdown-item" href="edit_car.html">Edit</a></li>
-                                                                <li><a class="dropdown-item" href="#">Delete</a></li>
-                                                                <li><a class="dropdown-item" href="#">Send for repair</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Mercedes</td>
-                                                    <td>E63s 2021</td>
-                                                    <td><span class="badge badge-style-light rounded-pill badge-success">Active</span></td>
-                                                    <td>3.4s</td>
-                                                    <td>AWD</td>
-                                                    <td>737hp</td>
-                                                    <td>$649.00</td>
-                                                    <td>
-                                                        <div class="btn-group dropstart">
-                                                            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                Action
-                                                            </button>
-                                                            <ul class="dropdown-menu">
-                                                                <li><a class="dropdown-item" href="edit_car.html">Edit</a></li>
-                                                                <li><a class="dropdown-item" href="#">Delete</a></li>
-                                                                <li><a class="dropdown-item" href="#">Send for repair</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>BMW</td>
-                                                    <td>M5 CS 2022</td>
-                                                    <td><span class="badge badge-style-light rounded-pill badge-danger">Repair</span></td>
-                                                    <td>3.3s</td>
-                                                    <td>AWD</td>
-                                                    <td>823hp</td>
-                                                    <td><del>$799.00</del> $499.00</td>
-                                                    <td>
-                                                        <div class="btn-group dropstart">
-                                                            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                Action
-                                                            </button>
-                                                            <ul class="dropdown-menu">
-                                                                <li><a class="dropdown-item" href="edit_car.html">Edit</a></li>
-                                                                <li><a class="dropdown-item" href="#">Delete</a></li>
-                                                                <li><a class="dropdown-item" href="#">Finish repair</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </td>
-                                                </tr>--%>
                                             </c:forEach>
                                         </tbody>
                                     </table>
