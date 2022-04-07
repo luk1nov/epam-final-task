@@ -11,7 +11,7 @@ public class CommandProvider {
     }
 
     public static Command defineCommand(HttpServletRequest request){
-        String command = request.getParameter(ParameterAndAttribute.COMMAND.toString().toLowerCase());
+        String command = request.getParameter(ParameterAndAttribute.COMMAND.toLowerCase());
 
         if(command == null){
             logger.error("command null");
