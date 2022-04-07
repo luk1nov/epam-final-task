@@ -2,12 +2,9 @@ package by.lukyanov.final_task.controller;
 
 import java.io.*;
 
+import by.lukyanov.final_task.command.*;
 import by.lukyanov.final_task.model.connection.ConnectionPool;
 import by.lukyanov.final_task.exception.CommandException;
-import by.lukyanov.final_task.command.Command;
-import by.lukyanov.final_task.command.CommandProvider;
-import by.lukyanov.final_task.command.PagePath;
-import by.lukyanov.final_task.command.Router;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
@@ -45,7 +42,7 @@ public class Controller extends HttpServlet {
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("process request");
         try {
-            Command command = CommandProvider.defineCommand(request);
+            Command command = CommandType.define(request);
             Router router = command.execute(request);
 
             switch (router.getType()) {
