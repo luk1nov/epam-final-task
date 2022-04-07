@@ -46,26 +46,18 @@ public class CarDaoImpl implements CarDao {
                 addCarStatement.setString(5, car.isActive() ? "1" : "0");
                 addCarStatement.executeUpdate(); // 2
                 ResultSet resultSetCarId = addCarStatement.getGeneratedKeys();
-                if (resultSetCarId.next() && car.getInfo() != null) {
+                if (resultSetCarId.next() ) {
                     int carId = resultSetCarId.getInt(1);
                     addCarInfoStatement.setString(1, String.valueOf(car.getInfo().getAcceleration()));
                     addCarInfoStatement.setString(2, String.valueOf(car.getInfo().getPower()));
                     addCarInfoStatement.setString(3, car.getInfo().getDrivetrain().toString());
                     addCarInfoStatement.setString(4, String.valueOf(carId));
-                    int resultSetCarInfo = addCarInfoStatement.executeUpdate();
-                    if (resultSetCarInfo != 0){
-                        result = true;
-                        connection.commit();
-                    } else {
-                        logger.info("Car didnt add since car info adding failed");
-                        connection.rollback();
-                    }
-                } else {
-                    logger.info("Car didnt add since car adding failed");
-                    connection.rollback();
+                    addCarInfoStatement.executeUpdate();
+                    result = true;
+                    connection.commit();
                 }
             } catch (SQLException e) {
-                logger.error("Dao exception trying add new car", e);
+                logger.error("SQL exception trying add new car", e);
                 connection.rollback();
                 throw new SQLException(e);
             } finally {
