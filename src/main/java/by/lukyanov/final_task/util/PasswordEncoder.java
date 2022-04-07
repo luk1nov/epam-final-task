@@ -11,6 +11,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class PasswordEncoder {
     private static final Logger logger = LogManager.getLogger();
+    private static final String ENCRYPTION_METHOD = "SHA-1";
     private static PasswordEncoder instance;
 
     private PasswordEncoder() {
@@ -24,14 +25,13 @@ public class PasswordEncoder {
     }
 
     public String encode(String decodedPassword) throws ServiceException {
-        byte[] encodedBytes;
+        byte[] encodedBytes = new byte[0];
         try {
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
+            MessageDigest messageDigest = MessageDigest.getInstance(ENCRYPTION_METHOD);
             messageDigest.update(decodedPassword.getBytes(StandardCharsets.UTF_8));
             encodedBytes = messageDigest.digest();
         } catch (NoSuchAlgorithmException e) {
             logger.error(e.getMessage());
-            throw new ServiceException(e.getMessage());
         }
         BigInteger bigInteger = new BigInteger(1, encodedBytes);
         String encodedPassword = bigInteger.toString(16);
