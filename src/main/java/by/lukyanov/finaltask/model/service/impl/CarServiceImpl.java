@@ -1,15 +1,12 @@
-package by.lukyanov.final_task.model.service.impl;
+package by.lukyanov.finaltask.model.service.impl;
 
-import static by.lukyanov.final_task.command.ParameterAndAttribute.*;
-import by.lukyanov.final_task.entity.Car;
-import by.lukyanov.final_task.entity.CarInfo;
-import by.lukyanov.final_task.exception.DaoException;
-import by.lukyanov.final_task.exception.ServiceException;
-import by.lukyanov.final_task.model.dao.impl.CarDaoImpl;
-import by.lukyanov.final_task.model.service.CarService;
-import static by.lukyanov.final_task.validation.impl.ValidatorImpl.*;
-
-import by.lukyanov.final_task.validation.impl.ValidatorImpl;
+import by.lukyanov.finaltask.entity.Car;
+import by.lukyanov.finaltask.entity.CarInfo;
+import by.lukyanov.finaltask.exception.DaoException;
+import by.lukyanov.finaltask.exception.ServiceException;
+import by.lukyanov.finaltask.model.dao.impl.CarDaoImpl;
+import by.lukyanov.finaltask.model.service.CarService;
+import by.lukyanov.finaltask.validation.impl.ValidatorImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,6 +14,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static by.lukyanov.finaltask.command.ParameterAndAttribute.*;
 
 public class CarServiceImpl implements CarService {
     private static final Logger logger = LogManager.getLogger();
@@ -34,11 +33,19 @@ public class CarServiceImpl implements CarService {
         String power = carData.get(CAR_INFO_POWER);
         String drivetrain = carData.get(CAR_INFO_DRIVETRAIN);
         Optional<String> salePrice = Optional.ofNullable(carData.get(CAR_SALE_PRICE));
-        logger.info(salePrice);
+
         if (validator.isOneWord(brand) && validator.isValidCarModel(model) && validator.isValidPrice(regularPrice) &&
                 validator.isValidCarActive(isActive) && validator.isValidAcceleration(acceleration) && validator.isValidPower(power) &&
                 (salePrice.isEmpty() || validator.isValidPrice(salePrice.get()))){
             CarInfo carInfo = new CarInfo(Double.parseDouble(acceleration), Integer.parseInt(power), CarInfo.Drivetrain.valueOf(drivetrain.toUpperCase()));
+            if (salePrice.isPresent()){
+                BigDecimal decimalSalePrice = new BigDecimal(salePrice.get());
+                BigDecimal decimalRegularPrice = new BigDecimal(regularPrice);
+                if(decimalSalePrice.compareTo(decimalRegularPrice) != -1){
+                    logger.info("sale price greater than regular");
+                    return false;
+                }
+            }
             Car car = new Car.CarBuilder()
                     .brand(brand)
                     .model(model)
@@ -69,6 +76,22 @@ public class CarServiceImpl implements CarService {
             throw new ServiceException(e);
         }
         return cars;
+    }
+
+    @Override
+    public Optional<Car> findCarById(String id) throws ServiceException {
+        Optional<Car> car;
+        if (validator.isValidId(id)){
+            try {
+                car = carDao.findCarById(id);
+            } catch (DaoException e) {
+                logger.error("Service exception trying find car by id");
+                throw new ServiceException(e);
+            }
+        } else {
+            car = Optional.empty();
+        }
+        return car;
     }
 
 }
