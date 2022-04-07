@@ -79,15 +79,15 @@ public class ConnectionPool {
     }
 
     public static ConnectionPool getInstance(){
-        try {
-            locker.lock();
-            if(instance == null){
+        if(instance == null){
+            try {
+                locker.lock();
                 if(isInstanceInitialized.compareAndSet(false, true)){
                     instance = new ConnectionPool();
                 }
+            } finally {
+                locker.unlock();
             }
-        } finally {
-            locker.unlock();
         }
         return instance;
     }
@@ -103,7 +103,7 @@ public class ConnectionPool {
         return connection;
     }
 
-    public ProxyConnection getConnection(){
+    public Connection getConnection(){
         ProxyConnection connection = null;
         try {
             connection = freeConnections.take();
@@ -116,15 +116,20 @@ public class ConnectionPool {
         return connection;
     }
 
-    public void releaseConnection(ProxyConnection connection){
-        try {
-            usedConnections.remove(connection);
-            freeConnections.put(connection);
-        } catch (InterruptedException e) {
-            logger.error(Message.RELEASE_CON_EXCEPT);
-            Thread.currentThread().interrupt();
+    public boolean releaseConnection(Connection connection){
+        if(connection instanceof ProxyConnection proxyConnection){
+            try {
+                usedConnections.remove(proxyConnection);
+                freeConnections.put(proxyConnection);
+            } catch (InterruptedException e) {
+                logger.error(Message.RELEASE_CON_EXCEPT);
+                Thread.currentThread().interrupt();
+            }
+            logger.debug("availible " + freeConnections.size());
+            return true;
+        } else {
+            return false;
         }
-        logger.debug("availible " + freeConnections.size());
     }
 
     public void destroyPool(){
