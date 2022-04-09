@@ -92,7 +92,8 @@ public final class Car extends AbstractEntity{
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Car{");
-        sb.append("brand='").append(brand).append('\'');
+        sb.append("id='").append(this.getId()).append('\'');
+        sb.append(", brand='").append(brand).append('\'');
         sb.append(", model='").append(model).append('\'');
         sb.append(", regularPrice=").append(regularPrice);
         sb.append(", salePrice=").append(salePrice);
