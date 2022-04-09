@@ -28,7 +28,7 @@ public enum CommandType {
     ADD_NEW_CAR(new AddNewCarCommand()),
     TO_ADMIN_ADD_NEW_CAR_PAGE(new ToAddNewCarCommand()),
     TO_EDIT_CAR_PAGE(new ToEditCarCommand()),
-    EDIT_CAR(new DefaultCommand()); //TODO
+    EDIT_CAR(new EditCarCommand());
 
     private static final Logger logger = LogManager.getLogger();
     private final Command command;
