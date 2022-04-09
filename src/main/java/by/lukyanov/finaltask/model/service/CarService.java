@@ -16,4 +16,7 @@ public interface CarService {
 
     Optional<Car> findCarById(String id) throws ServiceException;
 
+    boolean updateCar(Map<String, String> carData) throws ServiceException;
+
+
 }

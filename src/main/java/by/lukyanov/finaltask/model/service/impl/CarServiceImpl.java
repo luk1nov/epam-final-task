@@ -37,7 +37,6 @@ public class CarServiceImpl implements CarService {
         if (validator.isOneWord(brand) && validator.isValidCarModel(model) && validator.isValidPrice(regularPrice) &&
                 validator.isValidCarActive(isActive) && validator.isValidAcceleration(acceleration) && validator.isValidPower(power) &&
                 (salePrice.isEmpty() || validator.isValidPrice(salePrice.get()))){
-            CarInfo carInfo = new CarInfo(Double.parseDouble(acceleration), Integer.parseInt(power), CarInfo.Drivetrain.valueOf(drivetrain.toUpperCase()));
             if (salePrice.isPresent()){
                 BigDecimal decimalSalePrice = new BigDecimal(salePrice.get());
                 BigDecimal decimalRegularPrice = new BigDecimal(regularPrice);
@@ -46,10 +45,11 @@ public class CarServiceImpl implements CarService {
                     return false;
                 }
             }
+            CarInfo carInfo = new CarInfo(Double.parseDouble(acceleration), Integer.parseInt(power), CarInfo.Drivetrain.valueOf(drivetrain.toUpperCase()));
             Car car = new Car.CarBuilder()
                     .brand(brand)
                     .model(model)
-                    .regularPrice(BigDecimal.valueOf(Double.parseDouble(regularPrice)))
+                    .regularPrice(new BigDecimal(regularPrice))
                     .salePrice(salePrice.isPresent() ? BigDecimal.valueOf(Double.parseDouble(salePrice.get())) : null)
                     .active(Boolean.parseBoolean(isActive))
                     .carInfo(carInfo)
@@ -92,6 +92,52 @@ public class CarServiceImpl implements CarService {
             car = Optional.empty();
         }
         return car;
+    }
+
+    @Override
+    public boolean updateCar(Map<String, String> carData) throws ServiceException {
+        boolean result = false;
+        String carId = carData.get(CAR_ID);
+        String brand = carData.get(CAR_BRAND);
+        String model = carData.get(CAR_MODEL);
+        String regularPrice = carData.get(CAR_REGULAR_PRICE);
+        String isActive = carData.get(CAR_ACTIVE);
+        String acceleration = carData.get(CAR_INFO_ACCELERATION);
+        String power = carData.get(CAR_INFO_POWER);
+        String drivetrain = carData.get(CAR_INFO_DRIVETRAIN);
+        Optional<String> salePrice = Optional.ofNullable(carData.get(CAR_SALE_PRICE));
+
+        if (validator.isOneWord(brand) && validator.isValidCarModel(model) && validator.isValidPrice(regularPrice) &&
+                validator.isValidCarActive(isActive) && validator.isValidAcceleration(acceleration) && validator.isValidPower(power) &&
+                (salePrice.isEmpty() || validator.isValidPrice(salePrice.get()))){
+            if (salePrice.isPresent()){
+                BigDecimal decimalSalePrice = new BigDecimal(salePrice.get());
+                BigDecimal decimalRegularPrice = new BigDecimal(regularPrice);
+                if(decimalSalePrice.compareTo(decimalRegularPrice) != -1){
+                    logger.info("sale price greater than regular");
+                    return false;
+                }
+            }
+            CarInfo carInfo = new CarInfo(Double.parseDouble(acceleration), Integer.parseInt(power), CarInfo.Drivetrain.valueOf(drivetrain.toUpperCase()));
+            Car car = new Car.CarBuilder()
+                    .id(Long.valueOf(carId))
+                    .brand(brand)
+                    .model(model)
+                    .regularPrice(new BigDecimal(regularPrice))
+                    .salePrice(salePrice.isPresent() ? BigDecimal.valueOf(Double.parseDouble(salePrice.get())) : null)
+                    .active(Boolean.parseBoolean(isActive))
+                    .carInfo(carInfo)
+                    .build();
+            try {
+                result = carDao.update(car);
+            } catch (DaoException e) {
+                logger.error("Service exception trying edit car", e);
+                throw new ServiceException(e);
+            }
+        } else {
+            logger.info("Provided invalid car data");
+        }
+        return result;
     }
 
 }
