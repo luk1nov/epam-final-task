@@ -21,6 +21,8 @@ public class CarDaoImpl implements CarDao {
     private static final String SQL_FIND_CAR_BY_ID = "SELECT cars.car_id, cars.brand, cars.model, cars.regular_price, cars.sale_price, cars.is_active, car_info.acceleration, car_info.power, car_info.drivetrain FROM cars LEFT JOIN car_info ON cars.car_id = car_info.cars_car_id WHERE car_id = ?";
     private static final String SQL_INSERT_NEW_CAR = "INSERT INTO cars (brand,model,regular_price,sale_price,is_active) values(?,?,?,?,?)";
     private static final String SQL_INSERT_NEW_CAR_INFO = "INSERT INTO car_info (acceleration,power,drivetrain,cars_car_id) values(?,?,?,?)";
+    private static final String SQL_UPDATE_CAR_BY_ID = "UPDATE cars SET brand = ?, model = ?, regular_price = ?, sale_price = ?, is_active = ? WHERE car_id = ?";
+    private static final String SQL_UPDATE_CAR_INFO_BY_CAR_ID = "UPDATE car_info SET acceleration = ?, power = ?, drivetrain = ? WHERE cars_car_id = ?";
     private static CarDaoImpl instance;
     private final ConnectionPool pool = ConnectionPool.getInstance();
 
@@ -108,7 +110,43 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean update(Car car) throws DaoException {
-        return false;
+        boolean updated;
+        logger.debug(car.toString());
+        try (Connection connection = pool.getConnection()){
+            try (PreparedStatement carStatement = connection.prepareStatement(SQL_UPDATE_CAR_BY_ID);
+            PreparedStatement carInfoStatement = connection.prepareStatement(SQL_UPDATE_CAR_INFO_BY_CAR_ID)){
+//                connection.setAutoCommit(false);
+                carStatement.setString(1, car.getBrand());
+                carStatement.setString(2, car.getModel());
+                carStatement.setString(3, car.getRegularPrice().toString());
+                carStatement.setString(4, car.getSalePrice().isPresent() ? car.getSalePrice().get().toString() : null);
+                carStatement.setString(5, car.isActive() ? "1" : "0");
+                carStatement.setLong(6, car.getId());
+                int result = carStatement.executeUpdate();
+                if (result != 0) {
+                    carInfoStatement.setString(1, car.getInfo().getAcceleration().toString());
+                    carInfoStatement.setString(2, car.getInfo().getPower().toString());
+                    carInfoStatement.setString(3, car.getInfo().getDrivetrain().toString());
+                    carInfoStatement.setLong(4, car.getId());
+                    carInfoStatement.executeUpdate();
+                    updated = true;
+//                    connection.commit();
+                } else{
+                    updated = false;
+//                    connection.rollback();
+                }
+            } catch (SQLException e){
+                logger.error("SQL exception trying update car - rollback", e);
+//                connection.rollback();
+                throw new SQLException(e);
+            } finally {
+//                connection.setAutoCommit(true);
+            }
+        } catch (SQLException e) {
+            logger.error("Dao exception trying edit car", e);
+            throw new DaoException(e);
+        }
+        return updated;
     }
 
 
