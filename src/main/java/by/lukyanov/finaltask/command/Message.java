@@ -18,6 +18,8 @@ public final class Message {
     public static final String USER_NOT_UPDATED = "User update failed";
     public static final String USER_NOT_DELETED = "User not deleted";
     public static final String READ_PROPERTIES_ERROR = "Error reading properties for db";
+    public static final String CAR_NOT_EDITED = "Car not edited";
+    public static final String CAR_NOT_ADDED = "Car not added";
 
     private Message() {
     }

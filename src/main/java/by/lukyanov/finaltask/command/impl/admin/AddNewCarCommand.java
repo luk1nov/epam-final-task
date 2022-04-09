@@ -14,7 +14,8 @@ import org.apache.logging.log4j.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AddNewCarCommand implements Command {
+import static by.lukyanov.finaltask.command.Message.*;
+import static by.lukyanov.finaltask.command.ParameterAndAttribute.*;public class AddNewCarCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
     private static final CarServiceImpl carService = new CarServiceImpl();
 
@@ -55,7 +56,7 @@ public class AddNewCarCommand implements Command {
             router.setType(Router.Type.REDIRECT);
         } else {
             router.setPagePath(PagePath.FAIL_PAGE);
-            request.setAttribute(ParameterAndAttribute.MESSAGE, "car not added");
+            request.setAttribute(MESSAGE, CAR_NOT_ADDED);
         }
         return router;
     }
