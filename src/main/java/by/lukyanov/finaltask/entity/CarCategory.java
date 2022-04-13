@@ -1,6 +1,6 @@
 package by.lukyanov.finaltask.entity;
 
-public class CarCategory extends AbstractEntity{
+public final class CarCategory extends AbstractEntity{
     private String title;
 
     public CarCategory(String title) {

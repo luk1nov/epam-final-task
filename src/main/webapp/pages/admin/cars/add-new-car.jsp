@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -75,15 +76,23 @@
                                                     <option>FWD</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
+                                                <label for="inputCarCategory" class="form-label">Category</label>
+                                                <select name="carCategory" id="inputCarCategory" class="form-select">
+                                                    <c:forEach var="category" items="${list}">
+                                                        <option value="<c:out value="${category.id}"/>"><c:out value="${category.title}"/></option>
+                                                    </c:forEach>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
                                                 <label for="inputPrice" class="form-label">Price</label>
                                                 <input name="carRegularPrice" type="text" class="form-control" id="inputPrice">
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <label for="inputSalePrice" class="form-label">Sale Price</label>
                                                 <input name="carSalePrice" type="text" class="form-control" id="inputSalePrice">
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <label for="inputActive" class="form-label">Active</label>
                                                 <select name="carActive" id="inputActive" class="form-select">
                                                     <option selected value="true">Active</option>
