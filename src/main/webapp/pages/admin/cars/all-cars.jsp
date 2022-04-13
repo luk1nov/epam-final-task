@@ -93,7 +93,7 @@
                                                                 <li>
                                                                     <form action="/controller" method="POST">
                                                                         <input type="hidden" name="carId" value="${car.id}">
-                                                                        <input type="hidden" name="command" value="to_edit_car_page">
+                                                                        <input type="hidden" name="command" value="admin_to_edit_car">
                                                                         <input type="submit" class="dropdown-item" value="Edit">
                                                                     </form>
                                                                 </li>

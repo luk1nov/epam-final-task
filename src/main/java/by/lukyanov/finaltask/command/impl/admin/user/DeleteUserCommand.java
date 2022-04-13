@@ -1,4 +1,4 @@
-package by.lukyanov.finaltask.command.impl.admin;
+package by.lukyanov.finaltask.command.impl.admin.user;
 
 import by.lukyanov.finaltask.entity.User;
 import by.lukyanov.finaltask.exception.CommandException;

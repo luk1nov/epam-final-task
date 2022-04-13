@@ -24,7 +24,7 @@
             </li>
             <li>
                 <form action="/controller" method="POST">
-                    <input type="hidden" name="command" value="to_admin_all_users_page">
+                    <input type="hidden" name="command" value="admin_to_all_users">
                     <i class="material-icons-two-tone">people</i>
                     <input type="submit" value="All users">
                 </form>
@@ -34,14 +34,21 @@
             </li>
             <li>
                 <form action="/controller" method="POST">
-                    <input type="hidden" name="command" value="to_admin_add_new_car_page">
+                    <input type="hidden" name="command" value="admin_to_all_car_categories">
+                    <i class="material-icons-two-tone">category</i>
+                    <input type="submit" value="All categories">
+                </form>
+            </li>
+            <li>
+                <form action="/controller" method="POST">
+                    <input type="hidden" name="command" value="admin_to_add_new_car">
                     <i class="material-icons-two-tone">directions_car</i>
                     <input type="submit" value="Add new car">
                 </form>
             </li>
             <li>
                 <form action="/controller" method="POST">
-                    <input type="hidden" name="command" value="to_admin_all_cars_page">
+                    <input type="hidden" name="command" value="admin_to_all_cars">
                     <i class="material-icons-two-tone">garage</i>
                     <input type="submit" value="All cars">
                 </form>

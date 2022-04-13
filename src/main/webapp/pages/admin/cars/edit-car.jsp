@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Add new car</title>
+    <title>Edit car</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -41,7 +41,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="example-content">
-                                        <form class="row g-3" action="/controller" method="POST">
+                                        <form class="row g-3" action="/controller" method="POST" enctype="multipart/form-data">
                                             <div class="col-md-6">
                                                 <label for="inputBrand" class="form-label">Brand</label>
                                                 <select name="carBrand" class="js-states form-control" tabindex="-1" id="inputBrand" style="display: none; width: 100%">
@@ -91,11 +91,19 @@
                                                     <option value="false" <c:if test="${car.active == false}">selected</c:if>>Repair</option>
                                                 </select>
                                             </div>
-                                            <%--<div class="col-md-12">
+                                            <div class="col-md-12">
                                                 <label for="formFile" class="form-label">Photo</label>
-                                                <input class="form-control" type="file" id="formFile">
-                                            </div>--%>
-                                            <input type="hidden" name="command" value="edit_car">
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-text">
+                                                        <input name="changeImage" class="form-check-input mt-0" type="checkbox" value="true" aria-label="Checkbox for following text input">
+                                                    </div>
+                                                    <input name="carImage" type="file" class="form-control" id="formFile" aria-label="Text input with checkbox">
+                                                </div>
+                                            </div>
+                                            <c:if test="${car.image ne null}">
+                                                <img src="data:image/jpg;base64,${car.image}"/>
+                                            </c:if>
+                                            <input type="hidden" name="command" value="admin_edit_car">
                                             <input type="hidden" name="carId" value="${car.id}">
                                             <div class="col-12">
                                                 <input type="submit" class="btn btn-primary" value="Save"/>

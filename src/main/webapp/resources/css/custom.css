@@ -103,4 +103,29 @@ li.admin-home-link form input[type="submit"], .accordion-menu li form input[type
     filter: invert(34%) sepia(23%) saturate(3309%) hue-rotate(195deg) brightness(109%) contrast(115%);
 }
 
+.car-card-row {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.car-card-row>*{
+    width: auto;
+    margin: 0;
+}
+
+.car-card-img{
+    display: block;
+    width: inherit;
+    height: inherit;
+    object-fit: fill;
+}
+
+.car-card-img-container{
+    width: 305px;
+    height: 183px;
+    overflow: hidden;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
 

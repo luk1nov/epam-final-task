@@ -22,12 +22,21 @@ public class ParameterAndAttribute {
     public static final String CAR_REGULAR_PRICE = "carRegularPrice";
     public static final String CAR_SALE_PRICE = "carSalePrice";
     public static final String CAR_ACTIVE = "carActive";
+    public static final String CAR_IMAGE = "carImage";
+    public static final String CAR_CATEGORY = "carCategory";
     public static final String CAR_INFO_ACCELERATION = "carInfoAcceleration";
     public static final String CAR_INFO_POWER = "carInfoPower";
     public static final String CAR_INFO_DRIVETRAIN = "carInfoDrivetrain";
+    public static final String CHANGE_IMAGE = "changeImage";
+    public static final String CAR_CATEGORY_TITLE = "carCategoryTitle";
+    public static final String CAR_CATEGORY_ID = "carCategoryId";
 
-//    session
+    /* session */
     public static final String LOGGED_USER = "loggedUser";
+
+
+    /* util */
+    public static final String LIST = "list";
 
     private ParameterAndAttribute() {
     }

@@ -84,7 +84,7 @@
                                                             <li>
                                                                 <form action="/controller" method="POST">
                                                                     <input type="hidden" name="userId" value="${user.id}">
-                                                                    <input type="hidden" name="command" value="to_admin_edit_user_page">
+                                                                    <input type="hidden" name="command" value="admin_to_edit_user">
                                                                     <input type="submit" class="dropdown-item" value="Edit">
                                                                 </form>
                                                             </li>

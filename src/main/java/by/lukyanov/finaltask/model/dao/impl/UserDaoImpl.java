@@ -57,7 +57,6 @@ public class UserDaoImpl implements UserDao {
         return inserted;
     }
 
-    @Override
     public boolean delete(User user) throws DaoException {
         ConnectionPool pool = ConnectionPool.getInstance();
         boolean result = false;

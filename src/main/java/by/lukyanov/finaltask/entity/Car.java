@@ -9,6 +9,8 @@ public final class Car extends AbstractEntity{
     private BigDecimal regularPrice;
     private BigDecimal salePrice;
     private boolean active;
+    private String image;
+    private CarCategory carCategory;
     private CarInfo info;
 
     public Car() {
@@ -55,6 +57,22 @@ public final class Car extends AbstractEntity{
         this.active = active;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public CarCategory getCarCategory() {
+        return carCategory;
+    }
+
+    public void setCarCategory(CarCategory carCategory) {
+        this.carCategory = carCategory;
+    }
+
     public CarInfo getInfo() {
         return info;
     }
@@ -74,6 +92,8 @@ public final class Car extends AbstractEntity{
         if (model != null ? !model.equals(car.model) : car.model != null) return false;
         if (regularPrice != null ? !regularPrice.equals(car.regularPrice) : car.regularPrice != null) return false;
         if (salePrice != null ? !salePrice.equals(car.salePrice) : car.salePrice != null) return false;
+        if (image != null ? !image.equals(car.image) : car.image != null) return false;
+        if (carCategory != null ? !carCategory.equals(car.carCategory) : car.carCategory != null) return false;
         return info != null ? info.equals(car.info) : car.info == null;
     }
 
@@ -85,6 +105,8 @@ public final class Car extends AbstractEntity{
         result = 31 * result + (regularPrice != null ? regularPrice.hashCode() : 0);
         result = 31 * result + (salePrice != null ? salePrice.hashCode() : 0);
         result = 31 * result + (active ? 1 : 0);
+        result = 31 * result + (image != null ? image.hashCode() : 0);
+        result = 31 * result + (carCategory != null ? carCategory.hashCode() : 0);
         result = 31 * result + (info != null ? info.hashCode() : 0);
         return result;
     }
@@ -98,6 +120,8 @@ public final class Car extends AbstractEntity{
         sb.append(", regularPrice=").append(regularPrice);
         sb.append(", salePrice=").append(salePrice);
         sb.append(", active=").append(active);
+        sb.append(", image='").append(image).append('\'');
+        sb.append(", carCategory=").append(carCategory);
         sb.append(", info=").append(info);
         sb.append('}');
         return sb.toString();
@@ -137,6 +161,16 @@ public final class Car extends AbstractEntity{
 
         public CarBuilder active(boolean active){
             car.active = active;
+            return this;
+        }
+
+        public CarBuilder image(String image){
+            car.image = image;
+            return this;
+        }
+
+        public CarBuilder category(CarCategory category){
+            car.carCategory = category;
             return this;
         }
 

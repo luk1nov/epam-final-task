@@ -14,6 +14,10 @@ public final class PagePath {
     public static final String ADMIN_ALL_CARS = "pages/admin/cars/all-cars.jsp";
     public static final String ADMIN_ADD_NEW_CAR = "pages/admin/cars/add-new-car.jsp";
     public static final String ADMIN_EDIT_CAR = "pages/admin/cars/edit-car.jsp";
+    public static final String CAR_CATEGORY_PAGE = "pages/car-category.jsp";
+    public static final String ADMIN_ALL_CAR_CATEGORIES = "pages/admin/cars/all-categories.jsp";
+    public static final String ADMIN_ADD_CAR_CATEGORY = "pages/admin/cars/add-new-car-category.jsp";
+    public static final String ADMIN_EDIT_CAR_CATEGORY = "pages/admin/cars/edit-car-category.jsp";
 
     private PagePath() {
     }

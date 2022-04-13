@@ -40,7 +40,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="example-content">
-                                        <form class="row g-3" action="/controller" method="POST">
+                                        <form class="row g-3" action="/controller" method="POST" enctype="multipart/form-data">
                                             <div class="col-md-6">
                                                 <label for="inputBrand" class="form-label">Brand</label>
                                                 <select name="carBrand" class="js-states form-control" tabindex="-1" id="inputBrand" style="display: none; width: 100%">
@@ -90,11 +90,11 @@
                                                     <option value="false">Repair</option>
                                                 </select>
                                             </div>
-                                            <%--<div class="col-md-12">
+                                            <div class="col-md-12">
                                                 <label for="formFile" class="form-label">Photo</label>
-                                                <input class="form-control" type="file" id="formFile">
-                                            </div>--%>
-                                            <input type="hidden" name="command" value="add_new_car">
+                                                <input name="carImage" class="form-control" type="file" id="formFile">
+                                            </div>
+                                            <input type="hidden" name="command" value="admin_add_new_car">
                                             <div class="col-12">
                                                 <input type="submit" class="btn btn-primary" value="Save"/>
                                             </div>

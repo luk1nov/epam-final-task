@@ -1,4 +1,4 @@
-package by.lukyanov.finaltask.command.impl.admin;
+package by.lukyanov.finaltask.command.impl.admin.car;
 
 import by.lukyanov.finaltask.command.Command;
 import by.lukyanov.finaltask.command.Message;
@@ -29,7 +29,7 @@ public class ToEditCarCommand implements Command {
             Optional<Car> optionalCar = carService.findCarById(carId);
             if (optionalCar.isPresent()){
                 Car car = optionalCar.get();
-                logger.debug("car found " + car.getId());
+                logger.debug("car found " + car);
                 router.setPagePath(PagePath.ADMIN_EDIT_CAR);
                 request.setAttribute(CAR, car);
             } else{

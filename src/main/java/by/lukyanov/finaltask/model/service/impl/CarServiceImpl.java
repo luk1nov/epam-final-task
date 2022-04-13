@@ -10,7 +10,9 @@ import by.lukyanov.finaltask.validation.impl.ValidatorImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,7 +25,7 @@ public class CarServiceImpl implements CarService {
     private static final ValidatorImpl validator = ValidatorImpl.getInstance();
 
     @Override
-    public boolean addCar(Map<String, String> carData) throws ServiceException {
+    public boolean addCar(Map<String, String> carData, InputStream carImage) throws ServiceException {
         boolean result = false;
         String brand = carData.get(CAR_BRAND);
         String model = carData.get(CAR_MODEL);
@@ -55,7 +57,11 @@ public class CarServiceImpl implements CarService {
                     .carInfo(carInfo)
                     .build();
             try {
-                result = carDao.insert(car);
+                if(carImage != null){
+                    result = carDao.insertWithImage(car, carImage);
+                } else {
+                    result = carDao.insert(car);
+                }
             } catch (DaoException e) {
                 logger.error("Service exception trying add car", e);
                 throw new ServiceException(e);
@@ -95,7 +101,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public boolean updateCar(Map<String, String> carData) throws ServiceException {
+    public boolean updateCar(Map<String, String> carData, InputStream carImage) throws ServiceException {
         boolean result = false;
         String carId = carData.get(CAR_ID);
         String brand = carData.get(CAR_BRAND);
@@ -106,6 +112,7 @@ public class CarServiceImpl implements CarService {
         String power = carData.get(CAR_INFO_POWER);
         String drivetrain = carData.get(CAR_INFO_DRIVETRAIN);
         Optional<String> salePrice = Optional.ofNullable(carData.get(CAR_SALE_PRICE));
+        String changeImg = carData.get(CHANGE_IMAGE);
 
         if (validator.isOneWord(brand) && validator.isValidCarModel(model) && validator.isValidPrice(regularPrice) &&
                 validator.isValidCarActive(isActive) && validator.isValidAcceleration(acceleration) && validator.isValidPower(power) &&
@@ -118,18 +125,22 @@ public class CarServiceImpl implements CarService {
                     return false;
                 }
             }
-            CarInfo carInfo = new CarInfo(Double.parseDouble(acceleration), Integer.parseInt(power), CarInfo.Drivetrain.valueOf(drivetrain.toUpperCase()));
-            Car car = new Car.CarBuilder()
-                    .id(Long.valueOf(carId))
-                    .brand(brand)
-                    .model(model)
-                    .regularPrice(new BigDecimal(regularPrice))
-                    .salePrice(salePrice.isPresent() ? BigDecimal.valueOf(Double.parseDouble(salePrice.get())) : null)
-                    .active(Boolean.parseBoolean(isActive))
-                    .carInfo(carInfo)
-                    .build();
             try {
-                result = carDao.update(car);
+                CarInfo carInfo = new CarInfo(Double.parseDouble(acceleration), Integer.parseInt(power), CarInfo.Drivetrain.valueOf(drivetrain.toUpperCase()));
+                Car car = new Car.CarBuilder()
+                        .id(Long.valueOf(carId))
+                        .brand(brand)
+                        .model(model)
+                        .regularPrice(new BigDecimal(regularPrice))
+                        .salePrice(salePrice.isPresent() ? BigDecimal.valueOf(Double.parseDouble(salePrice.get())) : null)
+                        .active(Boolean.parseBoolean(isActive))
+                        .carInfo(carInfo)
+                        .build();
+                if(changeImg.equalsIgnoreCase("true")){
+                    result = carDao.updateWithImage(car, carImage);
+                } else {
+                    result = carDao.update(car);
+                }
             } catch (DaoException e) {
                 logger.error("Service exception trying edit car", e);
                 throw new ServiceException(e);
@@ -138,6 +149,22 @@ public class CarServiceImpl implements CarService {
             logger.info("Provided invalid car data");
         }
         return result;
+    }
+
+    @Override
+    public List<Car> findCarsByCategoryId(String id) throws ServiceException {
+        List<Car> cars;
+        if (validator.isValidId(id)) {
+            try {
+                cars = carDao.findCarsByCategoryId(id);
+            } catch (DaoException e) {
+                logger.error("Service exception trying find cars by category id");
+                throw new ServiceException(e);
+            }
+        } else {
+            cars = new ArrayList<>();
+        }
+        return cars;
     }
 
 }

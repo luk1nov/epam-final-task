@@ -12,7 +12,7 @@ public class ValidatorImpl {
     private static final String CAR_MODEL_PATTERN = "^[A-Za-zА-Яа-яЁё\\-0-9]{2,20}$";
     private static final String PRICE_PATTERN = "^\\d{1,5}\\.\\d{1,2}$|^\\d{1,5}$";
     private static final String CAR_POWER_PATTERN = "^\\d{3}$";
-    private static final String CAR_ACCELERATION_PATTERN = "^[1-5][0-9]?\\.[0-9]{1,2}$|^[1-5][0-9]?$";
+    private static final String CAR_ACCELERATION_PATTERN = "^([1-5][0-9]|[1-9])(\\.[0-9])?$";
     private static ValidatorImpl instance;
 
     private ValidatorImpl() {

@@ -18,60 +18,7 @@
 
 <div class="app full-width-header align-content-stretch d-flex flex-wrap">
     <div class="app-container" style="width: 100vw; margin-right: 280px;">
-        <div class="app-header" style="width: 100%;">
-            <nav class="navbar navbar-light navbar-expand-lg">
-                <div class="container-fluid">
-                    <div class="navbar-nav" id="navbarNav">
-                        <a href="${pageContext.request.contextPath}/controller?command=default" class="logo" style="text-decoration: none">Car Rental</a>
-                    </div>
-                    <div class="d-flex">
-                        <ul class="navbar-nav">
-                            <li class="nav-item hidden-on-mobile">
-                                <a class="nav-link" href="#">Cars</a>
-                            </li>
-                            <li class="nav-item hidden-on-mobile">
-                                <a class="nav-link" href="#">E-Cars</a>
-                            </li>
-                            <li class="nav-item hidden-on-mobile">
-                                <a class="nav-link" href="#">Premium</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="d-flex">
-                        <ul class="navbar-nav">
-                            <c:if test="${sessionScope.loggedUser.role eq 'ADMIN' or sessionScope.loggedUser.role eq 'MANAGER'}" >
-                                <li class="nav-item hidden-on-mobile" style="align-self: center;padding: 0 10px;">
-                                    <form action="/controller" method="POST">
-                                        <input type="hidden" name="command" value="to_admin_all_users_page">
-                                        <input type="submit" class="btn btn-outline-info" value="Admin panel">
-                                    </form>
-                                </li>
-                            </c:if>
-                            <c:if test="${empty sessionScope.loggedUser}" >
-                                <li class="nav-item hidden-on-mobile">
-                                    <a class="nav-link" href="${pageContext.request.contextPath}/controller?command=to_signup_page">Sign Up</a>
-                                </li>
-                                <li class="nav-item hidden-on-mobile">
-                                    <a class="nav-link" href="${pageContext.request.contextPath}/controller?command=to_signin_page">Log In</a>
-                                </li>
-                            </c:if>
-                            <c:if test="${not empty sessionScope.loggedUser}" >
-                                <li class="nav-item hidden-on-mobile">
-                                    <a class="nav-link" href="${pageContext.request.contextPath}/controller?command=log_out">Log Out</a>
-                                </li>
-                            </c:if>
-                            <li class="nav-item hidden-on-mobile">
-                                <a class="nav-link language-dropdown-toggle" href="#" id="languageDropDown" data-bs-toggle="dropdown"><img src="${pageContext.request.contextPath}/resources/images/flags/us.png" alt=""></a>
-                                <ul class="dropdown-menu dropdown-menu-end language-dropdown" aria-labelledby="languageDropDown">
-                                    <li><a class="dropdown-item" href="#"><img src="${pageContext.request.contextPath}/resources/images/flags/russia.png" alt="">Russian</a></li>
-                                </ul>
-                            </li>
-
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-        </div>
+        <c:import url="pages/components/header.jsp"/>
         <div class="app-content">
             <div class="content-wrapper">
                 <div class="container-fluid">
@@ -100,9 +47,20 @@
                             <div class="card">
                                 <img src="${pageContext.request.contextPath}/resources/images/cards/card.png" class="card-img-top" alt="...">
                                 <div class="card-body">
-                                    <h5 class="card-title">Card title</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                                    <h5 class="card-title">Bentley continental 2019</h5>
+                                    <p class="card-text">
+                                        Acceleration 0-100: 3.3s<br>
+                                        Power: 670hp<br>
+                                        Drivetrain: AWD<br>
+                                    </p>
+                                    <div class="row car-card-row">
+                                        <p class="card-text">Price: $600/hour</p>
+                                        <form action="/controller" method="POST">
+                                            <input type="hidden" name="car_id" value="">
+                                            <input type="hidden" name="command" value="">
+                                            <input class="btn btn-primary" type="submit" value="Rent">
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>

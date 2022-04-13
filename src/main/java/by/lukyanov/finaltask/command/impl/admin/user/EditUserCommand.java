@@ -1,4 +1,4 @@
-package by.lukyanov.finaltask.command.impl.admin;
+package by.lukyanov.finaltask.command.impl.admin.user;
 
 import by.lukyanov.finaltask.command.Command;
 import by.lukyanov.finaltask.command.PagePath;
@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static by.lukyanov.finaltask.command.Message.*;
+import static by.lukyanov.finaltask.command.ParameterAndAttribute.*;
 
 public class EditUserCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -24,20 +25,20 @@ public class EditUserCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         boolean updated;
         Router router = new Router();
-        String userId = request.getParameter(ParameterAndAttribute.USER_ID).strip();
-        String name = request.getParameter(ParameterAndAttribute.USER_NAME).strip();
-        String surname = request.getParameter(ParameterAndAttribute.USER_SURNAME).strip();
-        String email = request.getParameter(ParameterAndAttribute.USER_EMAIL).strip();
-        String role = request.getParameter(ParameterAndAttribute.USER_ROLE).strip();
-        String status = request.getParameter(ParameterAndAttribute.USER_STATUS).strip();
+        String userId = request.getParameter(USER_ID).strip();
+        String name = request.getParameter(USER_NAME).strip();
+        String surname = request.getParameter(USER_SURNAME).strip();
+        String email = request.getParameter(USER_EMAIL).strip();
+        String role = request.getParameter(USER_ROLE).strip();
+        String status = request.getParameter(USER_STATUS).strip();
 
         Map<String, String> userData = new HashMap<>();
-        userData.put(ParameterAndAttribute.USER_ID, userId);
-        userData.put(ParameterAndAttribute.USER_NAME, name);
-        userData.put(ParameterAndAttribute.USER_SURNAME, surname);
-        userData.put(ParameterAndAttribute.USER_EMAIL, email);
-        userData.put(ParameterAndAttribute.USER_STATUS, status);
-        userData.put(ParameterAndAttribute.USER_ROLE, role);
+        userData.put(USER_ID, userId);
+        userData.put(USER_NAME, name);
+        userData.put(USER_SURNAME, surname);
+        userData.put(USER_EMAIL, email);
+        userData.put(USER_STATUS, status);
+        userData.put(USER_ROLE, role);
 
         try {
             updated = userService.updateUser(userData);

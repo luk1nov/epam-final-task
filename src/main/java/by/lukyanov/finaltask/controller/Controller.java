@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
 @WebServlet(name = "controller", urlPatterns = "/controller")
+@MultipartConfig(maxFileSize = 16177215)
 public class Controller extends HttpServlet {
     private static final Logger logger = LogManager.getLogger();
 

@@ -35,7 +35,7 @@ public class CommandFilter implements Filter {
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         HttpSession session = httpServletRequest.getSession(false);
         Command command = CommandType.define(httpServletRequest);
-        EnumSet<CommandType> notAccessibleCommandTypes = EnumSet.range(CommandType.TO_ADMIN_ALL_USERS_PAGE, CommandType.TO_ADMIN_ADD_NEW_CAR_PAGE);
+        EnumSet<CommandType> notAccessibleCommandTypes = EnumSet.range(CommandType.ADMIN_TO_ALL_USERS, CommandType.ADMIN_EDIT_CAR_CATEGORY);
         final String redirectPage = httpServletRequest.getRequestURL().toString().replaceAll(httpServletRequest.getRequestURI(), "/" + PagePath.MAIN_PAGE);
         List<Command> notAccessibleCommands = notAccessibleCommandTypes.stream().map(CommandType::getCommand).toList();
 
