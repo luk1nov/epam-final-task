@@ -42,6 +42,7 @@
                                         <thead>
                                         <tr>
                                             <th scope="col">ID</th>
+                                            <th scope="col">Category</th>
                                             <th scope="col">Brand</th>
                                             <th scope="col">Model</th>
                                             <th scope="col">Status</th>
@@ -57,6 +58,7 @@
                                             <c:forEach var="car" items="${all_cars}">
                                                 <tr>
                                                     <td>${car.id}</td>
+                                                    <td>${car.carCategory.title}</td>
                                                     <td>${car.brand}</td>
                                                     <td>${car.model}</td>
                                                     <td>
@@ -97,8 +99,26 @@
                                                                         <input type="submit" class="dropdown-item" value="Edit">
                                                                     </form>
                                                                 </li>
-                                                                <li><a class="dropdown-item" href="#">Delete</a></li>
-                                                                <li><a class="dropdown-item" href="#">Send for repair</a></li>
+                                                                <li>
+                                                                    <form action="/controller" method="POST">
+                                                                        <input type="hidden" name="carId" value="${car.id}">
+                                                                        <input type="hidden" name="command" value="admin_delete_car">
+                                                                        <input type="submit" class="dropdown-item" value="Delete">
+                                                                    </form>
+                                                                </li>
+                                                                <li>
+                                                                    <form action="/controller" method="POST">
+                                                                        <input type="hidden" name="carId" value="${car.id}">
+                                                                        <input type="hidden" name="command" value="admin_change_car_active_status">
+                                                                        <input type="hidden" name="carActive" value="<c:out value="${car.active}"/>">
+                                                                        <c:if test="${car.active == true}">
+                                                                            <input type="submit" class="dropdown-item" value="Send for repair">
+                                                                        </c:if>
+                                                                        <c:if test="${car.active == false}">
+                                                                            <input type="submit" class="dropdown-item" value="Receive from repair">
+                                                                        </c:if>
+                                                                    </form>
+                                                                </li>
                                                             </ul>
                                                         </div>
                                                     </td>
