@@ -12,6 +12,10 @@ public final class CarCategory extends AbstractEntity{
         this.title = title;
     }
 
+    public CarCategory(Long id) {
+        this.setId(id);
+    }
+
     public String getTitle() {
         return title;
     }
