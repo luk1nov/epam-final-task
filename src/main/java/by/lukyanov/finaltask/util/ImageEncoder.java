@@ -1,5 +1,6 @@
 package by.lukyanov.finaltask.util;
 
+import by.lukyanov.finaltask.exception.DaoException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,7 +25,7 @@ public final class ImageEncoder {
         return instance;
     }
 
-    public String encodeBlob(Blob blob) throws SQLException, IOException {
+    public String encodeBlob(Blob blob) throws DaoException {
         String base64Image = null;
         if (blob != null){
             logger.debug("blob not null");
@@ -37,12 +38,9 @@ public final class ImageEncoder {
                 }
                 byte[] imageBytes = outputStream.toByteArray();
                 base64Image = Base64.getEncoder().encodeToString(imageBytes);
-            } catch (IOException e) {
-                logger.error("image read error", e);
-                throw new IOException(e);
-            } catch (SQLException e) {
-                logger.error("image read error", e);
-                throw new SQLException(e);
+            } catch (SQLException | IOException e) {
+                logger.error("Dao exception trying encode blob", e);
+                throw new DaoException(e);
             }
         }
         return base64Image;

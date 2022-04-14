@@ -19,12 +19,6 @@ import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 public class Controller extends HttpServlet {
     private static final Logger logger = LogManager.getLogger();
 
-    @Override
-    public void init() throws ServletException {
-        logger.info("Servlet initialized " + this.getServletName());
-        ConnectionPool.getInstance();
-    }
-
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         processRequest(request, response);
     }

@@ -51,29 +51,25 @@ public class ConnectionPool {
     private ConnectionPool() {
         freeConnections = new LinkedBlockingQueue<>(POOL_SIZE);
         usedConnections = new LinkedBlockingQueue<>(POOL_SIZE);
-        for (int i = 0; i < POOL_SIZE; i++) {
+        try {
+            for (int i = 0; i < POOL_SIZE; i++) {
+                createConnection();
+            }
+        } catch (InterruptedException | SQLException e) {
+            logger.error("connection didn't created");
+        }
+        if(freeConnections.size() != POOL_SIZE){
+            logger.warn(Message.POOL_NOT_FULL);
             try {
-                Connection connection = createConnection();
-                ProxyConnection proxyConnection = new ProxyConnection(connection);
-                freeConnections.put(proxyConnection);
-            } catch (InterruptedException e) {
-                logger.error("connection didn't created");
-            }
-        }
-        if(freeConnections.size() != POOL_SIZE){
-            logger.error(Message.POOL_NOT_FULL);
-            for (int i = freeConnections.size(); i < POOL_SIZE; i++) {
-                try {
-                    Connection connection = createConnection();
-                    ProxyConnection proxyConnection = new ProxyConnection(connection);
-                    freeConnections.put(proxyConnection);
-                } catch (InterruptedException e) {
-                    logger.error("connection didn't created again");
+                for (int i = freeConnections.size(); i < POOL_SIZE; i++) {
+                    createConnection();
                 }
+            } catch (InterruptedException | SQLException e) {
+                logger.error("connection didn't created again");
             }
-        }
-        if(freeConnections.size() != POOL_SIZE){
-            throw new ExceptionInInitializerError(Message.POOL_FILL_ERROR);
+            if(freeConnections.size() != POOL_SIZE){
+                throw new ExceptionInInitializerError(Message.POOL_FILL_ERROR);
+            }
         }
         logger.info("Connection pool init " + freeConnections.size());
     }
@@ -92,14 +88,10 @@ public class ConnectionPool {
         return instance;
     }
 
-    private Connection createConnection(){
-        Connection connection;
-        try {
-            connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-        } catch (SQLException e) {
-            logger.fatal(Message.POOL_INIT_ERROR, e);
-            throw new RuntimeException();
-        }
+    private Connection createConnection() throws SQLException, InterruptedException {
+        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+        ProxyConnection proxyConnection = new ProxyConnection(connection);
+        freeConnections.put(proxyConnection);
         return connection;
     }
 
@@ -133,8 +125,7 @@ public class ConnectionPool {
     }
 
     public void destroyPool(){
-        logger.info("free connections " + freeConnections.size());
-        logger.info("used connections " + usedConnections.size());
+        logger.info("free " + freeConnections.size() + "/ used " + usedConnections.size());
         for (int i = 0; i < POOL_SIZE; i++) {
             try{
                 freeConnections.take().reallyClose();

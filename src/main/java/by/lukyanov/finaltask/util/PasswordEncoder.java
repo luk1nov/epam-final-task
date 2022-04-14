@@ -11,7 +11,7 @@ import java.security.NoSuchAlgorithmException;
 
 public final class PasswordEncoder {
     private static final Logger logger = LogManager.getLogger();
-    private static final String ENCRYPTION_METHOD = "SHA-1";
+    private static final String ENCRYPTION_METHOD = "SHA-1"; //TODO new encryption method
     private static PasswordEncoder instance;
 
     private PasswordEncoder() {
@@ -24,7 +24,7 @@ public final class PasswordEncoder {
         return instance;
     }
 
-    public String encode(String decodedPassword) throws ServiceException {
+    public String encode(String decodedPassword) {
         byte[] encodedBytes = new byte[0];
         try {
             MessageDigest messageDigest = MessageDigest.getInstance(ENCRYPTION_METHOD);

@@ -59,17 +59,18 @@ public enum CommandType {
 
     public static Command define(HttpServletRequest request){
         String command = request.getParameter(ParameterAndAttribute.COMMAND.toLowerCase());
-
+        Command definedCommand;
         if(command == null){
             logger.error("command null");
-            return DEFAULT.getCommand();
+            definedCommand = DEFAULT.getCommand();
+        } else {
+            try {
+                definedCommand = valueOf(command.toUpperCase()).getCommand();
+            } catch (IllegalArgumentException e){
+                logger.error(e.getMessage());
+                definedCommand = DEFAULT.getCommand();
+            }
         }
-
-        try {
-            return valueOf(command.toUpperCase()).getCommand();
-        } catch (IllegalArgumentException e){
-            logger.error(e.getMessage());
-            return DEFAULT.getCommand();
-        }
+        return definedCommand;
     }
 }
