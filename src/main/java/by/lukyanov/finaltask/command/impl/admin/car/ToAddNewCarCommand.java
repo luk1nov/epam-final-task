@@ -22,9 +22,9 @@ public class ToAddNewCarCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         Router router = new Router();
-        List<CarCategory> carCategoryList;
+
         try {
-            carCategoryList = carCategoryService.findAllCarCategories();
+            List<CarCategory> carCategoryList = carCategoryService.findAllCarCategories();
             request.setAttribute(LIST, carCategoryList);
             router.setPagePath(PagePath.ADMIN_ADD_NEW_CAR);
         } catch (ServiceException e) {
