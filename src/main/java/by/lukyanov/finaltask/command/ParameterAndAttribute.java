@@ -27,7 +27,7 @@ public class ParameterAndAttribute {
     public static final String CAR_INFO_ACCELERATION = "carInfoAcceleration";
     public static final String CAR_INFO_POWER = "carInfoPower";
     public static final String CAR_INFO_DRIVETRAIN = "carInfoDrivetrain";
-    public static final String CHANGE_IMAGE = "changeImage";
+    public static final String UPLOAD_IMAGE = "uploadImage";
     public static final String CAR_CATEGORY_TITLE = "carCategoryTitle";
     public static final String CAR_CATEGORY_ID = "carCategoryId";
 

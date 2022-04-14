@@ -37,6 +37,8 @@ public enum CommandType {
     ADMIN_ADD_NEW_CAR(new AddNewCarCommand()),
     ADMIN_TO_EDIT_CAR(new ToEditCarCommand()),
     ADMIN_EDIT_CAR(new EditCarCommand()),
+    ADMIN_DELETE_CAR(new DeleteCarCommand()),
+    ADMIN_CHANGE_CAR_ACTIVE_STATUS(new ChangeCarActiveCommand()),
     ADMIN_TO_ADD_NEW_CAR_CATEGORY(new ToAddNewCarCategoryCommand()),
     ADMIN_ADD_NEW_CAR_CATEGORY(new AddNewCarCategoryCommand()),
     ADMIN_TO_ALL_CAR_CATEGORIES(new FindAllCarCategoriesCommand()),

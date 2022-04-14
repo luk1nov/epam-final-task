@@ -33,10 +33,11 @@ public class EditCarCommand implements Command {
         String regularPrice = request.getParameter(CAR_REGULAR_PRICE).strip();
         String salePrice = request.getParameter(CAR_SALE_PRICE).strip();
         String carActive = request.getParameter(CAR_ACTIVE).strip();
+        String carCategoryId = request.getParameter(CAR_CATEGORY_ID).strip();
         String acceleration = request.getParameter(CAR_INFO_ACCELERATION).strip();
         String power = request.getParameter(CAR_INFO_POWER).strip();
         String drivetrain = request.getParameter(CAR_INFO_DRIVETRAIN).strip();
-        String changeImg = request.getParameter(CHANGE_IMAGE) != null ? "true" : "false";
+        String uploadImg = request.getParameter(UPLOAD_IMAGE) != null ? "true" : "false";
 
         Map<String, String> carData = new HashMap<>();
         carData.put(CAR_ID, carId);
@@ -44,11 +45,11 @@ public class EditCarCommand implements Command {
         carData.put(CAR_MODEL, model);
         carData.put(CAR_REGULAR_PRICE, regularPrice);
         carData.put(CAR_ACTIVE, carActive);
+        carData.put(CAR_CATEGORY_ID, carCategoryId);
         carData.put(CAR_INFO_ACCELERATION, acceleration);
         carData.put(CAR_INFO_POWER, power);
         carData.put(CAR_INFO_DRIVETRAIN, drivetrain);
-        carData.put(CHANGE_IMAGE, changeImg);
-
+        carData.put(UPLOAD_IMAGE, uploadImg);
         if(!salePrice.isBlank()){
             carData.put(ParameterAndAttribute.CAR_SALE_PRICE, salePrice);
         }

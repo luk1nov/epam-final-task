@@ -30,7 +30,6 @@ public class CommandFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        logger.debug("command filter");
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         HttpSession session = httpServletRequest.getSession(false);
@@ -42,11 +41,9 @@ public class CommandFilter implements Filter {
         boolean loggedIn = (session != null && session.getAttribute(LOGGED_USER) != null);
 
         if (notAccessibleCommands.contains(command)){
-            logger.debug("admin command");
             if(loggedIn){
                 User user = (User) session.getAttribute(ParameterAndAttribute.LOGGED_USER);
                 if(user.getRole() == User.Role.ADMIN || user.getRole() == User.Role.MANAGER){
-                    logger.debug("user admin");
                     chain.doFilter(request, response);
                 } else {
                     logger.debug("user not admin");
@@ -57,7 +54,6 @@ public class CommandFilter implements Filter {
                 httpServletResponse.sendRedirect(redirectPage);
             }
         } else {
-            logger.debug("not admin command");
             chain.doFilter(request, response);
         }
 

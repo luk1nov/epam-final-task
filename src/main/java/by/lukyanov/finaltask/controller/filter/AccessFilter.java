@@ -23,7 +23,6 @@ public class AccessFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
-        logger.debug("access filter");
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         HttpSession session = httpServletRequest.getSession(false);
@@ -31,13 +30,11 @@ public class AccessFilter implements Filter {
         boolean loggedIn = session != null && session.getAttribute(ParameterAndAttribute.LOGGED_USER) != null;
         final String redirectPage = httpServletRequest.getRequestURL().toString().replaceAll(httpServletRequest.getRequestURI(), "/" + PagePath.MAIN_PAGE);
         if(loggedIn){
-            logger.debug("logged");
             User user = (User) session.getAttribute(ParameterAndAttribute.LOGGED_USER);
             if(user.getRole() == User.Role.ADMIN || user.getRole() == User.Role.MANAGER){
-                logger.debug("logged admin or manager");
                 chain.doFilter(request, response);
             } else {
-                logger.debug("logged user");
+                logger.debug("logged usual user");
                 httpServletResponse.sendRedirect(redirectPage);
             }
         } else {
