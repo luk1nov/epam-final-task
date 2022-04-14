@@ -60,7 +60,15 @@
                                                 <label for="inputModel" class="form-label">Model</label>
                                                 <input name="carModel" type="text" class="form-control" id="inputModel" value="${car.model}">
                                             </div>
-                                            <div class="col-6">
+                                            <div class="col-md-3">
+                                                <label for="inputCarCategory" class="form-label">Category</label>
+                                                <select name="carCategoryId" id="inputCarCategory" class="form-select">
+                                                    <c:forEach var="category" items="${list}">
+                                                        <option value="<c:out value="${category.id}"/>"><c:out value="${category.title}"/></option>
+                                                    </c:forEach>
+                                                </select>
+                                            </div>
+                                            <div class="col-3">
                                                 <label for="inputPower" class="form-label">Power</label>
                                                 <input name="carInfoPower" type="text" class="form-control" id="inputPower" value="${car.info.power}">
                                             </div>
@@ -95,7 +103,7 @@
                                                 <label for="formFile" class="form-label">Photo</label>
                                                 <div class="input-group mb-3">
                                                     <div class="input-group-text">
-                                                        <input name="changeImage" class="form-check-input mt-0" type="checkbox" value="true" aria-label="Checkbox for following text input">
+                                                        <input name="uploadImage" class="form-check-input mt-0" type="checkbox" value="true" aria-label="Checkbox for following text input">
                                                     </div>
                                                     <input name="carImage" type="file" class="form-control" id="formFile" aria-label="Text input with checkbox">
                                                 </div>
