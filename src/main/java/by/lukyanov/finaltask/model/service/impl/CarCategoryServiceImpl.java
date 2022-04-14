@@ -16,6 +16,7 @@ public class CarCategoryServiceImpl implements CarCategoryService {
     private static final Logger logger = LogManager.getLogger();
     private static final CarCategoryDaoImpl carCategoryDao = CarCategoryDaoImpl.getInstance();
     private static final ValidatorImpl validator = ValidatorImpl.getInstance();
+    private static final String DEFAULT_CAR_CATEGORY_ID = "1";
 
 
     @Override
@@ -84,7 +85,7 @@ public class CarCategoryServiceImpl implements CarCategoryService {
     @Override
     public boolean deleteCarCategory(String id) throws ServiceException {
         boolean result = false;
-        if (validator.isValidId(id)){
+        if (validator.isValidId(id) && !id.equals(DEFAULT_CAR_CATEGORY_ID)){
             try {
                 result = carCategoryDao.delete(id);
             } catch (DaoException e) {
