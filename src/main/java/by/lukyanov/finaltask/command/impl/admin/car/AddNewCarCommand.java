@@ -8,7 +8,6 @@ import by.lukyanov.finaltask.exception.ServiceException;
 import by.lukyanov.finaltask.model.service.impl.CarServiceImpl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.Part;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,32 +26,30 @@ public class AddNewCarCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         Router router = new Router();
-        boolean result;
         String brand = request.getParameter(CAR_BRAND).strip();
         String model = request.getParameter(CAR_MODEL).strip();
         String regularPrice = request.getParameter(CAR_REGULAR_PRICE).strip();
         String salePrice = request.getParameter(CAR_SALE_PRICE).strip();
         String carActive = request.getParameter(CAR_ACTIVE).strip();
+        String carCategoryId = request.getParameter(CAR_CATEGORY).strip();
         String acceleration = request.getParameter(CAR_INFO_ACCELERATION).strip();
         String power = request.getParameter(CAR_INFO_POWER).strip();
         String drivetrain = request.getParameter(CAR_INFO_DRIVETRAIN).strip();
+
         Map<String, String> carData = new HashMap<>();
         carData.put(CAR_BRAND, brand);
         carData.put(CAR_MODEL, model);
         carData.put(CAR_REGULAR_PRICE, regularPrice);
         carData.put(CAR_ACTIVE, carActive);
+        carData.put(CAR_CATEGORY_ID, carCategoryId);
         carData.put(CAR_INFO_ACCELERATION, acceleration);
         carData.put(CAR_INFO_POWER, power);
         carData.put(CAR_INFO_DRIVETRAIN, drivetrain);
+
         if(!salePrice.isBlank()){
             carData.put(CAR_SALE_PRICE, salePrice);
         }
-        try {
-            Part filePart = request.getPart(CAR_IMAGE);
-            InputStream is = null;
-            if (filePart != null){
-                is = filePart.getInputStream();
-            }
+        try (InputStream is = request.getPart(CAR_IMAGE).getInputStream()){
             if(carService.addCar(carData, is)){
                 router.setPagePath(PagePath.SUCCESS_PAGE);
                 router.setType(Router.Type.REDIRECT);
