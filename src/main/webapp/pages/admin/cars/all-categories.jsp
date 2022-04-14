@@ -64,11 +64,13 @@
                                                             <input type="hidden" name="command" value="admin_to_edit_car_category">
                                                             <input type="submit" class="btn btn-info" value="Edit">
                                                         </form>
-                                                        <form action="/controller" method="POST">
-                                                            <input type="hidden" name="carCategoryId" value="<c:out value="${category.id}"/>">
-                                                            <input type="hidden" name="command" value="admin_delete_car_category">
-                                                            <input type="submit" class="btn btn-danger" value="Delete">
-                                                        </form>
+                                                        <c:if test="${category.id != 1}">
+                                                            <form action="/controller" method="POST">
+                                                                <input type="hidden" name="carCategoryId" value="<c:out value="${category.id}"/>">
+                                                                <input type="hidden" name="command" value="admin_delete_car_category">
+                                                                <input type="submit" class="btn btn-danger" value="Delete">
+                                                            </form>
+                                                        </c:if>
                                                     </div>
                                                 </td>
                                             </tr>
