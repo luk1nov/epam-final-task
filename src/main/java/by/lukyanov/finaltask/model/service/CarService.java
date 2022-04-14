@@ -19,4 +19,8 @@ public interface CarService {
     boolean updateCar(Map<String, String> carData, InputStream carImage) throws ServiceException;
 
     List<Car> findCarsByCategoryId(String id) throws ServiceException;
+
+    boolean deleteCarById(String carId) throws ServiceException;
+
+    boolean changeCarActive(String carId, String active) throws ServiceException;
 }
