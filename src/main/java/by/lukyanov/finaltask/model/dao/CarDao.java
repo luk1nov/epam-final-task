@@ -15,4 +15,6 @@ public interface CarDao extends BaseDao<Car>{
     boolean updateWithImage(Car car, InputStream carImage) throws DaoException;
 
     List<Car> findCarsByCategoryId(String id) throws DaoException;
+
+    boolean changeCarActiveById(String id, boolean isActive) throws DaoException;
 }
