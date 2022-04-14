@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
                 encodedPassword = PasswordEncoder.getInstance().encode(password);
                 user = userDao.authenticate(email, encodedPassword);
             } catch (DaoException e) {
-                logger.error("Service exception trying authenticate user by email & password");
+                logger.error("Service exception trying authenticate user by email & password", e);
                 throw new ServiceException(e);
             }
         } else {
@@ -86,8 +86,8 @@ public class UserServiceImpl implements UserService {
                 logger.info("Provided invalid userId in deleteUser method");
             }
         } catch (DaoException e) {
-            logger.error("Service exception trying delete user");
-            throw new ServiceException();
+            logger.error("Service exception trying delete user", e);
+            throw new ServiceException(e);
         }
         return result;
     }
@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService {
         try {
             users = userDao.findAll();
         } catch (DaoException e) {
-            logger.error("Service exception trying find all users");
+            logger.error("Service exception trying find all users", e);
             throw new ServiceException(e);
         }
         return users;
@@ -127,7 +127,7 @@ public class UserServiceImpl implements UserService {
             try {
                 user = userDao.findUserById(id);
             } catch (DaoException e) {
-                logger.error("Service exception trying find user by id");
+                logger.error("Service exception trying find user by id", e);
                 throw new ServiceException(e);
             }
         } else {
@@ -158,10 +158,10 @@ public class UserServiceImpl implements UserService {
                         .build();
                 updated = userDao.update(user);
             } catch (IllegalArgumentException ex) {
-                logger.error("Service exception in updateUser non-existent role or status");
+                logger.error("Service exception in updateUser non-existent role or status", ex);
                 throw new ServiceException(ex);
             } catch (DaoException e) {
-                logger.error("Service exception trying update user");
+                logger.error("Service exception trying update user", e);
                 throw new ServiceException(e);
             }
         } else {
