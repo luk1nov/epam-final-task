@@ -16,10 +16,18 @@
                         </form>
                     </li>
                     <li class="nav-item hidden-on-mobile">
-                        <a class="nav-link" href="#">E-Cars</a>
+                        <form action="/controller" method="POST">
+                            <input type="hidden" name="carCategory" value="2">
+                            <input type="hidden" name="command" value="to_car_category_page">
+                            <input type="submit" value="Cars" class="nav-link">
+                        </form>
                     </li>
                     <li class="nav-item hidden-on-mobile">
-                        <a class="nav-link" href="#">Premium</a>
+                        <form action="/controller" method="POST">
+                            <input type="hidden" name="carCategory" value="3">
+                            <input type="hidden" name="command" value="to_car_category_page">
+                            <input type="submit" value="Cars" class="nav-link">
+                        </form>
                     </li>
                 </ul>
             </div>

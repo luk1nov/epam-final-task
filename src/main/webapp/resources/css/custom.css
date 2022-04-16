@@ -121,7 +121,7 @@ li.admin-home-link form input[type="submit"], .accordion-menu li form input[type
 }
 
 .car-card-img-container{
-    width: 305px;
+    width: 100%;
     height: 183px;
     overflow: hidden;
     border-top-left-radius: 10px;
