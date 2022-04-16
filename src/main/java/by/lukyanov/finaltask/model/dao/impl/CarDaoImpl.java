@@ -121,7 +121,7 @@ public class CarDaoImpl implements CarDao {
                         .build();
                 cars.add(car);
             }
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             logger.error("Dao exception trying find all cars", e);
             throw new DaoException(e);
         }
@@ -191,7 +191,7 @@ public class CarDaoImpl implements CarDao {
                     foundCar = Optional.empty();
                 }
             }
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             logger.error("Dao exception trying find car by id", e);
             throw new DaoException(e);
         }
@@ -298,7 +298,7 @@ public class CarDaoImpl implements CarDao {
                     cars.add(car);
                 }
             }
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             logger.error("Dao exception trying find all cars", e);
             throw new DaoException(e);
         }
