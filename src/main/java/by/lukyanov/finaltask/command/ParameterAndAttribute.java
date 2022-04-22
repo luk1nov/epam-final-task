@@ -3,9 +3,11 @@ package by.lukyanov.finaltask.command;
 public class ParameterAndAttribute {
 //    request
     public static final String COMMAND = "command";
+    public static final String LANGUAGE = "language";
     public static final String USER_ID = "userId";
     public static final String USER_NAME = "userName";
     public static final String USER_SURNAME = "userSurname";
+    public static final String USER_PHONE = "userPhone";
     public static final String USER_EMAIL = "userEmail";
     public static final String USER_PASS = "userPass";
     public static final String USER_REPEAT_PASS = "userRepeatPass";
@@ -30,9 +32,12 @@ public class ParameterAndAttribute {
     public static final String UPLOAD_IMAGE = "uploadImage";
     public static final String CAR_CATEGORY_TITLE = "carCategoryTitle";
     public static final String CAR_CATEGORY_ID = "carCategoryId";
+    public static final String REFILL_AMOUNT = "refillAmount";
 
     /* session */
     public static final String LOGGED_USER = "loggedUser";
+    public static final String CURRENT_PAGE = "currentPage";
+    public static final String LOCALE = "locale";
 
 
     /* util */

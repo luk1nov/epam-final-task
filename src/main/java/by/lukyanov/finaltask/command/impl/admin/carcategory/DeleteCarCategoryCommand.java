@@ -22,10 +22,10 @@ public class DeleteCarCategoryCommand implements Command {
         String carCatId = request.getParameter(ParameterAndAttribute.CAR_CATEGORY_ID);
         try{
             if(carCategoryService.deleteCarCategory(carCatId)){
-                router.setPagePath(SUCCESS_PAGE);
+                router.setPagePath(ADMIN_SUCCESS_PAGE);
                 router.setType(Router.Type.REDIRECT);
             } else {
-                router.setPagePath(FAIL_PAGE);
+                router.setPagePath(ADMIN_FAIL_PAGE);
             }
         } catch (ServiceException e) {
             logger.error("Command exception trying delete car category by id");

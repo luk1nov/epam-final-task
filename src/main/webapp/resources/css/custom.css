@@ -34,7 +34,9 @@
 }
 
 .navbar-light .navbar-nav .nav-link{
+    border: none;
     color: #000;
+    background: none;
 }
 
 input[type="submit"].dropdown-item{
@@ -127,5 +129,35 @@ li.admin-home-link form input[type="submit"], .accordion-menu li form input[type
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
+
+.custom-nav-bar{
+    width: 230px;
+    justify-content: space-between;
+}
+
+.lang-button{
+    display: flex;
+    align-items: center;
+}
+
+.lang-button::before{
+    content: '';
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    margin: 0 7px;
+}
+
+.ru-button::before{
+    background: url("../images/flags/russia.png") no-repeat;
+    background-size: contain;
+}
+
+.eng-button::before{
+    background: url("../images/flags/us.png") no-repeat;
+    background-size: contain;
+}
+
 
 

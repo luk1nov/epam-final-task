@@ -1,5 +1,7 @@
 package by.lukyanov.finaltask.entity;
 
+import java.math.BigDecimal;
+
 public final class User extends AbstractEntity{
     private String email;
     private String password;
@@ -7,18 +9,9 @@ public final class User extends AbstractEntity{
     private String surname;
     private Role role;
     private Status status;
-
-    public User() {
-    }
-
-    public User(String email, String password, String name, String surname) {
-        this.email = email;
-        this.password = password;
-        this.name = name;
-        this.surname = surname;
-        this.role = Role.USER;
-        this.status = Status.INACTIVE;
-    }
+    private String phone;
+    private BigDecimal balance;
+    private String driverLicense;
 
     public enum Role{
         ADMIN,
@@ -29,6 +22,7 @@ public final class User extends AbstractEntity{
 
     public enum Status{
         ACTIVE,
+        VERIFICATION,
         INACTIVE,
         BLOCKED
     }
@@ -81,19 +75,47 @@ public final class User extends AbstractEntity{
         this.status = status;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
+    public String getDriverLicense() {
+        return driverLicense;
+    }
+
+    public void setDriverLicense(String driverLicense) {
+        this.driverLicense = driverLicense;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
         User user = (User) o;
-        if (! super.equals(o)) return false;
+
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
         if (password != null ? !password.equals(user.password) : user.password != null) return false;
         if (name != null ? !name.equals(user.name) : user.name != null) return false;
         if (surname != null ? !surname.equals(user.surname) : user.surname != null) return false;
         if (role != user.role) return false;
-        return status == user.status;
+        if (status != user.status) return false;
+        if (phone != null ? !phone.equals(user.phone) : user.phone != null) return false;
+        if (balance != null ? !balance.equals(user.balance) : user.balance != null) return false;
+        return driverLicense != null ? driverLicense.equals(user.driverLicense) : user.driverLicense == null;
     }
 
     @Override
@@ -105,19 +127,24 @@ public final class User extends AbstractEntity{
         result = 31 * result + (surname != null ? surname.hashCode() : 0);
         result = 31 * result + (role != null ? role.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (phone != null ? phone.hashCode() : 0);
+        result = 31 * result + (balance != null ? balance.hashCode() : 0);
+        result = 31 * result + (driverLicense != null ? driverLicense.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("User{");
-        sb.append("id='").append(getId()).append('\'');
+        sb.append("id='").append(this.getId()).append('\'');
         sb.append(", email='").append(email).append('\'');
         sb.append(", password='").append(password).append('\'');
         sb.append(", name='").append(name).append('\'');
         sb.append(", surname='").append(surname).append('\'');
         sb.append(", role=").append(role);
         sb.append(", status=").append(status);
+        sb.append(", phone='").append(phone).append('\'');
+        sb.append(", balance=").append(balance);
         sb.append('}');
         return sb.toString();
     }
@@ -161,6 +188,21 @@ public final class User extends AbstractEntity{
 
         public UserBuilder status(Status status){
             user.status = status;
+            return this;
+        }
+
+        public UserBuilder phone(String phone){
+            user.phone = phone;
+            return this;
+        }
+
+        public UserBuilder balance(BigDecimal balance){
+            user.balance = balance;
+            return this;
+        }
+
+        public UserBuilder driverLicense(String driverLicense){
+            user.driverLicense = driverLicense;
             return this;
         }
 

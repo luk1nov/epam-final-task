@@ -9,8 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 public class ToSignInCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Router router = new Router();
-        router.setPagePath(PagePath.SIGNIN_PAGE);
-        return router;
+        return new Router(PagePath.SIGNIN_PAGE);
     }
 }

@@ -29,6 +29,7 @@ public class EditUserCommand implements Command {
         String name = request.getParameter(USER_NAME).strip();
         String surname = request.getParameter(USER_SURNAME).strip();
         String email = request.getParameter(USER_EMAIL).strip();
+        String phone = request.getParameter(USER_PHONE).strip();
         String role = request.getParameter(USER_ROLE).strip();
         String status = request.getParameter(USER_STATUS).strip();
 
@@ -37,6 +38,7 @@ public class EditUserCommand implements Command {
         userData.put(USER_NAME, name);
         userData.put(USER_SURNAME, surname);
         userData.put(USER_EMAIL, email);
+        userData.put(USER_PHONE, phone);
         userData.put(USER_STATUS, status);
         userData.put(USER_ROLE, role);
 
@@ -47,11 +49,11 @@ public class EditUserCommand implements Command {
             throw new CommandException(e);
         }
         if (updated){
-            router.setPagePath(PagePath.SUCCESS_PAGE);
+            router.setPagePath(PagePath.ADMIN_SUCCESS_PAGE);
             router.setType(Router.Type.REDIRECT);
         } else {
             request.setAttribute(ParameterAndAttribute.MESSAGE, USER_NOT_UPDATED);
-            router.setPagePath(PagePath.FAIL_PAGE);
+            router.setPagePath(PagePath.ADMIN_FAIL_PAGE);
         }
         return router;
     }

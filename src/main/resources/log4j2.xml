@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="warn">
-    <Properties>
-        <Property name="basePath">logs</Property>
-    </Properties>
-
-
     <Appenders>
-        <RollingFile name="fileLogger" fileName="resources/logs.log" filePattern="${basePath}/app-info-%d{yyyy-MM-dd}.log">
+        <RollingFile name="fileLogger" fileName="log/logs.log"
+                     filePattern="log/app-info-%d{yyyy-MM-dd}.log.gz"
+                     ignoreExceptions="false">
             <PatternLayout>
-                <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
+                <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %c{1} - %msg%n</pattern>
             </PatternLayout>
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true" />
@@ -16,15 +13,15 @@
         </RollingFile>
 
         <Console name="console" target="SYSTEM_OUT">
-            <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
+            <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %c{1} - %msg%n" />
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="by.lukanov.final_task" level="debug" additivity="true">
+        <Logger name="by.lukyanov.finaltask" level="debug" additivity="true">
             <appender-ref ref="fileLogger" level="debug" />
         </Logger>
         <Root level="debug" additivity="false">
-            <appender-ref ref="console" />
+            <appender-ref ref="console"/>
         </Root>
     </Loggers>
 </Configuration>

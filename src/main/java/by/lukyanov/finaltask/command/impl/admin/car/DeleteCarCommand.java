@@ -24,9 +24,9 @@ public class DeleteCarCommand implements Command {
         try {
             if (carService.deleteCarById(carId)){
                 router.setType(Router.Type.REDIRECT);
-                router.setPagePath(SUCCESS_PAGE);
+                router.setPagePath(ADMIN_SUCCESS_PAGE);
             } else {
-                router.setPagePath(FAIL_PAGE);
+                router.setPagePath(ADMIN_FAIL_PAGE);
             }
         } catch (ServiceException e) {
             logger.error("Command exception trying delete car", e);

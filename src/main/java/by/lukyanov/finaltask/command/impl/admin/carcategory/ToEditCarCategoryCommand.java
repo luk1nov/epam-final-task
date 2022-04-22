@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 
-import static by.lukyanov.finaltask.command.PagePath.FAIL_PAGE;
+import static by.lukyanov.finaltask.command.PagePath.ADMIN_FAIL_PAGE;
 
 public class ToEditCarCategoryCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -32,7 +32,7 @@ public class ToEditCarCategoryCommand implements Command {
                 router.setPagePath(PagePath.ADMIN_EDIT_CAR_CATEGORY);
             } else {
                 request.setAttribute(ParameterAndAttribute.MESSAGE, "car category not found");
-                router.setPagePath(FAIL_PAGE);
+                router.setPagePath(ADMIN_FAIL_PAGE);
             }
         } catch (ServiceException e) {
             logger.error("Command exception trying find category by id", e);

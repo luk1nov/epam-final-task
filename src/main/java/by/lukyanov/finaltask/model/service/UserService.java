@@ -21,4 +21,6 @@ public interface UserService {
     Optional<User> findUserById(String id) throws ServiceException;
 
     boolean updateUser(Map<String, String> userData) throws ServiceException;
+
+    boolean refillBalance(long id, String amount) throws ServiceException;
 }

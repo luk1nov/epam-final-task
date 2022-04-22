@@ -1,14 +1,16 @@
-package by.lukyanov.finaltask.command.impl.navigation;
+package by.lukyanov.finaltask.command.impl.user;
 
 import by.lukyanov.finaltask.command.Command;
-import by.lukyanov.finaltask.command.PagePath;
 import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.exception.CommandException;
 import jakarta.servlet.http.HttpServletRequest;
 
-public class ToSignUpCommand implements Command {
+import static by.lukyanov.finaltask.command.PagePath.REFILL_BALANCE;
+
+
+public class ToRefillBalanceCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        return new Router(PagePath.SIGNUP_PAGE);
+        return new Router(REFILL_BALANCE);
     }
 }

@@ -87,7 +87,7 @@ public class CarCategoryServiceImpl implements CarCategoryService {
         boolean result = false;
         if (validator.isValidId(id) && !id.equals(DEFAULT_CAR_CATEGORY_ID)){
             try {
-                result = carCategoryDao.delete(id);
+                result = carCategoryDao.delete(Long.parseLong(id));
             } catch (DaoException e) {
                 logger.error("Service exception trying delete car category", e);
                 throw new ServiceException(e);

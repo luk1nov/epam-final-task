@@ -10,8 +10,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static by.lukyanov.finaltask.command.PagePath.FAIL_PAGE;
-import static by.lukyanov.finaltask.command.PagePath.SUCCESS_PAGE;
+import static by.lukyanov.finaltask.command.PagePath.ADMIN_FAIL_PAGE;
+import static by.lukyanov.finaltask.command.PagePath.ADMIN_SUCCESS_PAGE;
 
 public class ChangeCarActiveCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -25,9 +25,9 @@ public class ChangeCarActiveCommand implements Command {
         try {
             if (carService.changeCarActive(carId, active)){
                 router.setType(Router.Type.REDIRECT);
-                router.setPagePath(SUCCESS_PAGE);
+                router.setPagePath(ADMIN_SUCCESS_PAGE);
             } else {
-                router.setPagePath(FAIL_PAGE);
+                router.setPagePath(ADMIN_FAIL_PAGE);
             }
         } catch (ServiceException e) {
             logger.error("Command exception trying change car active status", e);

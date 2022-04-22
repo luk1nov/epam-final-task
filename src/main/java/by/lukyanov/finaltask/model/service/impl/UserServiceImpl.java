@@ -11,6 +11,7 @@ import by.lukyanov.finaltask.validation.impl.ValidatorImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,6 +20,7 @@ public class UserServiceImpl implements UserService {
     private static final Logger logger = LogManager.getLogger();
     private static final UserDaoImpl userDao = UserDaoImpl.getInstance();
     private static final ValidatorImpl validator = ValidatorImpl.getInstance();
+    private static final String PHONE_CODE_BY = "+375-";
 
     @Override
     public Optional<User> authenticate(String email, String password) throws ServiceException {
@@ -44,15 +46,19 @@ public class UserServiceImpl implements UserService {
         String name = userData.get(ParameterAndAttribute.USER_NAME);
         String surname = userData.get(ParameterAndAttribute.USER_SURNAME);
         String email = userData.get(ParameterAndAttribute.USER_EMAIL);
+        String phone = userData.get(ParameterAndAttribute.USER_PHONE);
         String pass = userData.get(ParameterAndAttribute.USER_PASS);
         boolean addUserResult;
 
-        if(validator.isOneWord(name) && validator.isValidSurname(surname) && validator.isValidEmail(email) && validator.isValidPassword(pass)){
+        if(validator.isOneWord(name) && validator.isValidSurname(surname) && validator.isValidEmail(email) &&
+                validator.isValidPassword(pass) && validator.isValidPhone(phone)){
             String encodedPass = encoder.encode(pass);
+            String phoneWithCountryCode = PHONE_CODE_BY + phone;
             User user = new User.UserBuilder()
                     .name(name)
                     .surname(surname)
                     .email(email)
+                    .phone(phoneWithCountryCode)
                     .password(encodedPass)
                     .role(User.Role.USER)
                     .status(User.Status.INACTIVE)
@@ -75,13 +81,7 @@ public class UserServiceImpl implements UserService {
         boolean result = false;
         try {
             if(validator.isValidId(userId)){
-                Optional<User> optionalUser = userDao.findUserById(userId);
-                if(optionalUser.isPresent()){
-                    User user = optionalUser.get();
-                    result = userDao.delete(user);
-                } else {
-                    logger.info("User not exists in deleteUser method");
-                }
+                result = userDao.delete(Long.parseLong(userId));
             } else {
                 logger.info("Provided invalid userId in deleteUser method");
             }
@@ -143,16 +143,20 @@ public class UserServiceImpl implements UserService {
         String name = userData.get(ParameterAndAttribute.USER_NAME);
         String surname = userData.get(ParameterAndAttribute.USER_SURNAME);
         String email = userData.get(ParameterAndAttribute.USER_EMAIL);
+        String phone = userData.get(ParameterAndAttribute.USER_PHONE);
         String role = userData.get(ParameterAndAttribute.USER_ROLE).toUpperCase();
         String status = userData.get(ParameterAndAttribute.USER_STATUS).toUpperCase();
         logger.info(userData.toString());
-        if(validator.isValidId(userId) && validator.isOneWord(name) && validator.isValidSurname(surname) && validator.isValidEmail(email)){
+        if(validator.isValidId(userId) && validator.isOneWord(name) && validator.isValidSurname(surname) &&
+                validator.isValidEmail(email) && validator.isValidPhone(phone)){
             try{
+                String phoneWithCountryCode = PHONE_CODE_BY + phone;
                 User user = new User.UserBuilder()
                         .id(Long.parseLong(userId))
                         .name(name)
                         .surname(surname)
                         .email(email)
+                        .phone(phoneWithCountryCode)
                         .role(User.Role.valueOf(role))
                         .status(User.Status.valueOf(status))
                         .build();
@@ -167,6 +171,20 @@ public class UserServiceImpl implements UserService {
         } else {
             logger.info("Provided invalid user data");
             updated = false;
+        }
+        return updated;
+    }
+
+    @Override
+    public boolean refillBalance(long id, String amount) throws ServiceException {
+        boolean updated = false;
+        if (validator.isValidPrice(amount)){
+            try {
+                updated = userDao.refillBalance(id, new BigDecimal(amount));
+            } catch (DaoException e) {
+               logger.error("Service exception trying refill balance", e);
+               throw new ServiceException(e);
+            }
         }
         return updated;
     }

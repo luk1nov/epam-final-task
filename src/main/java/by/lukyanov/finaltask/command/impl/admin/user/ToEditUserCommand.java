@@ -14,6 +14,7 @@ import java.util.Optional;
 public class ToEditUserCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
     private static final UserServiceImpl userService = new UserServiceImpl();
+    private static final String PHONE_CODE_BY = "\\+375-";
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
@@ -25,11 +26,13 @@ public class ToEditUserCommand implements Command {
             if (optionalUser.isPresent()){
                 User user = optionalUser.get();
                 logger.debug("user found " + user.getId());
-                router.setPagePath(PagePath.ADMIN_EDIT_USER);
+                String phoneWithoutCode = user.getPhone().replaceAll(PHONE_CODE_BY, "");
+                user.setPhone(phoneWithoutCode);
+                router.setPagePath(PagePath.ADMIN_ADD_EDIT_USER);
                 request.setAttribute(ParameterAndAttribute.USER, user);
             } else{
                 logger.debug("user not found");
-                router.setPagePath(PagePath.FAIL_PAGE);
+                router.setPagePath(PagePath.ADMIN_FAIL_PAGE);
                 request.setAttribute(ParameterAndAttribute.MESSAGE, Message.CAN_NOT_EDIT_USER);
             }
         } catch (ServiceException e) {

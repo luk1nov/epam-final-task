@@ -13,6 +13,11 @@ public class Router {
         this.type = Type.FORWARD;
     }
 
+    public Router(String path) {
+        this.type = Type.FORWARD;
+        this.pagePath = path;
+    }
+
     public String getPagePath() {
         return pagePath;
     }

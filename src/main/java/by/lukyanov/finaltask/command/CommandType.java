@@ -1,18 +1,18 @@
 package by.lukyanov.finaltask.command;
 
+import by.lukyanov.finaltask.command.impl.ChangeLocaleCommand;
 import by.lukyanov.finaltask.command.impl.DefaultCommand;
 import by.lukyanov.finaltask.command.impl.admin.car.*;
 import by.lukyanov.finaltask.command.impl.admin.carcategory.*;
-import by.lukyanov.finaltask.command.impl.admin.user.DeleteUserCommand;
-import by.lukyanov.finaltask.command.impl.admin.user.EditUserCommand;
-import by.lukyanov.finaltask.command.impl.admin.user.FindAllUsersCommand;
-import by.lukyanov.finaltask.command.impl.admin.user.ToEditUserCommand;
+import by.lukyanov.finaltask.command.impl.admin.user.*;
 import by.lukyanov.finaltask.command.impl.login.LogOutCommand;
 import by.lukyanov.finaltask.command.impl.login.SignInCommand;
 import by.lukyanov.finaltask.command.impl.login.SignUpCommand;
 import by.lukyanov.finaltask.command.impl.navigation.ToCarCategoryCommand;
 import by.lukyanov.finaltask.command.impl.navigation.ToSignInCommand;
 import by.lukyanov.finaltask.command.impl.navigation.ToSignUpCommand;
+import by.lukyanov.finaltask.command.impl.user.RefillBalanceCommand;
+import by.lukyanov.finaltask.command.impl.user.ToRefillBalanceCommand;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,15 +20,19 @@ import org.apache.logging.log4j.Logger;
 public enum CommandType {
     //USERS
     DEFAULT(new DefaultCommand()),
+    CHANGE_LOCALE(new ChangeLocaleCommand()),
     SIGNUP(new SignUpCommand()),
     SIGNIN(new SignInCommand()),
     LOG_OUT(new LogOutCommand()),
     TO_SIGNIN_PAGE(new ToSignInCommand()),
     TO_SIGNUP_PAGE(new ToSignUpCommand()),
     TO_CAR_CATEGORY_PAGE(new ToCarCategoryCommand()),
+    TO_REFILL_BALANCE(new ToRefillBalanceCommand()),
+    REFILL_BALANCE(new RefillBalanceCommand()),
 
     //ADMIN
     ADMIN_TO_ALL_USERS(new FindAllUsersCommand()),
+    ADMIN_TO_ADD_NEW_USER(new ToAddNewUserCommand()),
     ADMIN_TO_EDIT_USER(new ToEditUserCommand()),
     ADMIN_EDIT_USER(new EditUserCommand()),
     ADMIN_DELETE_USER(new DeleteUserCommand()),

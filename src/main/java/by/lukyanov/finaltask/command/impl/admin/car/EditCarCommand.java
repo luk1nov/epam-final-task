@@ -55,11 +55,11 @@ public class EditCarCommand implements Command {
         }
         try (InputStream is = request.getPart(CAR_IMAGE).getInputStream()){
             if (carService.updateCar(carData, is)) {
-                router.setPagePath(PagePath.SUCCESS_PAGE);
+                router.setPagePath(PagePath.ADMIN_SUCCESS_PAGE);
                 router.setType(Router.Type.REDIRECT);
             } else {
                 request.setAttribute(ParameterAndAttribute.MESSAGE, CAR_NOT_EDITED);
-                router.setPagePath(PagePath.FAIL_PAGE);
+                router.setPagePath(PagePath.ADMIN_FAIL_PAGE);
             }
         } catch (ServiceException | ServletException | IOException e) {
             logger.error("Command exception trying edit car", e);

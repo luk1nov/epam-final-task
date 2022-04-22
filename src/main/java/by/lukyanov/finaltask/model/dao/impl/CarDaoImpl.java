@@ -19,15 +19,15 @@ import java.util.Optional;
 
 public class CarDaoImpl implements CarDao {
     private static final Logger logger = LogManager.getLogger();
-    private static final String SQL_FIND_ALL_CARS = "SELECT cars.car_id, cars.brand, cars.model, cars.regular_price, cars.sale_price, cars.is_active, cars.image, car_info.acceleration, car_info.power, car_info.drivetrain, car_category.car_category_title FROM cars LEFT JOIN car_info ON cars.car_id = car_info.cars_car_id INNER JOIN car_category on cars.car_category_id = car_category.car_category_id ORDER BY cars.car_id";
+    private static final String SQL_FIND_ALL_CARS = "SELECT cars.car_id, cars.brand, cars.model, cars.regular_price, cars.sale_price, cars.is_active, cars.image, car_info.acceleration, car_info.power, car_info.drivetrain, car_category.car_category_title FROM cars LEFT JOIN car_info ON cars.car_id = car_info.cars_car_id INNER JOIN car_category on cars.car_category_car_category_id = car_category.car_category_id ORDER BY cars.car_id";
     private static final String SQL_FIND_CAR_BY_ID = "SELECT cars.car_id, cars.brand, cars.model, cars.regular_price, cars.sale_price, cars.is_active, cars.image, car_info.acceleration, car_info.power, car_info.drivetrain FROM cars LEFT JOIN car_info ON cars.car_id = car_info.cars_car_id WHERE car_id = ?";
     private static final String SQL_INSERT_NEW_CAR = "INSERT INTO cars (brand,model,regular_price,sale_price,is_active) values(?,?,?,?,?)";
-    private static final String SQL_INSERT_NEW_CAR_WITH_IMAGE = "INSERT INTO cars (brand,model,regular_price,sale_price,is_active, image) values(?,?,?,?,?,?)";
-    private static final String SQL_INSERT_NEW_CAR_INFO = "INSERT INTO car_info (acceleration,power,drivetrain,cars_car_id) values(?,?,?,?)";
-    private static final String SQL_UPDATE_CAR_BY_ID = "UPDATE cars SET brand = ?, model = ?, regular_price = ?, sale_price = ?, is_active = ?, car_category_id = ? WHERE car_id = ?";
-    private static final String SQL_UPDATE_CAR_WITH_IMAGE_BY_ID = "UPDATE cars SET brand = ?, model = ?, regular_price = ?, sale_price = ?, is_active = ?, car_category_id = ?, image = ? WHERE car_id = ?";
-    private static final String SQL_UPDATE_CAR_INFO_BY_CAR_ID = "UPDATE car_info SET acceleration = ?, power = ?, drivetrain = ? WHERE cars_car_id = ?";
-    private static final String SQL_FIND_CARS_BY_CATEGORY_ID = "SELECT cars.car_id, cars.brand, cars.model, cars.regular_price, cars.sale_price, cars.is_active, cars.image, car_info.acceleration, car_info.power, car_info.drivetrain FROM cars LEFT JOIN car_info ON cars.car_id = car_info.cars_car_id WHERE car_category_id = ?";
+    private static final String SQL_INSERT_NEW_CAR_WITH_IMAGE = "INSERT INTO cars (brand,model,regular_price,sale_price,is_active, image, car_category_car_category_id) values(?,?,?,?,?,?,?)";
+    private static final String SQL_INSERT_NEW_CAR_INFO = "INSERT INTO car_info (acceleration,power,drivetrain,cars_car_id, cars_car_category_car_category_id) values(?,?,?,?,?)";
+    private static final String SQL_UPDATE_CAR_BY_ID = "UPDATE cars SET brand = ?, model = ?, regular_price = ?, sale_price = ?, is_active = ?, car_category_car_category_id = ? WHERE car_id = ?";
+    private static final String SQL_UPDATE_CAR_WITH_IMAGE_BY_ID = "UPDATE cars SET brand = ?, model = ?, regular_price = ?, sale_price = ?, is_active = ?, car_category_car_category_id = ?, image = ? WHERE car_id = ?";
+    private static final String SQL_UPDATE_CAR_INFO_BY_CAR_ID = "UPDATE car_info SET acceleration = ?, power = ?, drivetrain = ?, cars_car_category_car_category_id = ? WHERE cars_car_id = ?";
+    private static final String SQL_FIND_CARS_BY_CATEGORY_ID = "SELECT cars.car_id, cars.brand, cars.model, cars.regular_price, cars.sale_price, cars.is_active, cars.image, car_info.acceleration, car_info.power, car_info.drivetrain FROM cars LEFT JOIN car_info ON cars.car_id = car_info.cars_car_id WHERE car_category_car_category_id = ?";
     private static final String SQL_DELETE_CAR_BY_ID = "DELETE FROM cars WHERE car_id = ?";
     private static final String SQL_UPDATE_STATUS_CAR_BY_ID = "UPDATE cars SET is_active = ? WHERE car_id = ?";
     private static CarDaoImpl instance;
@@ -44,51 +44,50 @@ public class CarDaoImpl implements CarDao {
         return instance;
     }
 
-    @Override
-    public boolean insert(Car car) throws DaoException {
-        boolean result = false;
-        try (Connection connection = pool.getConnection()){
-            try (PreparedStatement addCarStatement = connection.prepareStatement(SQL_INSERT_NEW_CAR, Statement.RETURN_GENERATED_KEYS);
-                 PreparedStatement addCarInfoStatement = connection.prepareStatement(SQL_INSERT_NEW_CAR_INFO)) {
-                connection.setAutoCommit(false); // 1
-                addCarStatement.setString(1, car.getBrand());
-                addCarStatement.setString(2, car.getModel());
-                addCarStatement.setBigDecimal(3, car.getRegularPrice());
-                addCarStatement.setBigDecimal(4, car.getSalePrice().isPresent() ? car.getSalePrice().get() : null);
-                addCarStatement.setBoolean(5, car.isActive());
-                addCarStatement.executeUpdate(); // 2
-                try (ResultSet resultSetCarId = addCarStatement.getGeneratedKeys()){
-                    if (resultSetCarId.next() ) {
-                        int carId = resultSetCarId.getInt(1);
-                        addCarInfoStatement.setDouble(1, car.getInfo().getAcceleration());
-                        addCarInfoStatement.setInt(2, car.getInfo().getPower());
-                        addCarInfoStatement.setString(3, car.getInfo().getDrivetrain().toString());
-                        addCarInfoStatement.setLong(4,carId);
-                        addCarInfoStatement.executeUpdate();
-                        result = true;
-                        connection.commit();
-                        logger.info("successful query - commit");
-                    }
-                }
-            } catch (SQLException e) {
-                logger.error("SQL exception trying add new car - rollback", e);
-                connection.rollback();
-                throw new SQLException(e);
-            } finally {
-                connection.setAutoCommit(true); // 4
-            }
-        } catch (SQLException e){
-            logger.error("Dao exception trying add new car", e);
-            throw new DaoException(e);
-        }
-        return result;
-    }
+//    public boolean insert(Car car) throws DaoException {
+//        boolean result = false;
+//        try (Connection connection = pool.getConnection()){
+//            try (PreparedStatement addCarStatement = connection.prepareStatement(SQL_INSERT_NEW_CAR, Statement.RETURN_GENERATED_KEYS);
+//                 PreparedStatement addCarInfoStatement = connection.prepareStatement(SQL_INSERT_NEW_CAR_INFO)) {
+//                connection.setAutoCommit(false); // 1
+//                addCarStatement.setString(1, car.getBrand());
+//                addCarStatement.setString(2, car.getModel());
+//                addCarStatement.setBigDecimal(3, car.getRegularPrice());
+//                addCarStatement.setBigDecimal(4, car.getSalePrice().isPresent() ? car.getSalePrice().get() : null);
+//                addCarStatement.setBoolean(5, car.isActive());
+//                addCarStatement.executeUpdate(); // 2
+//                try (ResultSet resultSetCarId = addCarStatement.getGeneratedKeys()){
+//                    if (resultSetCarId.next() ) {
+//                        int carId = resultSetCarId.getInt(1);
+//                        addCarInfoStatement.setDouble(1, car.getInfo().getAcceleration());
+//                        addCarInfoStatement.setInt(2, car.getInfo().getPower());
+//                        addCarInfoStatement.setString(3, car.getInfo().getDrivetrain().toString());
+//                        addCarInfoStatement.setLong(4,carId);
+//                        addCarInfoStatement.executeUpdate();
+//                        result = true;
+//                        connection.commit();
+//                        logger.info("successful query - commit");
+//                    }
+//                }
+//            } catch (SQLException e) {
+//                logger.error("SQL exception trying add new car - rollback", e);
+//                connection.rollback();
+//                throw new SQLException(e);
+//            } finally {
+//                connection.setAutoCommit(true); // 4
+//            }
+//        } catch (SQLException e){
+//            logger.error("Dao exception trying add new car", e);
+//            throw new DaoException(e);
+//        }
+//        return result;
+//    }
 
-    public boolean delete(String id) throws DaoException {
+    public boolean delete(long id) throws DaoException {
         boolean result = false;
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_DELETE_CAR_BY_ID)) {
-            statement.setString(1, id);
+            statement.setLong(1, id);
             if (statement.executeUpdate() != 0){
                 result = true;
                 logger.info("user deleted " + id);
@@ -142,13 +141,13 @@ public class CarDaoImpl implements CarDao {
                 carStatement.setBigDecimal(4, car.getSalePrice().isPresent() ? car.getSalePrice().get() : null);
                 carStatement.setBoolean(5, car.isActive());
                 carStatement.setLong(6, car.getCarCategory().getId());
-                logger.debug(car.getCarCategory().getId());
                 carStatement.setLong(7, car.getId());
                 carStatement.executeUpdate();
                 carInfoStatement.setDouble(1, car.getInfo().getAcceleration());
                 carInfoStatement.setInt(2, car.getInfo().getPower());
                 carInfoStatement.setString(3, car.getInfo().getDrivetrain().toString());
                 carInfoStatement.setLong(4, car.getId());
+                carInfoStatement.setLong(5, car.getCarCategory().getId());
                 carInfoStatement.executeUpdate();
                 updated = true;
                 connection.commit();
@@ -198,8 +197,8 @@ public class CarDaoImpl implements CarDao {
         return foundCar;
     }
 
-    @Override
-    public boolean insertWithImage(Car car, InputStream carImage) throws DaoException {
+
+    public boolean insert(Car car, InputStream carImage) throws DaoException {
         boolean result = false;
         try (Connection connection = pool.getConnection()){
             try (PreparedStatement addCarStatement = connection.prepareStatement(SQL_INSERT_NEW_CAR_WITH_IMAGE, Statement.RETURN_GENERATED_KEYS);
@@ -210,7 +209,8 @@ public class CarDaoImpl implements CarDao {
                 addCarStatement.setBigDecimal(3, car.getRegularPrice());
                 addCarStatement.setBigDecimal(4, car.getSalePrice().isPresent() ? car.getSalePrice().get() : null);
                 addCarStatement.setBoolean(5, car.isActive());
-                addCarStatement.setBlob(6, carImage);
+                addCarStatement.setBlob(6, carImage.available() != 0 ? carImage : null);
+                addCarStatement.setLong(7, car.getCarCategory().getId());
                 addCarStatement.executeUpdate(); // 2
                 try (ResultSet resultSetCarId = addCarStatement.getGeneratedKeys()){
                     if (resultSetCarId.next() ) {
@@ -219,13 +219,14 @@ public class CarDaoImpl implements CarDao {
                         addCarInfoStatement.setInt(2, car.getInfo().getPower());
                         addCarInfoStatement.setString(3, car.getInfo().getDrivetrain().toString());
                         addCarInfoStatement.setLong(4, carId);
+                        addCarInfoStatement.setLong(5, car.getCarCategory().getId());
                         addCarInfoStatement.executeUpdate();
                         result = true;
                         connection.commit();
                         logger.info("successful query - commit");
                     }
                 }
-            } catch (SQLException e) {
+            } catch (SQLException | IOException e) {
                 logger.error("SQL exception trying add new car - rollback", e);
                 connection.rollback();
                 throw new SQLException(e);
@@ -259,6 +260,7 @@ public class CarDaoImpl implements CarDao {
                 carInfoStatement.setInt(2, car.getInfo().getPower());
                 carInfoStatement.setString(3, car.getInfo().getDrivetrain().toString());
                 carInfoStatement.setLong(4, car.getId());
+                carInfoStatement.setLong(5, car.getCarCategory().getId());
                 carInfoStatement.executeUpdate();
                 updated = true;
                 connection.commit();

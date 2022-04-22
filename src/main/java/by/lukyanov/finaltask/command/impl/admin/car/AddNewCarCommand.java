@@ -51,10 +51,10 @@ public class AddNewCarCommand implements Command {
         }
         try (InputStream is = request.getPart(CAR_IMAGE).getInputStream()){
             if(carService.addCar(carData, is)){
-                router.setPagePath(PagePath.SUCCESS_PAGE);
+                router.setPagePath(PagePath.ADMIN_SUCCESS_PAGE);
                 router.setType(Router.Type.REDIRECT);
             } else {
-                router.setPagePath(PagePath.FAIL_PAGE);
+                router.setPagePath(PagePath.ADMIN_FAIL_PAGE);
                 request.setAttribute(MESSAGE, CAR_NOT_ADDED);
             }
         } catch (IOException e) {

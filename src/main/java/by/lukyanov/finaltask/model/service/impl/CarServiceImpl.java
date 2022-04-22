@@ -3,7 +3,6 @@ package by.lukyanov.finaltask.model.service.impl;
 import by.lukyanov.finaltask.entity.Car;
 import by.lukyanov.finaltask.entity.CarCategory;
 import by.lukyanov.finaltask.entity.CarInfo;
-import by.lukyanov.finaltask.entity.User;
 import by.lukyanov.finaltask.exception.DaoException;
 import by.lukyanov.finaltask.exception.ServiceException;
 import by.lukyanov.finaltask.model.dao.impl.CarDaoImpl;
@@ -12,7 +11,6 @@ import by.lukyanov.finaltask.validation.impl.ValidatorImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -41,7 +39,7 @@ public class CarServiceImpl implements CarService {
         Optional<String> salePrice = Optional.ofNullable(carData.get(CAR_SALE_PRICE));
 
         if (validator.isOneWord(brand) && validator.isValidCarModel(model) && validator.isValidPrice(regularPrice) &&
-                validator.isValidCarActive(isActive) && validator.isValidAcceleration(acceleration) && validator.isValidPower(power) &&
+                validator.isStringBoolean(isActive) && validator.isValidAcceleration(acceleration) && validator.isValidPower(power) &&
                 validator.isValidId(categoryId) && (salePrice.isEmpty() || validator.isValidPrice(salePrice.get()) && comparePrices(regularPrice, salePrice.get()))){
             try {
                 CarInfo carInfo = new CarInfo(Double.parseDouble(acceleration), Integer.parseInt(power), CarInfo.Drivetrain.valueOf(drivetrain.toUpperCase()));
@@ -54,12 +52,8 @@ public class CarServiceImpl implements CarService {
                         .category( new CarCategory(Long.parseLong(categoryId)))
                         .carInfo(carInfo)
                         .build();
-                if(carImage.available() != 0){
-                    result = carDao.insertWithImage(car, carImage);
-                } else {
-                    result = carDao.insert(car);
-                }
-            } catch (DaoException | IOException e) {
+                result = carDao.insert(car, carImage);
+            } catch (DaoException e) {
                 logger.error("Service exception trying add car", e);
                 throw new ServiceException(e);
             }
@@ -113,7 +107,7 @@ public class CarServiceImpl implements CarService {
         String changeImg = carData.get(UPLOAD_IMAGE);
 
         if (validator.isOneWord(brand) && validator.isValidCarModel(model) && validator.isValidPrice(regularPrice) &&
-                validator.isValidCarActive(isActive) && validator.isValidAcceleration(acceleration) && validator.isValidPower(power) &&
+                validator.isStringBoolean(isActive) && validator.isValidAcceleration(acceleration) && validator.isValidPower(power) &&
                 validator.isValidId(categoryId) && (salePrice.isEmpty() || validator.isValidPrice(salePrice.get()) && comparePrices(regularPrice, salePrice.get()))){
             try {
                 CarInfo carInfo = new CarInfo(Double.parseDouble(acceleration), Integer.parseInt(power), CarInfo.Drivetrain.valueOf(drivetrain.toUpperCase()));
@@ -163,7 +157,7 @@ public class CarServiceImpl implements CarService {
         boolean result = false;
         if(validator.isValidId(carId)){
             try {
-                result = carDao.delete(carId);
+                result = carDao.delete(Long.parseLong(carId));
             } catch (DaoException e) {
                 logger.error("Service exception trying delete car", e);
                 throw new ServiceException(e);
@@ -177,7 +171,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public boolean changeCarActive(String carId, String active) throws ServiceException {
         boolean result = false;
-        if(validator.isValidId(carId) && validator.isValidCarActive(active)){
+        if(validator.isValidId(carId) && validator.isStringBoolean(active)){
             boolean changedActiveStatus = Boolean.parseBoolean(active);
             try {
                 result = carDao.changeCarActiveById(carId, !changedActiveStatus);

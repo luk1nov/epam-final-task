@@ -32,7 +32,10 @@
                     <div class="row">
                         <div class="col">
                             <div class="page-description">
-                                <h1>Edit user</h1>
+                                <h1>
+                                    <c:if test="${user == null}">Add new user</c:if>
+                                    <c:if test="${user != null}">Edit user</c:if>
+                                </h1>
                             </div>
                         </div>
                     </div>
@@ -42,13 +45,20 @@
                                 <div class="card-body">
                                     <div class="example-content">
                                         <form class="row g-3" action="controller" method="post">
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <label for="inputName" class="form-label">Name</label>
                                                 <input name="userName" type="text" class="form-control" id="inputName" value="${user.name}"/>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <label for="inputSurname" class="form-label">Surname</label>
                                                 <input name="userSurname" type="text" class="form-control" id="inputSurname" value="${user.surname}"/>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="inputPhone" class="form-label">Phone</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text" id="basic-addon1">+375</span>
+                                                    <input type="text" name="userPhone" class="form-control" id="inputPhone" aria-describedby="inputPhone" value="${user.phone}">
+                                                </div>
                                             </div>
                                             <div class="col-6">
                                                 <label for="inputEmail" class="form-label">Email</label>
@@ -70,14 +80,18 @@
                                                     <option <c:if test="${user.status == 'BLOCKED'}">selected</c:if>>Blocked</option>
                                                 </select>
                                             </div>
-                                            <%--<div class="col-md-12">
-                                                <label for="formFile" class="form-label">Driver license</label>
-                                                <input class="form-control" type="file" id="formFile">
-                                            </div>--%>
                                             <input type="hidden" name="userId" value="${user.id}">
-                                            <input type="hidden" name="command" value="admin_edit_user">
+
                                             <div class="col-12">
-                                                <button type="submit" class="btn btn-primary">Save</button>
+                                                <c:if test="${user == null}">
+                                                    <input type="hidden" name="command" value="admin_edit_user">
+                                                    <input type="submit" class="btn btn-primary" value="Add">
+                                                </c:if>
+                                                <c:if test="${user != null}">
+                                                    <input type="hidden" name="command" value="admin_add_new_user">
+                                                    <input type="submit" class="btn btn-primary" value="Edit">
+                                                </c:if>
+
                                             </div>
                                         </form>
                                     </div>
@@ -98,5 +112,11 @@
 <script src="${pageContext.request.contextPath}/resources/plugins/perfectscroll/perfect-scrollbar.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/main.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/custom.js"></script>
+<script>
+    document.getElementById('inputPhone').addEventListener('input', function (y) {
+        var b = y.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,3})(\d{0,2})(\d{0,2})/);
+        y.target.value = !b[2] ? b[1] : '' + b[1] + '-' + b[2] + (b[3] ? '-' + b[3] : '') + (b[4] ? '-' + b[4] : '');
+    });
+</script>
 </body>
 </html>

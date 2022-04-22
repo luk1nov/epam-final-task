@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -46,6 +47,7 @@
                                             <th scope="col">Role</th>
                                             <th scope="col">Status</th>
                                             <th scope="col">Email</th>
+                                            <th scope="col">Balance</th>
                                             <th scope="col">Actions</th>
                                         </tr>
                                         </thead>
@@ -75,6 +77,10 @@
                                                          </span>
                                                     </td>
                                                 <td>${user.email}</td>
+                                                <td>
+                                                    <fmt:setLocale value="en_US"/>
+                                                        <fmt:formatNumber value = "${user.balance}" type = "currency" maxFractionDigits = "2"/>
+                                                </td>
                                                 <td>
                                                     <div class="btn-group dropstart">
                                                         <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">

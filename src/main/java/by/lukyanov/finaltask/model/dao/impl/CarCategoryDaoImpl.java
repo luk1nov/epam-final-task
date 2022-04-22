@@ -35,7 +35,7 @@ public class CarCategoryDaoImpl implements CarCategoryDao {
         return instance;
     }
 
-    @Override
+
     public boolean insert(CarCategory category) throws DaoException {
         boolean result = false;
         try (Connection connection = pool.getConnection();
@@ -51,11 +51,12 @@ public class CarCategoryDaoImpl implements CarCategoryDao {
         return result;
     }
 
-    public boolean delete(String id) throws DaoException {
+    @Override
+    public boolean delete(long id) throws DaoException {
         boolean result = false;
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_DELETE_CAR_CATEGORY_BY_ID)) {
-            statement.setString(1, id);
+            statement.setLong(1, id);
             int resultRows = statement.executeUpdate();
             if (resultRows != 0){
                 result = true;

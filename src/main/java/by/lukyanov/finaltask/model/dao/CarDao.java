@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface CarDao extends BaseDao<Car>{
     Optional<Car> findCarById(String id) throws DaoException;
 
-    boolean insertWithImage(Car car, InputStream carImage) throws DaoException;
+    boolean insert(Car car, InputStream carImage) throws DaoException;
 
     boolean updateWithImage(Car car, InputStream carImage) throws DaoException;
 

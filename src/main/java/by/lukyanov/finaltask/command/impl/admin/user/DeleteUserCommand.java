@@ -30,11 +30,11 @@ public class DeleteUserCommand implements Command {
             }
         }
         if(result){
-            router.setPagePath(PagePath.SUCCESS_PAGE);
+            router.setPagePath(PagePath.ADMIN_SUCCESS_PAGE);
             router.setType(Router.Type.REDIRECT);
         } else {
             request.setAttribute(ParameterAndAttribute.MESSAGE, Message.USER_NOT_DELETED);
-            router.setPagePath(PagePath.FAIL_PAGE);
+            router.setPagePath(PagePath.ADMIN_FAIL_PAGE);
         }
         return router;
     }

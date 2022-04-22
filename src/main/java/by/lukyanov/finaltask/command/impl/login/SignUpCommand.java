@@ -18,16 +18,18 @@ public class SignUpCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         Router router = new Router();
-        String email = request.getParameter(ParameterAndAttribute.USER_EMAIL).strip();
+        String email = request.getParameter(ParameterAndAttribute.USER_EMAIL);
+        String phone = request.getParameter(ParameterAndAttribute.USER_PHONE);
         String password = request.getParameter(ParameterAndAttribute.USER_PASS);
         String repeatedPassword = request.getParameter(ParameterAndAttribute.USER_REPEAT_PASS);
-        String name = request.getParameter(ParameterAndAttribute.USER_NAME).strip();
-        String surname = request.getParameter(ParameterAndAttribute.USER_SURNAME).strip();
+        String name = request.getParameter(ParameterAndAttribute.USER_NAME);
+        String surname = request.getParameter(ParameterAndAttribute.USER_SURNAME);
 
         Map<String, String> userData = new HashMap<>();
         userData.put(ParameterAndAttribute.USER_NAME, name);
         userData.put(ParameterAndAttribute.USER_SURNAME, surname);
         userData.put(ParameterAndAttribute.USER_EMAIL, email);
+        userData.put(ParameterAndAttribute.USER_PHONE, phone);
         userData.put(ParameterAndAttribute.USER_PASS, password);
         if(repeatedPassword.equals(password)){
             try {

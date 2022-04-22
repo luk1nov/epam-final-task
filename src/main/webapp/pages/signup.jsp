@@ -33,6 +33,12 @@
                 <label for="signUpSurname" class="form-label">Surname</label>
                 <input type="text" name="userSurname" class="form-control m-b-md" id="signUpSurname" aria-describedby="signUpSurname">
 
+                <label for="signUpPhone" class="form-label">Phone</label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">+375</span>
+                    <input type="text" name="userPhone" class="form-control" id="signUpPhone" aria-describedby="signUpPhone">
+                </div>
+
                 <label for="signUpEmail" class="form-label">Email address</label>
                 <input type="email" name="userEmail" class="form-control m-b-md" id="signUpEmail" aria-describedby="signUpEmail" >
 
@@ -56,5 +62,11 @@
 <script src="${pageContext.request.contextPath}/resources/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/main.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/custom.js"></script>
+<script>
+    document.getElementById('signUpPhone').addEventListener('input', function (y) {
+        var b = y.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,3})(\d{0,2})(\d{0,2})/);
+        y.target.value = !b[2] ? b[1] : '' + b[1] + '-' + b[2] + (b[3] ? '-' + b[3] : '') + (b[4] ? '-' + b[4] : '');
+    });
+</script>
 </body>
 </html>

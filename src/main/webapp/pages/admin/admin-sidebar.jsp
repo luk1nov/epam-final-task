@@ -20,7 +20,11 @@
                 Users
             </li>
             <li>
-                <a href="users/add-new-user.jsp"><i class="material-icons-two-tone">person_add</i>Add new user</a>
+                <form action="/controller" method="POST">
+                    <input type="hidden" name="command" value="admin_to_add_new_user">
+                    <i class="material-icons-two-tone">person_add</i>
+                    <input type="submit" value="Add new user">
+                </form>
             </li>
             <li>
                 <form action="/controller" method="POST">

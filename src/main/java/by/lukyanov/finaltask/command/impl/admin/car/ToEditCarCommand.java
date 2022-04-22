@@ -39,7 +39,7 @@ public class ToEditCarCommand implements Command {
                 request.setAttribute(CAR, car);
             } else{
                 logger.debug("car not found");
-                router.setPagePath(PagePath.FAIL_PAGE);
+                router.setPagePath(PagePath.ADMIN_FAIL_PAGE);
                 request.setAttribute(MESSAGE, Message.CAN_NOT_EDIT_USER);
             }
         } catch (ServiceException e) {
