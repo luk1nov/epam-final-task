@@ -66,9 +66,7 @@ public class ConnectionPool {
                 }
             } catch (InterruptedException | SQLException e) {
                 logger.error("connection didn't created again");
-            }
-            if(freeConnections.size() != POOL_SIZE){
-                throw new ExceptionInInitializerError(Message.POOL_FILL_ERROR);
+                throw new RuntimeException(Message.POOL_FILL_ERROR);
             }
         }
         logger.info("Connection pool init " + freeConnections.size());
@@ -104,24 +102,22 @@ public class ConnectionPool {
             logger.error(Message.GET_CON_EXCEPT);
             Thread.currentThread().interrupt();
         }
-        logger.debug("availible " + freeConnections.size());
         return connection;
     }
 
     public boolean releaseConnection(Connection connection){
+        boolean isReleased = false;
         if(connection instanceof ProxyConnection proxyConnection){
             try {
                 usedConnections.remove(proxyConnection);
                 freeConnections.put(proxyConnection);
+                isReleased = true;
             } catch (InterruptedException e) {
                 logger.error(Message.RELEASE_CON_EXCEPT);
                 Thread.currentThread().interrupt();
             }
-            logger.debug("availible " + freeConnections.size());
-            return true;
-        } else {
-            return false;
         }
+        return isReleased;
     }
 
     public void destroyPool(){

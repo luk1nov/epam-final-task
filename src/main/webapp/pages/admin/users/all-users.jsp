@@ -69,6 +69,9 @@
                                                         <c:when test="${user.status == 'BLOCKED'}">
                                                             <span class="badge badge-style-light rounded-pill badge-danger">
                                                         </c:when>
+                                                        <c:when test="${user.status == 'VERIFICATION'}">
+                                                            <span class="badge badge-style-light rounded-pill badge-primary">
+                                                        </c:when>
                                                         <c:otherwise>
                                                             <span class="badge badge-style-light rounded-pill badge-light">
                                                         </c:otherwise>

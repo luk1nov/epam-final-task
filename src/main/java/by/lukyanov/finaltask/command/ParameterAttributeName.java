@@ -1,6 +1,6 @@
 package by.lukyanov.finaltask.command;
 
-public class ParameterAndAttribute {
+public class ParameterAttributeName {
 //    request
     public static final String COMMAND = "command";
     public static final String LANGUAGE = "language";
@@ -9,6 +9,7 @@ public class ParameterAndAttribute {
     public static final String USER_SURNAME = "userSurname";
     public static final String USER_PHONE = "userPhone";
     public static final String USER_EMAIL = "userEmail";
+    public static final String USER_DRIVER_LICENSE = "userDriverLicense";
     public static final String USER_PASS = "userPass";
     public static final String USER_REPEAT_PASS = "userRepeatPass";
     public static final String USER_ROLE = "userRole";
@@ -23,6 +24,7 @@ public class ParameterAndAttribute {
     public static final String CAR_MODEL = "carModel";
     public static final String CAR_REGULAR_PRICE = "carRegularPrice";
     public static final String CAR_SALE_PRICE = "carSalePrice";
+    public static final String CAR_PRICE = "carPrice";
     public static final String CAR_ACTIVE = "carActive";
     public static final String CAR_IMAGE = "carImage";
     public static final String CAR_CATEGORY = "carCategory";
@@ -33,6 +35,12 @@ public class ParameterAndAttribute {
     public static final String CAR_CATEGORY_TITLE = "carCategoryTitle";
     public static final String CAR_CATEGORY_ID = "carCategoryId";
     public static final String REFILL_AMOUNT = "refillAmount";
+    public static final String CURRENT_PASSWORD = "currentPass";
+    public static final String NEW_PASSWORD = "newPass";
+    public static final String REPEATED_NEW_PASSWORD = "repeatNewPass";
+    public static final String ORDER_DATE_RANGE = "orderDateRange";
+    public static final String ORDER_ID = "orderId";
+    public static final String ORDER_MESSAGE = "orderMessage";
 
     /* session */
     public static final String LOGGED_USER = "loggedUser";
@@ -43,6 +51,6 @@ public class ParameterAndAttribute {
     /* util */
     public static final String LIST = "list";
 
-    private ParameterAndAttribute() {
+    private ParameterAttributeName() {
     }
 }

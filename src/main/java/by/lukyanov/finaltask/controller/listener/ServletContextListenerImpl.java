@@ -12,4 +12,8 @@ public class ServletContextListenerImpl implements ServletContextListener {
         ConnectionPool.getInstance();
     }
 
+    @Override
+    public void contextDestroyed(ServletContextEvent sce) {
+        ConnectionPool.getInstance().destroyPool();
+    }
 }

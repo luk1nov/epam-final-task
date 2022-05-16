@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static by.lukyanov.finaltask.command.Message.CAR_NOT_ADDED;
-import static by.lukyanov.finaltask.command.ParameterAndAttribute.*;
+import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class AddNewCarCommand implements Command {
     private static final Logger logger = LogManager.getLogger();

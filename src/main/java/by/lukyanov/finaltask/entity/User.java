@@ -7,24 +7,18 @@ public final class User extends AbstractEntity{
     private String password;
     private String name;
     private String surname;
-    private Role role;
-    private Status status;
+    private UserRole role;
+    private UserStatus status;
     private String phone;
     private BigDecimal balance;
     private String driverLicense;
 
-    public enum Role{
-        ADMIN,
-        MANAGER,
-        USER,
-        GUEST
+    public User(){
+        super();
     }
 
-    public enum Status{
-        ACTIVE,
-        VERIFICATION,
-        INACTIVE,
-        BLOCKED
+    public User(long id) {
+        super(id);
     }
 
     public String getEmail() {
@@ -59,19 +53,19 @@ public final class User extends AbstractEntity{
         this.surname = surname;
     }
 
-    public Role getRole() {
+    public UserRole getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(UserRole role) {
         this.role = role;
     }
 
-    public Status getStatus() {
+    public UserStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(UserStatus status) {
         this.status = status;
     }
 
@@ -181,12 +175,12 @@ public final class User extends AbstractEntity{
             return this;
         }
 
-        public UserBuilder role(Role role){
+        public UserBuilder role(UserRole role){
             user.role = role;
             return this;
         }
 
-        public UserBuilder status(Status status){
+        public UserBuilder status(UserStatus status){
             user.status = status;
             return this;
         }

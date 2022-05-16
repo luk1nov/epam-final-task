@@ -8,7 +8,11 @@
                 Orders
             </li>
             <li>
-                <a href="orders/rental_requests.jsp"><i class="material-icons-two-tone">upload</i>Rental requests</a>
+                <form action="/controller" method="POST">
+                    <input type="hidden" name="command" value="admin_find_processing_orders">
+                    <i class="material-icons-two-tone">upload</i>
+                    <input type="submit" value="Rental requests">
+                </form>
             </li>
             <li>
                 <a href="orders/return_requests.jsp"><i class="material-icons-two-tone">download</i>Return requests</a>
@@ -31,6 +35,13 @@
                     <input type="hidden" name="command" value="admin_to_all_users">
                     <i class="material-icons-two-tone">people</i>
                     <input type="submit" value="All users">
+                </form>
+            </li>
+            <li>
+                <form action="/controller" method="POST">
+                    <input type="hidden" name="command" value="admin_to_unverified_users">
+                    <i class="material-icons-two-tone">manage_accounts</i>
+                    <input type="submit" value="Unverified users">
                 </form>
             </li>
             <li class="sidebar-title">

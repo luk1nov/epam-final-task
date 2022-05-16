@@ -5,6 +5,7 @@ import by.lukyanov.finaltask.entity.User;
 import by.lukyanov.finaltask.exception.CommandException;
 import by.lukyanov.finaltask.exception.ServiceException;
 import by.lukyanov.finaltask.model.service.impl.UserServiceImpl;
+import by.lukyanov.finaltask.util.PasswordEncoder;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
@@ -19,21 +20,25 @@ public class SignInCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         Router router = new Router();
-        String email = request.getParameter(ParameterAndAttribute.USER_EMAIL).strip();
-        String password = request.getParameter(ParameterAndAttribute.USER_PASS);
+        String email = request.getParameter(ParameterAttributeName.USER_EMAIL).strip();
+        String password = request.getParameter(ParameterAttributeName.USER_PASS);
         Optional<User> optionalUser;
-        User user;
         HttpSession session = request.getSession();
         try {
-            optionalUser = userService.authenticate(email, password);
+            optionalUser = userService.findUserByEmail(email);
             if (optionalUser.isPresent()){
-                user = optionalUser.get();
-                session.setAttribute(ParameterAndAttribute.LOGGED_USER, user);
-                router.setType(Router.Type.REDIRECT);
-                router.setPagePath(PagePath.MAIN_PAGE);
+                User user = optionalUser.get();
+                if(PasswordEncoder.getInstance().verify(user.getPassword(), password)){
+                    session.setAttribute(ParameterAttributeName.LOGGED_USER, user);
+                    router.setType(Router.Type.REDIRECT);
+                    router.setPagePath(PagePath.MAIN_PAGE);
+                } else {
+                    router.setPagePath(PagePath.SIGNIN_PAGE);
+                    request.setAttribute(ParameterAttributeName.MESSAGE, Message.INCORRECT_EMAIL_OR_LOGIN);
+                }
             } else {
                 router.setPagePath(PagePath.SIGNIN_PAGE);
-                request.setAttribute(ParameterAndAttribute.MESSAGE, Message.INCORRECT_EMAIL_OR_LOGIN);
+                request.setAttribute(ParameterAttributeName.MESSAGE, "User not exists");
             }
         } catch (ServiceException e) {
             logger.error("Command exception trying authenticate user by email & pass", e);

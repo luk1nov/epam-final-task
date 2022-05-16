@@ -8,13 +8,17 @@ public final class Car extends AbstractEntity{
     private String model;
     private BigDecimal regularPrice;
     private BigDecimal salePrice;
-    private boolean active;
+    private boolean active = true;
     private String image;
     private CarCategory carCategory;
     private CarInfo info;
 
     public Car() {
-        active = true;
+        super();
+    }
+
+    public Car(long id){
+        super(id);
     }
 
     public String getBrand() {

@@ -1,7 +1,7 @@
 package by.lukyanov.finaltask.command.impl.admin.car;
 
 import by.lukyanov.finaltask.command.Command;
-import by.lukyanov.finaltask.command.ParameterAndAttribute;
+import by.lukyanov.finaltask.command.ParameterAttributeName;
 import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.exception.CommandException;
 import by.lukyanov.finaltask.exception.ServiceException;
@@ -20,7 +20,7 @@ public class DeleteCarCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         Router router = new Router();
-        String carId = request.getParameter(ParameterAndAttribute.CAR_ID);
+        String carId = request.getParameter(ParameterAttributeName.CAR_ID);
         try {
             if (carService.deleteCarById(carId)){
                 router.setType(Router.Type.REDIRECT);

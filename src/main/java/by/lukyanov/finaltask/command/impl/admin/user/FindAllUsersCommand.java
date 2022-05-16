@@ -2,7 +2,7 @@ package by.lukyanov.finaltask.command.impl.admin.user;
 
 import by.lukyanov.finaltask.command.Command;
 import by.lukyanov.finaltask.command.PagePath;
-import by.lukyanov.finaltask.command.ParameterAndAttribute;
+import by.lukyanov.finaltask.command.ParameterAttributeName;
 import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.entity.User;
 import by.lukyanov.finaltask.exception.CommandException;
@@ -23,7 +23,7 @@ public class FindAllUsersCommand implements Command {
         Router router = new Router();
         try {
             List<User> users = userService.findAllUsers();
-            request.setAttribute(ParameterAndAttribute.ALL_USERS, users);
+            request.setAttribute(ParameterAttributeName.ALL_USERS, users);
             router.setType(Router.Type.FORWARD);
             router.setPagePath(PagePath.ADMIN_ALL_USERS);
         } catch (ServiceException e) {

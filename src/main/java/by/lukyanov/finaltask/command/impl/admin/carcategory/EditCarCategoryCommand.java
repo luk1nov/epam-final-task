@@ -10,7 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import static by.lukyanov.finaltask.command.PagePath.*;
-import static by.lukyanov.finaltask.command.ParameterAndAttribute.*;
+import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class EditCarCategoryCommand implements Command {
     private static final Logger logger = LogManager.getLogger();

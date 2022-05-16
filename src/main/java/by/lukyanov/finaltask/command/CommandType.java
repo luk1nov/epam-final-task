@@ -2,18 +2,20 @@ package by.lukyanov.finaltask.command;
 
 import by.lukyanov.finaltask.command.impl.ChangeLocaleCommand;
 import by.lukyanov.finaltask.command.impl.DefaultCommand;
+import by.lukyanov.finaltask.command.impl.admin.order.AcceptOrderCommand;
+import by.lukyanov.finaltask.command.impl.admin.order.DeclineOrderCommand;
+import by.lukyanov.finaltask.command.impl.admin.order.FindProcessingOrdersCommand;
+import by.lukyanov.finaltask.command.impl.navigation.*;
 import by.lukyanov.finaltask.command.impl.admin.car.*;
 import by.lukyanov.finaltask.command.impl.admin.carcategory.*;
 import by.lukyanov.finaltask.command.impl.admin.user.*;
 import by.lukyanov.finaltask.command.impl.login.LogOutCommand;
 import by.lukyanov.finaltask.command.impl.login.SignInCommand;
 import by.lukyanov.finaltask.command.impl.login.SignUpCommand;
-import by.lukyanov.finaltask.command.impl.navigation.ToCarCategoryCommand;
-import by.lukyanov.finaltask.command.impl.navigation.ToSignInCommand;
-import by.lukyanov.finaltask.command.impl.navigation.ToSignUpCommand;
-import by.lukyanov.finaltask.command.impl.user.RefillBalanceCommand;
-import by.lukyanov.finaltask.command.impl.user.ToRefillBalanceCommand;
-import jakarta.servlet.http.HttpServletRequest;
+import by.lukyanov.finaltask.command.impl.order.CancelOrderCommand;
+import by.lukyanov.finaltask.command.impl.order.CreateOrderCommand;
+import by.lukyanov.finaltask.command.impl.order.FindAllUserOrdersCommand;
+import by.lukyanov.finaltask.command.impl.user.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,6 +31,15 @@ public enum CommandType {
     TO_CAR_CATEGORY_PAGE(new ToCarCategoryCommand()),
     TO_REFILL_BALANCE(new ToRefillBalanceCommand()),
     REFILL_BALANCE(new RefillBalanceCommand()),
+    TO_USER_ACCOUNT(new ToUserAccountCommand()),
+    UPDATE_USER_INFO(new UpdateUserInfoCommand()),
+    UPDATE_DRIVER_LICENSE(new UpdateDriverLicenseCommand()),
+    CHANGE_PASSWORD(new ChangePasswordCommand()),
+    FIND_ALL_USER_ORDERS(new FindAllUserOrdersCommand()),
+    CANCEL_USER_ORDER(new CancelOrderCommand()),
+    TO_CAR_PAGE(new ToCarPageCommand()),
+    CREATE_ORDER(new CreateOrderCommand()),
+    TO_RETURN_CAR(new ToReturnCarCommand()),
 
     //ADMIN
     ADMIN_TO_ALL_USERS(new FindAllUsersCommand()),
@@ -36,6 +47,9 @@ public enum CommandType {
     ADMIN_TO_EDIT_USER(new ToEditUserCommand()),
     ADMIN_EDIT_USER(new EditUserCommand()),
     ADMIN_DELETE_USER(new DeleteUserCommand()),
+    ADMIN_TO_UNVERIFIED_USERS(new ToUnverifiedUsersCommand()),
+    ADMIN_VERIFY_USER(new VerifyUserCommand()),
+    ADMIN_DECLINE_USER(new DeclineUserVerificationCommand()),
     ADMIN_TO_ALL_CARS(new FindAllCarsCommand()),
     ADMIN_TO_ADD_NEW_CAR(new ToAddNewCarCommand()),
     ADMIN_ADD_NEW_CAR(new AddNewCarCommand()),
@@ -48,6 +62,10 @@ public enum CommandType {
     ADMIN_TO_ALL_CAR_CATEGORIES(new FindAllCarCategoriesCommand()),
     ADMIN_TO_EDIT_CAR_CATEGORY(new ToEditCarCategoryCommand()),
     ADMIN_DELETE_CAR_CATEGORY(new DeleteCarCategoryCommand()),
+    ADMIN_FIND_PROCESSING_ORDERS(new FindProcessingOrdersCommand()),
+    ADMIN_ACCEPT_ORDER(new AcceptOrderCommand()),
+    ADMIN_TO_DECLINE_ORDER(new ToDeclineOrderCommand()),
+    ADMIN_DECLINE_ORDER(new DeclineOrderCommand()),
     ADMIN_EDIT_CAR_CATEGORY(new EditCarCategoryCommand());
 
     private static final Logger logger = LogManager.getLogger();
@@ -61,19 +79,18 @@ public enum CommandType {
         return command;
     }
 
-    public static Command define(HttpServletRequest request){
-        String command = request.getParameter(ParameterAndAttribute.COMMAND.toLowerCase());
+    public static Command define(String command){
         Command definedCommand;
-        if(command == null){
-            logger.error("command null");
-            definedCommand = DEFAULT.getCommand();
-        } else {
-            try {
-                definedCommand = valueOf(command.toUpperCase()).getCommand();
-            } catch (IllegalArgumentException e){
-                logger.error(e.getMessage());
+        try {
+            if(command == null){
+                logger.error("Command is null");
                 definedCommand = DEFAULT.getCommand();
+            } else {
+                definedCommand = valueOf(command.toUpperCase()).getCommand();
             }
+        } catch (IllegalArgumentException e){
+            logger.error(e.getMessage());
+            definedCommand = DEFAULT.getCommand();
         }
         return definedCommand;
     }

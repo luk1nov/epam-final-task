@@ -2,7 +2,7 @@ package by.lukyanov.finaltask.command.impl.admin.carcategory;
 
 import by.lukyanov.finaltask.command.Command;
 import by.lukyanov.finaltask.command.PagePath;
-import by.lukyanov.finaltask.command.ParameterAndAttribute;
+import by.lukyanov.finaltask.command.ParameterAttributeName;
 import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.entity.CarCategory;
 import by.lukyanov.finaltask.exception.CommandException;
@@ -23,7 +23,7 @@ public class FindAllCarCategoriesCommand implements Command {
         Router router = new Router();
         try {
             List<CarCategory> carCategories = carCategoryService.findAllCarCategories();
-            request.setAttribute(ParameterAndAttribute.LIST, carCategories);
+            request.setAttribute(ParameterAttributeName.LIST, carCategories);
             router.setPagePath(PagePath.ADMIN_ALL_CAR_CATEGORIES);
         } catch (ServiceException e) {
             logger.error("Service exception trying find all categories", e);

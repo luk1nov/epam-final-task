@@ -9,9 +9,11 @@
     background-size: cover;
 }
 
-.error-card.error-stacktrace{
+.error-card .error-stacktrace{
     max-height: 400px;
-    overflow-y: scroll;
+    max-width: 900px;
+    overflow: auto;
+    margin: 0;
 }
 
 .error-card{
@@ -111,6 +113,8 @@ li.admin-home-link form input[type="submit"], .accordion-menu li form input[type
 }
 
 .car-card-row>*{
+    line-height: 1.15;
+    max-width: 170px;
     width: auto;
     margin: 0;
 }
@@ -159,5 +163,13 @@ li.admin-home-link form input[type="submit"], .accordion-menu li form input[type
     background-size: contain;
 }
 
+.admin-panel-btn{
+    background: url("../images/icons/admin_panel_settings.svg");
+}
 
+.order-car-link{
+    border: none;
+    background: none;
+    text-decoration: underline;
+}
 

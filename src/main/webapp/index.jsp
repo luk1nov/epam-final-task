@@ -31,64 +31,9 @@
                     <div class="row">
                         <div class="col">
                             <div class="page-description">
-                                <h1>Full-width Header</h1>
-                                <span>Header without spacing to sidebar and page edges. <div
-                                        class="alert alert-secondary m-t-lg" role="alert">Note! Logo block with user
-                                            info in it is not compatible with full-width header.</div></span>
+                                <h1><fmt:message key="label.main_page"/></h1>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="card">
-                                <img src="${pageContext.request.contextPath}/resources/images/cards/card.png" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card title</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card">
-                                <img src="${pageContext.request.contextPath}/resources/images/cards/card.png" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                    <h5 class="card-title">Bentley continental 2019</h5>
-                                    <p class="card-text">
-                                        Acceleration 0-100: 3.3s<br>
-                                        Power: 670hp<br>
-                                        Drivetrain: AWD<br>
-                                    </p>
-                                    <div class="row car-card-row">
-                                        <p class="card-text">Price: $600/hour</p>
-                                        <form action="/controller" method="POST">
-                                            <input type="hidden" name="car_id" value="">
-                                            <input type="hidden" name="command" value="">
-                                            <input class="btn btn-primary" type="submit" value="Rent">
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card">
-                                <img src="${pageContext.request.contextPath}/resources/images/cards/card.png" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card title</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card">
-                                <img src="${pageContext.request.contextPath}/resources/images/cards/card.png" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card title</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                                </div>
-                            </div>
+                            ${message}
                         </div>
                     </div>
                 </div>

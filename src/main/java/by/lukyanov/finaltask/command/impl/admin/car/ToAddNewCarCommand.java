@@ -12,7 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.util.List;
 
-import static by.lukyanov.finaltask.command.ParameterAndAttribute.LIST;
+import static by.lukyanov.finaltask.command.ParameterAttributeName.LIST;
 
 
 public class ToAddNewCarCommand implements Command {

@@ -1,6 +1,7 @@
 package by.lukyanov.finaltask.util;
 
 import by.lukyanov.finaltask.exception.DaoException;
+import by.lukyanov.finaltask.exception.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,10 +26,9 @@ public final class ImageEncoder {
         return instance;
     }
 
-    public String encodeBlob(Blob blob) throws DaoException {
+    public String decodeBlob(Blob blob) throws DaoException {
         String base64Image = null;
         if (blob != null){
-            logger.debug("blob not null");
             try (InputStream inputStream = blob.getBinaryStream();
                  ByteArrayOutputStream outputStream = new ByteArrayOutputStream()){
                 byte[] buffer = new byte[4096];
@@ -43,6 +43,23 @@ public final class ImageEncoder {
                 throw new DaoException(e);
             }
         }
+        return base64Image;
+    }
+
+    public String decodeInputStream(InputStream is) throws ServiceException {
+        String base64Image;
+            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()){
+                byte[] buffer = new byte[4096];
+                int bytesRead = -1;
+                while ((bytesRead = is.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+                byte[] imageBytes = outputStream.toByteArray();
+                base64Image = Base64.getEncoder().encodeToString(imageBytes);
+            } catch (IOException e) {
+                logger.error("Dao exception trying encode blob", e);
+                throw new ServiceException(e);
+            }
         return base64Image;
     }
 }

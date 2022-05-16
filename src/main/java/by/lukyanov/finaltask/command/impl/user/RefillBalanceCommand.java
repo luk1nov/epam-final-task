@@ -1,7 +1,6 @@
 package by.lukyanov.finaltask.command.impl.user;
 
 import by.lukyanov.finaltask.command.Command;
-import by.lukyanov.finaltask.command.ParameterAndAttribute;
 import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.entity.User;
 import by.lukyanov.finaltask.exception.CommandException;
@@ -13,7 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import static by.lukyanov.finaltask.command.PagePath.*;
-import static by.lukyanov.finaltask.command.ParameterAndAttribute.*;
+import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class RefillBalanceCommand implements Command {
     private static final Logger logger = LogManager.getLogger();

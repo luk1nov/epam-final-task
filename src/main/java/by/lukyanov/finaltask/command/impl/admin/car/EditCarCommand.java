@@ -2,7 +2,7 @@ package by.lukyanov.finaltask.command.impl.admin.car;
 
 import by.lukyanov.finaltask.command.Command;
 import by.lukyanov.finaltask.command.PagePath;
-import by.lukyanov.finaltask.command.ParameterAndAttribute;
+import by.lukyanov.finaltask.command.ParameterAttributeName;
 import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.exception.CommandException;
 import by.lukyanov.finaltask.exception.ServiceException;
@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static by.lukyanov.finaltask.command.Message.*;
-import static by.lukyanov.finaltask.command.ParameterAndAttribute.*;
+import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class EditCarCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -51,14 +51,14 @@ public class EditCarCommand implements Command {
         carData.put(CAR_INFO_DRIVETRAIN, drivetrain);
         carData.put(UPLOAD_IMAGE, uploadImg);
         if(!salePrice.isBlank()){
-            carData.put(ParameterAndAttribute.CAR_SALE_PRICE, salePrice);
+            carData.put(ParameterAttributeName.CAR_SALE_PRICE, salePrice);
         }
         try (InputStream is = request.getPart(CAR_IMAGE).getInputStream()){
             if (carService.updateCar(carData, is)) {
                 router.setPagePath(PagePath.ADMIN_SUCCESS_PAGE);
                 router.setType(Router.Type.REDIRECT);
             } else {
-                request.setAttribute(ParameterAndAttribute.MESSAGE, CAR_NOT_EDITED);
+                request.setAttribute(ParameterAttributeName.MESSAGE, CAR_NOT_EDITED);
                 router.setPagePath(PagePath.ADMIN_FAIL_PAGE);
             }
         } catch (ServiceException | ServletException | IOException e) {

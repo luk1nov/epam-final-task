@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.Optional;
 
-import static by.lukyanov.finaltask.command.ParameterAndAttribute.*;
+import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class ToEditCarCommand implements Command {
     private static final Logger logger = LogManager.getLogger();

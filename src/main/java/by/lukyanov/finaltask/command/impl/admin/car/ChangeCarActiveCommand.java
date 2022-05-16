@@ -1,7 +1,7 @@
 package by.lukyanov.finaltask.command.impl.admin.car;
 
 import by.lukyanov.finaltask.command.Command;
-import by.lukyanov.finaltask.command.ParameterAndAttribute;
+import by.lukyanov.finaltask.command.ParameterAttributeName;
 import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.exception.CommandException;
 import by.lukyanov.finaltask.exception.ServiceException;
@@ -10,8 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static by.lukyanov.finaltask.command.PagePath.ADMIN_FAIL_PAGE;
-import static by.lukyanov.finaltask.command.PagePath.ADMIN_SUCCESS_PAGE;
+import static by.lukyanov.finaltask.command.PagePath.*;
 
 public class ChangeCarActiveCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -19,13 +18,12 @@ public class ChangeCarActiveCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Router router = new Router();
-        String carId = request.getParameter(ParameterAndAttribute.CAR_ID);
-        String active = request.getParameter(ParameterAndAttribute.CAR_ACTIVE);
+        Router router = new Router(TO_ALL_CARS);
+        String carId = request.getParameter(ParameterAttributeName.CAR_ID);
+        String active = request.getParameter(ParameterAttributeName.CAR_ACTIVE);
         try {
             if (carService.changeCarActive(carId, active)){
                 router.setType(Router.Type.REDIRECT);
-                router.setPagePath(ADMIN_SUCCESS_PAGE);
             } else {
                 router.setPagePath(ADMIN_FAIL_PAGE);
             }

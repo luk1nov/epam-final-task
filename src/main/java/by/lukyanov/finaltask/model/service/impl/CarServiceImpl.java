@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static by.lukyanov.finaltask.command.ParameterAndAttribute.*;
+import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class CarServiceImpl implements CarService {
     private static final Logger logger = LogManager.getLogger();
@@ -39,7 +39,7 @@ public class CarServiceImpl implements CarService {
         Optional<String> salePrice = Optional.ofNullable(carData.get(CAR_SALE_PRICE));
 
         if (validator.isOneWord(brand) && validator.isValidCarModel(model) && validator.isValidPrice(regularPrice) &&
-                validator.isStringBoolean(isActive) && validator.isValidAcceleration(acceleration) && validator.isValidPower(power) &&
+                validator.isValidAcceleration(acceleration) && validator.isValidPower(power) &&
                 validator.isValidId(categoryId) && (salePrice.isEmpty() || validator.isValidPrice(salePrice.get()) && comparePrices(regularPrice, salePrice.get()))){
             try {
                 CarInfo carInfo = new CarInfo(Double.parseDouble(acceleration), Integer.parseInt(power), CarInfo.Drivetrain.valueOf(drivetrain.toUpperCase()));
@@ -80,7 +80,7 @@ public class CarServiceImpl implements CarService {
         Optional<Car> car;
         if (validator.isValidId(id)){
             try {
-                car = carDao.findCarById(id);
+                car = carDao.findCarById(Long.parseLong(id));
             } catch (DaoException e) {
                 logger.error("Service exception trying find car by id", e);
                 throw new ServiceException(e);
@@ -107,7 +107,7 @@ public class CarServiceImpl implements CarService {
         String changeImg = carData.get(UPLOAD_IMAGE);
 
         if (validator.isOneWord(brand) && validator.isValidCarModel(model) && validator.isValidPrice(regularPrice) &&
-                validator.isStringBoolean(isActive) && validator.isValidAcceleration(acceleration) && validator.isValidPower(power) &&
+                validator.isValidAcceleration(acceleration) && validator.isValidPower(power) &&
                 validator.isValidId(categoryId) && (salePrice.isEmpty() || validator.isValidPrice(salePrice.get()) && comparePrices(regularPrice, salePrice.get()))){
             try {
                 CarInfo carInfo = new CarInfo(Double.parseDouble(acceleration), Integer.parseInt(power), CarInfo.Drivetrain.valueOf(drivetrain.toUpperCase()));
@@ -141,7 +141,7 @@ public class CarServiceImpl implements CarService {
         List<Car> cars;
         if (validator.isValidId(id)) {
             try {
-                cars = carDao.findCarsByCategoryId(id);
+                cars = carDao.findCarsByCategoryId(Long.parseLong(id));
             } catch (DaoException e) {
                 logger.error("Service exception trying find cars by category id", e);
                 throw new ServiceException(e);
@@ -171,10 +171,10 @@ public class CarServiceImpl implements CarService {
     @Override
     public boolean changeCarActive(String carId, String active) throws ServiceException {
         boolean result = false;
-        if(validator.isValidId(carId) && validator.isStringBoolean(active)){
+        if(validator.isValidId(carId)){
             boolean changedActiveStatus = Boolean.parseBoolean(active);
             try {
-                result = carDao.changeCarActiveById(carId, !changedActiveStatus);
+                result = carDao.changeCarActiveById(Long.parseLong(carId), !changedActiveStatus);
             } catch (DaoException e) {
                 logger.error("Service exception trying change car active status", e);
                 throw new ServiceException(e);

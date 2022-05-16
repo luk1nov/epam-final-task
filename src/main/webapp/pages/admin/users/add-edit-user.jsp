@@ -76,6 +76,7 @@
                                                 <label for="inputStatus" class="form-label">Status</label>
                                                 <select name="userStatus" id="inputStatus" class="form-select">
                                                     <option <c:if test="${user.status == 'ACTIVE'}">selected</c:if>>Active</option>
+                                                    <option <c:if test="${user.status == 'VERIFICATION'}">selected</c:if>>Verification</option>
                                                     <option <c:if test="${user.status == 'INACTIVE'}">selected</c:if>>Inactive</option>
                                                     <option <c:if test="${user.status == 'BLOCKED'}">selected</c:if>>Blocked</option>
                                                 </select>
@@ -84,14 +85,13 @@
 
                                             <div class="col-12">
                                                 <c:if test="${user == null}">
-                                                    <input type="hidden" name="command" value="admin_edit_user">
+                                                    <input type="hidden" name="command" value="admin_add_new_user">
                                                     <input type="submit" class="btn btn-primary" value="Add">
                                                 </c:if>
                                                 <c:if test="${user != null}">
-                                                    <input type="hidden" name="command" value="admin_add_new_user">
+                                                    <input type="hidden" name="command" value="admin_edit_user">
                                                     <input type="submit" class="btn btn-primary" value="Edit">
                                                 </c:if>
-
                                             </div>
                                         </form>
                                     </div>

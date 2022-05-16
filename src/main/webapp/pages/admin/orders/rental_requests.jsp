@@ -1,10 +1,7 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Anton
-  Date: 30.03.2022
-  Time: 0:36
-  To change this template use File | Settings | File Templates.
---%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${locale}" scope="session"/>
+<fmt:setBundle basename="pagecontent"/>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -23,15 +20,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/plugins/perfectscroll/perfect-scrollbar.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/resources/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/resources/plugins/perfectscroll/perfect-scrollbar.css" rel="stylesheet">
 
     <!-- Theme Styles -->
-    <link href="${pageContext.request.contextPath}/css/main.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/css/custom.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/resources/css/main.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/resources/css/custom.css" rel="stylesheet">
 
-    <link rel="icon" type="image/png" sizes="32x32" href="${pageContext.request.contextPath}/images/neptune.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="${pageContext.request.contextPath}/images/neptune.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="${pageContext.request.contextPath}/resources/images/neptune.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="${pageContext.request.contextPath}/resources/images/neptune.png" />
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -60,63 +57,87 @@
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <table class="table">
+                                    <c:if test="${empty list}">
+                                        <div class="alert alert-primary alert-style-light" role="alert">
+                                            <fmt:message key="label.rental_requests_empty"/>
+                                        </div>
+                                    </c:if>
+                                    <c:if test="${not empty list}">
+                                        <table class="table">
                                         <thead>
                                         <tr>
+                                            <th scope="col">ID</th>
                                             <th scope="col">User</th>
                                             <th scope="col">Car</th>
                                             <th scope="col">From</th>
                                             <th scope="col">To</th>
-                                            <th scope="col">User status</th>
                                             <th scope="col">Car status</th>
+                                            <th scope="col">User status</th>
                                             <th scope="col">Actions</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td><a href="#">Mark Otto</a></td>
-                                            <td><a href="#">Bentley Continental 2019</a></td>
-                                            <td>27/03/2022 19:51</td>
-                                            <td>30/03/2022 19:51</td>
-                                            <td><span class="badge badge-style-light rounded-pill badge-success">Active</span></td>
-                                            <td><span class="badge badge-style-light rounded-pill badge-success">Active</span></td>
-                                            <td>
-                                                <div class="btn-group" role="group" aria-label="Basic example">
-                                                    <button type="button" class="btn btn-danger">Decline</button>
-                                                    <button type="button" class="btn btn-success">Accept</button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">Mark Otto</a></td>
-                                            <td><a href="#">Bentley Continental 2019</a></td>
-                                            <td>27/03/2022 19:51</td>
-                                            <td>30/03/2022 19:51</td>
-                                            <td><span class="badge badge-style-light rounded-pill badge-warning">Inactive</span></td>
-                                            <td><span class="badge badge-style-light rounded-pill badge-success">Active</span></td>
-                                            <td>
-                                                <div class="btn-group" role="group" aria-label="Basic example">
-                                                    <button type="button" class="btn btn-danger">Decline</button>
-                                                    <button type="button" class="btn btn-success">Accept</button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">Mark Otto</a></td>
-                                            <td><a href="#">Bentley Continental 2019</a></td>
-                                            <td>27/03/2022 19:51</td>
-                                            <td>30/03/2022 19:51</td>
-                                            <td><span class="badge badge-style-light rounded-pill badge-danger">Blocked</span></td>
-                                            <td><span class="badge badge-style-light rounded-pill badge-danger">Repair</span></td>
-                                            <td>
-                                                <div class="btn-group" role="group" aria-label="Basic example">
-                                                    <button type="button" class="btn btn-danger">Decline</button>
-                                                    <button type="button" class="btn btn-success">Accept</button>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        <c:forEach var="order" items="${list}">
+                                            <tr>
+                                                <td><c:out value="${order.id}"/></td>
+                                                <td><c:out value="${order.user.name}"/> <c:out value="${order.user.surname}"/></td>
+                                                <td><c:out value="${order.car.brand}"/> <c:out value="${order.car.model}"/></td>
+                                                <td>
+                                                    <fmt:parseDate value="${order.beginDate}" pattern="yyyy-MM-dd" var="parsedDate" type="date" />
+                                                    <fmt:formatDate value="${parsedDate}" type="date" pattern="dd MMMM yyyy" />
+                                                </td>
+                                                <td>
+                                                    <fmt:parseDate value="${order.endDate}" pattern="yyyy-MM-dd" var="parsedDate" type="date" />
+                                                    <fmt:formatDate value="${parsedDate}" type="date" pattern="dd MMMM yyyy" />
+                                                </td>
+                                                <td>
+                                                    <c:if test="${order.car.active}">
+                                                        <span class="badge badge-style-light rounded-pill badge-success">ACTIVE
+                                                    </c:if>
+                                                    <c:if test="${not order.car.active}">
+                                                        <span class="badge badge-style-light rounded-pill badge-danger">REPAIR
+                                                    </c:if>
+                                                        </span>
+                                                </td>
+                                                <td>
+                                                    <c:choose>
+                                                    <c:when test="${order.user.status == 'INACTIVE'}">
+                                                    <span class="badge badge-style-light rounded-pill badge-warning">
+                                                        </c:when>
+                                                        <c:when test="${order.user.status == 'ACTIVE'}">
+                                                            <span class="badge badge-style-light rounded-pill badge-success">
+                                                        </c:when>
+                                                        <c:when test="${order.user.status == 'BLOCKED'}">
+                                                            <span class="badge badge-style-light rounded-pill badge-danger">
+                                                        </c:when>
+                                                        <c:when test="${order.user.status == 'VERIFICATION'}">
+                                                            <span class="badge badge-style-light rounded-pill badge-primary">
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="badge badge-style-light rounded-pill badge-light">
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                    <c:out value="${order.user.status}"/></span>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                                        <form action="/controller" method="POST" class="m-0">
+                                                            <input type="hidden" name="orderId" value="<c:out value="${order.id}"/>">
+                                                            <input type="hidden" name="command" value="admin_to_decline_order">
+                                                            <input class="btn btn-danger" type="submit" value="Decline">
+                                                        </form>
+                                                        <form action="/controller" method="POST" class="m-0">
+                                                            <input type="hidden" name="orderId" value="<c:out value="${order.id}"/>">
+                                                            <input type="hidden" name="command" value="admin_accept_order">
+                                                            <input class="btn btn-success" type="submit" value="Accept">
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
                                         </tbody>
                                     </table>
+                                    </c:if>
                                 </div>
                             </div>
                         </div>
@@ -128,12 +149,12 @@
 </div>
 
 <!-- Javascripts -->
-<script src="${pageContext.request.contextPath}/plugins/jquery/jquery-3.5.1.min.js"></script>
-<script src="${pageContext.request.contextPath}/plugins/bootstrap/js/popper.min.js"></script>
-<script src="${pageContext.request.contextPath}/plugins/bootstrap/js/bootstrap.min.js"></script>
-<script src="${pageContext.request.contextPath}/plugins/perfectscroll/perfect-scrollbar.min.js"></script>
-<script src="${pageContext.request.contextPath}/js/main.min.js"></script>
-<script src="${pageContext.request.contextPath}/js/custom.js"></script>
+<script src="${pageContext.request.contextPath}/resources/plugins/jquery/jquery-3.5.1.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/plugins/bootstrap/js/popper.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/plugins/perfectscroll/perfect-scrollbar.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/main.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/custom.js"></script>
 </body>
 
 </html>

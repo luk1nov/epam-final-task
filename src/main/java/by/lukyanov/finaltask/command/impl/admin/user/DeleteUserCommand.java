@@ -17,9 +17,9 @@ public class DeleteUserCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         Router router = new Router();
-        String userId = request.getParameter(ParameterAndAttribute.USER_ID).strip();
+        String userId = request.getParameter(ParameterAttributeName.USER_ID).strip();
         HttpSession session = request.getSession(false);
-        User loggedUser = (User) session.getAttribute(ParameterAndAttribute.LOGGED_USER);
+        User loggedUser = (User) session.getAttribute(ParameterAttributeName.LOGGED_USER);
         boolean result = false;
         if(loggedUser.getId() != Long.parseLong(userId)){
             try {
@@ -33,7 +33,7 @@ public class DeleteUserCommand implements Command {
             router.setPagePath(PagePath.ADMIN_SUCCESS_PAGE);
             router.setType(Router.Type.REDIRECT);
         } else {
-            request.setAttribute(ParameterAndAttribute.MESSAGE, Message.USER_NOT_DELETED);
+            request.setAttribute(ParameterAttributeName.MESSAGE, Message.USER_NOT_DELETED);
             router.setPagePath(PagePath.ADMIN_FAIL_PAGE);
         }
         return router;

@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CarDao extends BaseDao<Car>{
-    Optional<Car> findCarById(String id) throws DaoException;
+    Optional<Car> findCarById(long id) throws DaoException;
 
     boolean insert(Car car, InputStream carImage) throws DaoException;
 
     boolean updateWithImage(Car car, InputStream carImage) throws DaoException;
 
-    List<Car> findCarsByCategoryId(String id) throws DaoException;
+    List<Car> findCarsByCategoryId(long id) throws DaoException;
 
-    boolean changeCarActiveById(String id, boolean isActive) throws DaoException;
+    boolean changeCarActiveById(long id, boolean isActive) throws DaoException;
 }

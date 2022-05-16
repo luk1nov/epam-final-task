@@ -1,5 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${locale}" scope="session"/>
+<fmt:setBundle basename="pagecontent"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,10 +28,21 @@
                     <div class="row">
                         <div class="col">
                             <div class="page-description">
-                                <h1>Full-width Header</h1>
-                                <span>Header without spacing to sidebar and page edges. <div
-                                        class="alert alert-secondary m-t-lg" role="alert">Note! Logo block with user
-                                            info in it is not compatible with full-width header.</div></span>
+                                <h1>
+                                    <c:choose>
+                                        <c:when test="${fn:toLowerCase(carCategoryTitle) eq 'cars'}">
+                                            <fmt:message key="label.category_cars"/>
+                                        </c:when>
+                                        <c:when test="${fn:toLowerCase(carCategoryTitle) eq 'e-cars'}">
+                                            <fmt:message key="label.category_e_cars"/>
+                                        </c:when>
+                                        <c:when test="${fn:toLowerCase(carCategoryTitle) eq 'premium'}">
+                                            <fmt:message key="label.category_premium"/>
+                                        </c:when>
+                                        <c:otherwise>Car category</c:otherwise>
+                                    </c:choose>
+<%--                                    <c:out value="${carCategoryTitle}"/>--%>
+                                </h1>
                             </div>
                         </div>
                     </div>
@@ -46,15 +61,23 @@
                                     <div class="card-body">
                                         <h5 class="card-title"><c:out value="${car.brand}"/> <c:out value="${car.model}"/></h5>
                                         <p class="card-text">
-                                            Acceleration 0-100: <c:out value="${car.info.acceleration}"/>s<br>
-                                            Power: <c:out value="${car.info.power}"/>hp<br>
-                                            Drivetrain: <c:out value="${car.info.drivetrain}"/><br>
+                                            <fmt:message key="label.car_acceleration"/> 0-100: <c:out value="${car.info.acceleration}"/>s<br>
+                                            <fmt:message key="label.car_power"/>: <c:out value="${car.info.power}"/>hp<br>
+                                            <fmt:message key="label.car_drivetrain"/>: <c:out value="${car.info.drivetrain}"/><br>
                                         </p>
                                         <div class="row car-card-row">
-                                            <p class="card-text">Price: $<c:out value="${car.salePrice.orElse(null)}" default="${car.regularPrice}"/>/hour</p>
+                                            <p class="card-text bold">
+                                                <c:if test="${car.salePrice.isPresent()}">
+                                                    <del>$<c:out value="${car.regularPrice}"/></del>
+                                                $<c:out value="${car.salePrice.get()}"/>
+                                                </c:if>
+                                                <c:if test="${car.salePrice.isEmpty()}">
+                                                    $<c:out value="${car.regularPrice}"/>
+                                                </c:if>/ day
+                                            </p>
                                             <form action="/controller" method="POST">
-                                                <input type="hidden" name="car_id" value="<c:out value="${car.id}"/>">
-                                                <input type="hidden" name="command" value="">
+                                                <input type="hidden" name="carId" value="<c:out value="${car.id}"/>">
+                                                <input type="hidden" name="command" value="to_car_page">
                                                 <input class="btn btn-primary" type="submit" value="Rent">
                                             </form>
                                         </div>

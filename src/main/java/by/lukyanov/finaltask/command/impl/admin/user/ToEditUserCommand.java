@@ -19,7 +19,7 @@ public class ToEditUserCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         Router router = new Router();
-        String userId = request.getParameter(ParameterAndAttribute.USER_ID).strip();
+        String userId = request.getParameter(ParameterAttributeName.USER_ID).strip();
         logger.debug("request id " + userId);
         try {
             Optional<User> optionalUser = userService.findUserById(userId);
@@ -29,11 +29,11 @@ public class ToEditUserCommand implements Command {
                 String phoneWithoutCode = user.getPhone().replaceAll(PHONE_CODE_BY, "");
                 user.setPhone(phoneWithoutCode);
                 router.setPagePath(PagePath.ADMIN_ADD_EDIT_USER);
-                request.setAttribute(ParameterAndAttribute.USER, user);
+                request.setAttribute(ParameterAttributeName.USER, user);
             } else{
                 logger.debug("user not found");
                 router.setPagePath(PagePath.ADMIN_FAIL_PAGE);
-                request.setAttribute(ParameterAndAttribute.MESSAGE, Message.CAN_NOT_EDIT_USER);
+                request.setAttribute(ParameterAttributeName.MESSAGE, Message.CAN_NOT_EDIT_USER);
             }
         } catch (ServiceException e) {
             logger.error("Command exception trying find usr by id");

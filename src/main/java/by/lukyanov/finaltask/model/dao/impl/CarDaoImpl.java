@@ -23,10 +23,10 @@ public class CarDaoImpl implements CarDao {
     private static final String SQL_FIND_CAR_BY_ID = "SELECT cars.car_id, cars.brand, cars.model, cars.regular_price, cars.sale_price, cars.is_active, cars.image, car_info.acceleration, car_info.power, car_info.drivetrain FROM cars LEFT JOIN car_info ON cars.car_id = car_info.cars_car_id WHERE car_id = ?";
     private static final String SQL_INSERT_NEW_CAR = "INSERT INTO cars (brand,model,regular_price,sale_price,is_active) values(?,?,?,?,?)";
     private static final String SQL_INSERT_NEW_CAR_WITH_IMAGE = "INSERT INTO cars (brand,model,regular_price,sale_price,is_active, image, car_category_car_category_id) values(?,?,?,?,?,?,?)";
-    private static final String SQL_INSERT_NEW_CAR_INFO = "INSERT INTO car_info (acceleration,power,drivetrain,cars_car_id, cars_car_category_car_category_id) values(?,?,?,?,?)";
+    private static final String SQL_INSERT_NEW_CAR_INFO = "INSERT INTO car_info (acceleration,power,drivetrain,cars_car_id) values(?,?,?,?)";
     private static final String SQL_UPDATE_CAR_BY_ID = "UPDATE cars SET brand = ?, model = ?, regular_price = ?, sale_price = ?, is_active = ?, car_category_car_category_id = ? WHERE car_id = ?";
     private static final String SQL_UPDATE_CAR_WITH_IMAGE_BY_ID = "UPDATE cars SET brand = ?, model = ?, regular_price = ?, sale_price = ?, is_active = ?, car_category_car_category_id = ?, image = ? WHERE car_id = ?";
-    private static final String SQL_UPDATE_CAR_INFO_BY_CAR_ID = "UPDATE car_info SET acceleration = ?, power = ?, drivetrain = ?, cars_car_category_car_category_id = ? WHERE cars_car_id = ?";
+    private static final String SQL_UPDATE_CAR_INFO_BY_CAR_ID = "UPDATE car_info SET acceleration = ?, power = ?, drivetrain = ? WHERE cars_car_id = ?";
     private static final String SQL_FIND_CARS_BY_CATEGORY_ID = "SELECT cars.car_id, cars.brand, cars.model, cars.regular_price, cars.sale_price, cars.is_active, cars.image, car_info.acceleration, car_info.power, car_info.drivetrain FROM cars LEFT JOIN car_info ON cars.car_id = car_info.cars_car_id WHERE car_category_car_category_id = ?";
     private static final String SQL_DELETE_CAR_BY_ID = "DELETE FROM cars WHERE car_id = ?";
     private static final String SQL_UPDATE_STATUS_CAR_BY_ID = "UPDATE cars SET is_active = ? WHERE car_id = ?";
@@ -113,7 +113,7 @@ public class CarDaoImpl implements CarDao {
                         .regularPrice(resultSet.getBigDecimal(4))
                         .salePrice(resultSet.getString(5) != null ? resultSet.getBigDecimal(5) : null)
                         .active(resultSet.getBoolean(6))
-                        .image(ImageEncoder.getInstance().encodeBlob(resultSet.getBlob(7)))
+                        .image(ImageEncoder.getInstance().decodeBlob(resultSet.getBlob(7)))
                         .carInfo(new CarInfo(resultSet.getDouble(8), resultSet.getInt(9),
                                 CarInfo.Drivetrain.valueOf(resultSet.getString(10).toUpperCase())))
                         .category(new CarCategory(resultSet.getString(11)))
@@ -147,7 +147,6 @@ public class CarDaoImpl implements CarDao {
                 carInfoStatement.setInt(2, car.getInfo().getPower());
                 carInfoStatement.setString(3, car.getInfo().getDrivetrain().toString());
                 carInfoStatement.setLong(4, car.getId());
-                carInfoStatement.setLong(5, car.getCarCategory().getId());
                 carInfoStatement.executeUpdate();
                 updated = true;
                 connection.commit();
@@ -166,12 +165,12 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public Optional<Car> findCarById(String id) throws DaoException {
+    public Optional<Car> findCarById(long id) throws DaoException {
         Optional<Car> foundCar;
         ConnectionPool pool = ConnectionPool.getInstance();
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_FIND_CAR_BY_ID)){
-            statement.setString(1, id);
+            statement.setLong(1, id);
             try (ResultSet resultSet = statement.executeQuery()){
                 if (resultSet.next()){
                     Car car = new Car.CarBuilder()
@@ -181,7 +180,7 @@ public class CarDaoImpl implements CarDao {
                             .regularPrice(resultSet.getBigDecimal(4))
                             .salePrice(resultSet.getString(5) != null ? resultSet.getBigDecimal(5) : null)
                             .active(resultSet.getBoolean(6))
-                            .image(ImageEncoder.getInstance().encodeBlob(resultSet.getBlob(7)))
+                            .image(ImageEncoder.getInstance().decodeBlob(resultSet.getBlob(7)))
                             .carInfo(new CarInfo(resultSet.getDouble(8), resultSet.getInt(9),
                                     CarInfo.Drivetrain.valueOf(resultSet.getString(10).toUpperCase())))
                             .build();
@@ -219,7 +218,6 @@ public class CarDaoImpl implements CarDao {
                         addCarInfoStatement.setInt(2, car.getInfo().getPower());
                         addCarInfoStatement.setString(3, car.getInfo().getDrivetrain().toString());
                         addCarInfoStatement.setLong(4, carId);
-                        addCarInfoStatement.setLong(5, car.getCarCategory().getId());
                         addCarInfoStatement.executeUpdate();
                         result = true;
                         connection.commit();
@@ -260,7 +258,6 @@ public class CarDaoImpl implements CarDao {
                 carInfoStatement.setInt(2, car.getInfo().getPower());
                 carInfoStatement.setString(3, car.getInfo().getDrivetrain().toString());
                 carInfoStatement.setLong(4, car.getId());
-                carInfoStatement.setLong(5, car.getCarCategory().getId());
                 carInfoStatement.executeUpdate();
                 updated = true;
                 connection.commit();
@@ -279,11 +276,11 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public List<Car> findCarsByCategoryId(String id) throws DaoException {
+    public List<Car> findCarsByCategoryId(long id) throws DaoException {
         List<Car> cars = new ArrayList<>();
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_FIND_CARS_BY_CATEGORY_ID)){
-            statement.setString(1, id);
+            statement.setLong(1, id);
             try (ResultSet resultSet = statement.executeQuery()){
                 while (resultSet.next()){
                     Car car = new Car.CarBuilder()
@@ -293,7 +290,7 @@ public class CarDaoImpl implements CarDao {
                             .regularPrice(resultSet.getBigDecimal(4))
                             .salePrice(resultSet.getString(5) != null ? resultSet.getBigDecimal(5) : null)
                             .active(resultSet.getBoolean(6))
-                            .image(ImageEncoder.getInstance().encodeBlob(resultSet.getBlob(7)))
+                            .image(ImageEncoder.getInstance().decodeBlob(resultSet.getBlob(7)))
                             .carInfo(new CarInfo(resultSet.getDouble(8), resultSet.getInt(9),
                                     CarInfo.Drivetrain.valueOf(resultSet.getString(10).toUpperCase())))
                             .build();
@@ -308,12 +305,12 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public boolean changeCarActiveById(String id, boolean isActive) throws DaoException {
+    public boolean changeCarActiveById(long id, boolean isActive) throws DaoException {
         boolean result = false;
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_STATUS_CAR_BY_ID)){
             statement.setBoolean(1, isActive);
-            statement.setString(2, id);
+            statement.setLong(2, id);
             if (statement.executeUpdate() != 0){
                 result = true;
             }

@@ -35,17 +35,9 @@
             </div>
             <div class="d-flex">
                 <ul class="navbar-nav">
-                    <c:if test="${sessionScope.loggedUser.role eq 'ADMIN' or sessionScope.loggedUser.role eq 'MANAGER'}" >
-                        <li class="nav-item hidden-on-mobile" style="align-self: center;padding: 0 10px;">
-                            <form action="/controller" method="POST">
-                                <input type="hidden" name="command" value="admin_to_all_users">
-                                <input type="submit" class="btn btn-outline-info" value="Admin panel">
-                            </form>
-                        </li>
-                    </c:if>
                     <c:if test="${empty sessionScope.loggedUser}" >
                         <li class="nav-item hidden-on-mobile">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/controller?command=to_signup_page">Sign Up</a>
+                            <a class="nav-link" href="${pageContext.request.contextPath}/controller?command=to_signup_page"><fmt:message key="label.sign_up"/></a>
                         </li>
                         <li class="nav-item hidden-on-mobile">
                             <a class="nav-link" href="${pageContext.request.contextPath}/controller?command=to_signin_page"><fmt:message key="label.sign_in"/></a>
@@ -59,6 +51,20 @@
                             <form action="/controller" method="POST">
                                 <input type="hidden" name="command" value="to_refill_balance">
                                 <input type="submit" class="btn btn-outline-success" value="Refill balance">
+                            </form>
+                        </li>
+                        <li class="nav-item hidden-on-mobile" style="align-self: center;padding: 0 10px;">
+                            <form action="/controller" method="POST">
+                                <input type="hidden" name="command" value="to_user_account">
+                                <input type="submit" class="btn btn-outline-warning" value="Profile">
+                            </form>
+                        </li>
+                    </c:if>
+                    <c:if test="${sessionScope.loggedUser.role eq 'ADMIN' or sessionScope.loggedUser.role eq 'MANAGER'}" >
+                        <li class="nav-item hidden-on-mobile" style="align-self: center;padding: 0 10px;">
+                            <form action="/controller" method="POST">
+                                <input type="hidden" name="command" value="admin_to_all_users">
+                                <input type="submit" class="btn btn-outline-info" value="Admin panel">
                             </form>
                         </li>
                     </c:if>

@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 import static by.lukyanov.finaltask.command.PagePath.ADMIN_FAIL_PAGE;
 import static by.lukyanov.finaltask.command.PagePath.ADMIN_SUCCESS_PAGE;
-import static by.lukyanov.finaltask.command.ParameterAndAttribute.CAR_CATEGORY_TITLE;
+import static by.lukyanov.finaltask.command.ParameterAttributeName.CAR_CATEGORY_TITLE;
 
 public class AddNewCarCategoryCommand implements Command {
     private static final Logger logger = LogManager.getLogger();

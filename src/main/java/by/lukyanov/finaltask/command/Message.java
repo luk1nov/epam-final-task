@@ -20,6 +20,10 @@ public final class Message {
     public static final String READ_PROPERTIES_ERROR = "Error reading properties for db";
     public static final String CAR_NOT_EDITED = "Car not edited";
     public static final String CAR_NOT_ADDED = "Car not added";
+    public static final String INFO_NOT_UPDATED = "error.info_not_updated";
+    public static final String CAR_NOT_FOUND = "error.car_not_found";
+    public static final String USER_NOT_VERIFIED = "label.user_not_verified";
+    public static final String USER_NOT_DECLINED = "label.user_not_declined";
 
     private Message() {
     }

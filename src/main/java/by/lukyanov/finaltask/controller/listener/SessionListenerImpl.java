@@ -4,7 +4,7 @@ import by.lukyanov.finaltask.command.PagePath;
 import jakarta.servlet.annotation.WebListener;
 import jakarta.servlet.http.*;
 
-import static by.lukyanov.finaltask.command.ParameterAndAttribute.*;
+import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 @WebListener
 public class SessionListenerImpl implements HttpSessionListener{

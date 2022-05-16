@@ -2,7 +2,7 @@ package by.lukyanov.finaltask.command.impl.admin.user;
 
 import by.lukyanov.finaltask.command.Command;
 import by.lukyanov.finaltask.command.PagePath;
-import by.lukyanov.finaltask.command.ParameterAndAttribute;
+import by.lukyanov.finaltask.command.ParameterAttributeName;
 import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.exception.CommandException;
 import by.lukyanov.finaltask.exception.ServiceException;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static by.lukyanov.finaltask.command.Message.*;
-import static by.lukyanov.finaltask.command.ParameterAndAttribute.*;
+import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class EditUserCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -52,7 +52,7 @@ public class EditUserCommand implements Command {
             router.setPagePath(PagePath.ADMIN_SUCCESS_PAGE);
             router.setType(Router.Type.REDIRECT);
         } else {
-            request.setAttribute(ParameterAndAttribute.MESSAGE, USER_NOT_UPDATED);
+            request.setAttribute(ParameterAttributeName.MESSAGE, USER_NOT_UPDATED);
             router.setPagePath(PagePath.ADMIN_FAIL_PAGE);
         }
         return router;

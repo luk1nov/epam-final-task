@@ -1,6 +1,8 @@
 package by.lukyanov.finaltask.model.service.impl;
 
-import by.lukyanov.finaltask.command.ParameterAndAttribute;
+import by.lukyanov.finaltask.command.ParameterAttributeName;
+import by.lukyanov.finaltask.entity.UserRole;
+import by.lukyanov.finaltask.entity.UserStatus;
 import by.lukyanov.finaltask.model.dao.impl.UserDaoImpl;
 import by.lukyanov.finaltask.entity.User;
 import by.lukyanov.finaltask.exception.DaoException;
@@ -11,6 +13,8 @@ import by.lukyanov.finaltask.validation.impl.ValidatorImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -25,11 +29,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> authenticate(String email, String password) throws ServiceException {
         Optional<User> user;
-        String encodedPassword;
         if(validator.isValidEmail(email) && validator.isValidPassword(password)){
             try {
-                encodedPassword = PasswordEncoder.getInstance().encode(password);
-                user = userDao.authenticate(email, encodedPassword);
+                user = userDao.authenticate(email, password);
             } catch (DaoException e) {
                 logger.error("Service exception trying authenticate user by email & password", e);
                 throw new ServiceException(e);
@@ -43,11 +45,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean addUser(Map<String, String> userData) throws ServiceException {
         PasswordEncoder encoder = PasswordEncoder.getInstance();
-        String name = userData.get(ParameterAndAttribute.USER_NAME);
-        String surname = userData.get(ParameterAndAttribute.USER_SURNAME);
-        String email = userData.get(ParameterAndAttribute.USER_EMAIL);
-        String phone = userData.get(ParameterAndAttribute.USER_PHONE);
-        String pass = userData.get(ParameterAndAttribute.USER_PASS);
+        String name = userData.get(ParameterAttributeName.USER_NAME);
+        String surname = userData.get(ParameterAttributeName.USER_SURNAME);
+        String email = userData.get(ParameterAttributeName.USER_EMAIL);
+        String phone = userData.get(ParameterAttributeName.USER_PHONE);
+        String pass = userData.get(ParameterAttributeName.USER_PASS);
         boolean addUserResult;
 
         if(validator.isOneWord(name) && validator.isValidSurname(surname) && validator.isValidEmail(email) &&
@@ -60,8 +62,8 @@ public class UserServiceImpl implements UserService {
                     .email(email)
                     .phone(phoneWithCountryCode)
                     .password(encodedPass)
-                    .role(User.Role.USER)
-                    .status(User.Status.INACTIVE)
+                    .role(UserRole.USER)
+                    .status(UserStatus.INACTIVE)
                     .build();
             try {
                 addUserResult = userDao.insert(user);
@@ -125,7 +127,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> user;
         if (validator.isValidId(id)){
             try {
-                user = userDao.findUserById(id);
+                user = userDao.findUserById(Long.parseLong(id));
             } catch (DaoException e) {
                 logger.error("Service exception trying find user by id", e);
                 throw new ServiceException(e);
@@ -139,13 +141,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean updateUser(Map<String, String> userData) throws ServiceException {
         boolean updated;
-        String userId = userData.get(ParameterAndAttribute.USER_ID);
-        String name = userData.get(ParameterAndAttribute.USER_NAME);
-        String surname = userData.get(ParameterAndAttribute.USER_SURNAME);
-        String email = userData.get(ParameterAndAttribute.USER_EMAIL);
-        String phone = userData.get(ParameterAndAttribute.USER_PHONE);
-        String role = userData.get(ParameterAndAttribute.USER_ROLE).toUpperCase();
-        String status = userData.get(ParameterAndAttribute.USER_STATUS).toUpperCase();
+        String userId = userData.get(ParameterAttributeName.USER_ID);
+        String name = userData.get(ParameterAttributeName.USER_NAME);
+        String surname = userData.get(ParameterAttributeName.USER_SURNAME);
+        String email = userData.get(ParameterAttributeName.USER_EMAIL);
+        String phone = userData.get(ParameterAttributeName.USER_PHONE);
+        String role = userData.get(ParameterAttributeName.USER_ROLE).toUpperCase();
+        String status = userData.get(ParameterAttributeName.USER_STATUS).toUpperCase();
         logger.info(userData.toString());
         if(validator.isValidId(userId) && validator.isOneWord(name) && validator.isValidSurname(surname) &&
                 validator.isValidEmail(email) && validator.isValidPhone(phone)){
@@ -157,8 +159,8 @@ public class UserServiceImpl implements UserService {
                         .surname(surname)
                         .email(email)
                         .phone(phoneWithCountryCode)
-                        .role(User.Role.valueOf(role))
-                        .status(User.Status.valueOf(status))
+                        .role(UserRole.valueOf(role))
+                        .status(UserStatus.valueOf(status))
                         .build();
                 updated = userDao.update(user);
             } catch (IllegalArgumentException ex) {
@@ -180,12 +182,97 @@ public class UserServiceImpl implements UserService {
         boolean updated = false;
         if (validator.isValidPrice(amount)){
             try {
-                updated = userDao.refillBalance(id, new BigDecimal(amount));
+                updated = userDao.updateBalance(id, new BigDecimal(amount), false);
             } catch (DaoException e) {
                logger.error("Service exception trying refill balance", e);
                throw new ServiceException(e);
             }
         }
         return updated;
+    }
+
+    @Override
+    public boolean updateUserInfo(long id, Map<String, String> userData) throws ServiceException {
+        boolean updated = false;
+        String name = userData.get(ParameterAttributeName.USER_NAME);
+        String surname = userData.get(ParameterAttributeName.USER_SURNAME);
+        String email = userData.get(ParameterAttributeName.USER_EMAIL);
+        String phone = userData.get(ParameterAttributeName.USER_PHONE);
+        if(validator.isOneWord(name) && validator.isValidSurname(surname) &&
+                validator.isValidEmail(email) && validator.isValidPhone(phone)){
+            try{
+                String phoneWithCountryCode = PHONE_CODE_BY + phone;
+                User user = new User.UserBuilder()
+                        .id(id)
+                        .name(name)
+                        .surname(surname)
+                        .email(email)
+                        .phone(phoneWithCountryCode)
+                        .build();
+                updated = userDao.updateUserInfo(user);
+            } catch (DaoException e) {
+                logger.error("Service exception trying update user info", e);
+                throw new ServiceException(e);
+            }
+        } else {
+            logger.info("Provided invalid user data");
+        }
+        return updated;
+    }
+
+    @Override
+    public boolean updateDriverLicense(long id, InputStream image) throws ServiceException {
+        boolean result = false;
+        try {
+            if (image.available() != 0){
+                result = userDao.updateDriverLicense(id, image);
+            }
+        } catch (DaoException | IOException e) {
+            logger.error("Service exception trying update driver license", e);
+            throw new ServiceException(e);
+        }
+        return result;
+    }
+
+    @Override
+    public boolean changeUserPassword(long id, String password) throws ServiceException {
+        boolean result = false;
+        if (validator.isValidPassword(password)){
+            try {
+                result = userDao.updatePassword(id, PasswordEncoder.getInstance().encode(password));
+            } catch (DaoException e) {
+                logger.error("Service exception trying update driver license", e);
+                throw new ServiceException(e);
+            }
+        } else {
+            logger.warn("provided bad password");
+        }
+        return result;
+    }
+
+    @Override
+    public List<User> findUsersByStatus(UserStatus status) throws ServiceException {
+        List<User> users;
+        try {
+            users = userDao.findUsersByStatus(status);
+        } catch (DaoException e) {
+            logger.error("Service exception trying find users by status", e);
+            throw new ServiceException(e);
+        }
+        return users;
+    }
+
+    @Override
+    public boolean updateUserStatus(String id, UserStatus status) throws ServiceException {
+        boolean result = false;
+        if(validator.isValidId(id)){
+            try{
+                result = userDao.updateUserStatus(Long.parseLong(id), status);
+            } catch (DaoException e) {
+                logger.error("Service exception trying update user status", e);
+                throw new ServiceException(e);
+            }
+        }
+        return result;
     }
 }

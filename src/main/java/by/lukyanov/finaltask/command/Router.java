@@ -1,13 +1,14 @@
 package by.lukyanov.finaltask.command;
 
 public class Router {
+    private String pagePath;
+    private Type type;
+
     public enum Type{
         FORWARD,
         REDIRECT
     }
 
-    private String pagePath;
-    private Type type;
 
     public Router() {
         this.type = Type.FORWARD;
