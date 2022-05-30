@@ -2,9 +2,7 @@ package by.lukyanov.finaltask.command;
 
 import by.lukyanov.finaltask.command.impl.ChangeLocaleCommand;
 import by.lukyanov.finaltask.command.impl.DefaultCommand;
-import by.lukyanov.finaltask.command.impl.admin.order.AcceptOrderCommand;
-import by.lukyanov.finaltask.command.impl.admin.order.DeclineOrderCommand;
-import by.lukyanov.finaltask.command.impl.admin.order.FindProcessingOrdersCommand;
+import by.lukyanov.finaltask.command.impl.admin.order.*;
 import by.lukyanov.finaltask.command.impl.navigation.*;
 import by.lukyanov.finaltask.command.impl.admin.car.*;
 import by.lukyanov.finaltask.command.impl.admin.carcategory.*;
@@ -15,6 +13,7 @@ import by.lukyanov.finaltask.command.impl.login.SignUpCommand;
 import by.lukyanov.finaltask.command.impl.order.CancelOrderCommand;
 import by.lukyanov.finaltask.command.impl.order.CreateOrderCommand;
 import by.lukyanov.finaltask.command.impl.order.FindAllUserOrdersCommand;
+import by.lukyanov.finaltask.command.impl.order.ReturnCarCommand;
 import by.lukyanov.finaltask.command.impl.user.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,6 +39,7 @@ public enum CommandType {
     TO_CAR_PAGE(new ToCarPageCommand()),
     CREATE_ORDER(new CreateOrderCommand()),
     TO_RETURN_CAR(new ToReturnCarCommand()),
+    FINISH_RENT(new ReturnCarCommand()),
 
     //ADMIN
     ADMIN_TO_ALL_USERS(new FindAllUsersCommand()),
@@ -51,6 +51,7 @@ public enum CommandType {
     ADMIN_VERIFY_USER(new VerifyUserCommand()),
     ADMIN_DECLINE_USER(new DeclineUserVerificationCommand()),
     ADMIN_TO_ALL_CARS(new FindAllCarsCommand()),
+    ADMIN_TO_REPAIRING_CARS(new FindCarsOnRepairCommand()),
     ADMIN_TO_ADD_NEW_CAR(new ToAddNewCarCommand()),
     ADMIN_ADD_NEW_CAR(new AddNewCarCommand()),
     ADMIN_TO_EDIT_CAR(new ToEditCarCommand()),
@@ -62,7 +63,11 @@ public enum CommandType {
     ADMIN_TO_ALL_CAR_CATEGORIES(new FindAllCarCategoriesCommand()),
     ADMIN_TO_EDIT_CAR_CATEGORY(new ToEditCarCategoryCommand()),
     ADMIN_DELETE_CAR_CATEGORY(new DeleteCarCategoryCommand()),
+    ADMIN_FIND_ALL_ORDERS(new FinaAllOrdersCommand()),
+    ADMIN_FIND_COMPLETED_ORDERS(new FindCompletedOrdersCommand()),
+    ADMIN_SHOW_ORDER_REPORT(new ShowOrderReportCommand()),
     ADMIN_FIND_PROCESSING_ORDERS(new FindProcessingOrdersCommand()),
+    ADMIN_DELETE_ORDER(new DeleteOrderCommand()),
     ADMIN_ACCEPT_ORDER(new AcceptOrderCommand()),
     ADMIN_TO_DECLINE_ORDER(new ToDeclineOrderCommand()),
     ADMIN_DECLINE_ORDER(new DeclineOrderCommand()),
