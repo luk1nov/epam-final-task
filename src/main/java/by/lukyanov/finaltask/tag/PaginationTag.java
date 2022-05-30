@@ -8,8 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-import static by.lukyanov.finaltask.command.ParameterAttributeName.PAGES_COUNT;
-import static by.lukyanov.finaltask.command.ParameterAttributeName.RESULT_PAGE;
+import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class PaginationTag extends SimpleTagSupport{
     private static final Logger logger = LogManager.getLogger();
@@ -40,6 +39,7 @@ public class PaginationTag extends SimpleTagSupport{
     }
 
     private String buildPaginationElement(int page, int currentPage){
+        String catId = (String) getJspContext().findAttribute(CAR_CATEGORY_ID);
         StringBuilder sb = new StringBuilder();
         sb.append(page == currentPage ? "<li class='page-item disabled active'>" : "<li class='page-item'>");
         sb.append("<form action='/controller' method='POST' class='m-0'>");
@@ -49,6 +49,11 @@ public class PaginationTag extends SimpleTagSupport{
         sb.append("<input type='hidden' name='command' value='");
         sb.append(command);
         sb.append("'>");
+        if(catId != null){
+            sb.append("<input type='hidden' name='carCategoryId' value='");
+            sb.append(catId);
+            sb.append("'>");
+        }
         sb.append("<input class='page-link' type='submit' value='");
         sb.append(page);
         sb.append("'>");
