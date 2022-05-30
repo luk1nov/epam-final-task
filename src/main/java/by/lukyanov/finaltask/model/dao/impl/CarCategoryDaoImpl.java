@@ -18,7 +18,7 @@ import java.util.Optional;
 public class CarCategoryDaoImpl implements CarCategoryDao {
     private static final Logger logger = LogManager.getLogger();
     private static final String SQL_INSERT_CAR_CATEGORY = "INSERT INTO car_category (car_category_title) VALUES (?)";
-    private static final String SQL_SELECT_ALL_CAR_CATEGORIES = "SELECT car_category_id, car_category_title FROM car_category";
+    private static final String SQL_SELECT_ALL_CAR_CATEGORIES = "SELECT car_category_id, car_category_title FROM car_category LIMIT ? OFFSET ?";
     private static final String SQL_SELECT_CAR_CATEGORY_BY_ID = "SELECT car_category_id, car_category_title FROM car_category WHERE car_category_id = ?";
     private static final String SQL_DELETE_CAR_CATEGORY_BY_ID = "DELETE FROM car_category WHERE car_category_id = ?";
     private static final String SQL_UPDATE_CAR_CATEGORY = "UPDATE car_category SET car_category_title = ? WHERE car_category_id = ?";
