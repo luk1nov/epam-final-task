@@ -8,6 +8,7 @@ import by.lukyanov.finaltask.exception.CommandException;
 import by.lukyanov.finaltask.exception.ServiceException;
 import by.lukyanov.finaltask.model.service.impl.CarCategoryServiceImpl;
 import by.lukyanov.finaltask.model.service.impl.CarServiceImpl;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
@@ -15,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import static by.lukyanov.finaltask.command.PagePath.*;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
@@ -26,11 +28,11 @@ public class ToCarCategoryCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Router router = new Router();
         String catId = request.getParameter(CAR_CATEGORY).strip();
         HttpSession session = request.getSession();
         String currentPage = (String) session.getAttribute(CURRENT_PAGE);
-        String categoryPage = TO_CAR_CAR_CATEGORY_PAGE + "&carCategory=" + catId;
+        Router router = new Router(currentPage);
+        String categoryPage = TO_CAR_CAR_CATEGORY_PAGE + CAR_CATEGORY_ATTR + catId;
         try {
             Optional<CarCategory> optionalCarCategory = categoryService.findCarCategoryById(catId);
             if(optionalCarCategory.isPresent()){
@@ -40,8 +42,6 @@ public class ToCarCategoryCommand implements Command {
                 request.setAttribute(LIST, cars);
                 router.setPagePath(CAR_CATEGORY_PAGE);
                 session.setAttribute(CURRENT_PAGE, categoryPage);
-            } else {
-                router.setPagePath(currentPage);
             }
         } catch (ServiceException e) {
             logger.error("Command exception trying find all cars", e);
