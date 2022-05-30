@@ -22,16 +22,17 @@ import static by.lukyanov.finaltask.command.ParameterAttributeName.RESULT_PAGE;
 public class FindProcessingOrdersCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
     private static final OrderServiceImpl orderService = new OrderServiceImpl();
+    private static final int POSTS_PER_PAGE = 10;
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         Router router = new Router(PagePath.ADMIN_PROCESSING_ORDERS);
         String currentResultPage = request.getParameter(ParameterAttributeName.RESULT_PAGE);
         try {
-            int totalResultPages = ResultCounter.countPages(orderService.countOrdersByStatus(OrderStatus.PROCESSING));
+            int totalResultPages = ResultCounter.countPages(orderService.countOrdersByStatus(OrderStatus.PROCESSING), POSTS_PER_PAGE);
             request.setAttribute(PAGES_COUNT, totalResultPages);
             request.setAttribute(RESULT_PAGE, currentResultPage);
-            List<Order> orderList = orderService.findOrdersByOrderStatus(OrderStatus.PROCESSING, currentResultPage);
+            List<Order> orderList = orderService.findOrdersByOrderStatus(OrderStatus.PROCESSING, currentResultPage, POSTS_PER_PAGE);
             request.setAttribute(ParameterAttributeName.LIST, orderList);
         } catch (ServiceException e) {
             logger.error("Command exception trying find processing orders", e);

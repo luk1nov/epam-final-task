@@ -23,6 +23,7 @@ import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 public class FindAllCarsCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
     private static final CarServiceImpl carService = new CarServiceImpl();
+    private static final int POSTS_PER_PAGE = 10;
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
@@ -31,10 +32,10 @@ public class FindAllCarsCommand implements Command {
         session.setAttribute(CURRENT_PAGE, TO_ALL_CARS);
         String currentResultPage = request.getParameter(RESULT_PAGE);
         try {
-            int pagesCount = ResultCounter.countPages(carService.countAllCars());
+            int pagesCount = ResultCounter.countPages(carService.countAllCars(), POSTS_PER_PAGE);
             request.setAttribute(PAGES_COUNT, pagesCount);
             request.setAttribute(RESULT_PAGE, currentResultPage);
-            List<Car> cars = carService.findAllCars(currentResultPage);
+            List<Car> cars = carService.findAllCars(currentResultPage, POSTS_PER_PAGE);
             request.setAttribute(LIST, cars);
             router.setPagePath(PagePath.ADMIN_ALL_CARS);
         } catch (ServiceException e) {

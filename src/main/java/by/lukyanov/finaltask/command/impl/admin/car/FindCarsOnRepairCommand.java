@@ -19,19 +19,20 @@ import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 public class FindCarsOnRepairCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
     private static final CarServiceImpl carService = new CarServiceImpl();
+    private static final int POSTS_PER_PAGE = 10;
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         Router router = new Router(ADMIN_REPAIRING_CARS);
         String currentResultPage = request.getParameter(RESULT_PAGE);
         try {
-            int pagesCount = ResultCounter.countPages(carService.countAllCarsByActive(false));
+            int pagesCount = ResultCounter.countPages(carService.countAllCarsByActive(false), POSTS_PER_PAGE);
             if(currentResultPage == null || currentResultPage.isBlank()){
                 currentResultPage = "1";
             }
             request.setAttribute(PAGES_COUNT, pagesCount);
             request.setAttribute(RESULT_PAGE, currentResultPage);
-            List<Car> cars = carService.findCarsByActiveStatus(false, currentResultPage);
+            List<Car> cars = carService.findCarsByActiveStatus(false, currentResultPage, POSTS_PER_PAGE);
             request.setAttribute(LIST, cars);
         } catch (ServiceException e) {
             logger.error("Command exception trying find cars on repair", e);
