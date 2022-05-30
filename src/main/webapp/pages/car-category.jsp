@@ -2,6 +2,7 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="util" uri="customtags" %>
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="pagecontent"/>
 <!DOCTYPE html>
@@ -85,6 +86,7 @@
                             </div>
                         </c:forEach>
                     </div>
+                    <util:Pagination command="to_car_category_page"/>
                 </div>
             </div>
         </div>
