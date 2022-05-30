@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Add new car</title>
+    <title>Add new car category</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -31,7 +31,7 @@
                     <div class="row">
                         <div class="col">
                             <div class="page-description">
-                                <h1>Add new car</h1>
+                                <h1>Add new car category</h1>
                             </div>
                         </div>
                     </div>

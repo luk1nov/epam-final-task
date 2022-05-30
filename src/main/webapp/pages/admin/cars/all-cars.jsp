@@ -45,6 +45,7 @@
                                             <th scope="col">Category</th>
                                             <th scope="col">Brand</th>
                                             <th scope="col">Model</th>
+                                            <th scope="col">Vin</th>
                                             <th scope="col">Status</th>
                                             <th scope="col">0-100</th>
                                             <th scope="col">Drivetrain</th>
@@ -55,12 +56,13 @@
                                         </thead>
                                         <tbody>
 
-                                            <c:forEach var="car" items="${all_cars}">
+                                            <c:forEach var="car" items="${list}">
                                                 <tr>
-                                                    <td>${car.id}</td>
-                                                    <td>${car.carCategory.title}</td>
-                                                    <td>${car.brand}</td>
-                                                    <td>${car.model}</td>
+                                                    <td><c:out value="${car.id}"/></td>
+                                                    <td><c:out value="${car.carCategory.title}"/></td>
+                                                    <td><c:out value="${car.brand}"/></td>
+                                                    <td><c:out value="${car.model}"/></td>
+                                                    <td><c:out value="${car.vinCode}"/></td>
                                                     <td>
                                                         <c:choose>
                                                             <c:when test="${car.active eq 'true'}">
@@ -70,20 +72,19 @@
                                                                 <span class="badge badge-style-light rounded-pill badge-danger">Repair</span>
                                                             </c:when>
                                                             <c:otherwise>
-                                                                <span class="badge badge-style-light rounded-pill badge-light">${car.active}</span>
+                                                                <span class="badge badge-style-light rounded-pill badge-light"><c:out value="${car.active}"/></span>
                                                             </c:otherwise>
                                                     </c:choose>
                                                     </td>
-                                                    <td>${car.info.acceleration}</td>
-                                                    <td>${car.info.drivetrain}</td>
-                                                    <td>${car.info.power}</td>
+                                                    <td><c:out value="${car.info.acceleration}"/></td>
+                                                    <td><c:out value="${car.info.drivetrain}"/></td>
+                                                    <td><c:out value="${car.info.power}"/></td>
                                                     <td>
-                                                        <fmt:setLocale value="en_US"/>
                                                         <c:if test="${car.salePrice.isEmpty()}">
-                                                            <fmt:formatNumber value = "${car.regularPrice}" type = "currency" maxFractionDigits = "2"/>
+                                                            $<fmt:formatNumber value = "${car.regularPrice}" maxFractionDigits = "2"/>
                                                         </c:if>
                                                         <c:if test="${car.salePrice.isPresent()}">
-                                                            <del>${car.regularPrice}</del> <fmt:formatNumber value = "${car.salePrice.get()}" type = "currency" maxFractionDigits = "2"/>
+                                                            <del>$<c:out value="${car.regularPrice}"/></del> $<fmt:formatNumber value = "${car.salePrice.get()}" maxFractionDigits = "2"/>
                                                         </c:if>
                                                     </td>
                                                     <td>
@@ -94,21 +95,21 @@
                                                             <ul class="dropdown-menu">
                                                                 <li>
                                                                     <form action="/controller" method="POST">
-                                                                        <input type="hidden" name="carId" value="${car.id}">
+                                                                        <input type="hidden" name="carId" value="<c:out value="${car.id}"/>">
                                                                         <input type="hidden" name="command" value="admin_to_edit_car">
                                                                         <input type="submit" class="dropdown-item" value="Edit">
                                                                     </form>
                                                                 </li>
                                                                 <li>
                                                                     <form action="/controller" method="POST">
-                                                                        <input type="hidden" name="carId" value="${car.id}">
+                                                                        <input type="hidden" name="carId" value="<c:out value="${car.id}"/>">
                                                                         <input type="hidden" name="command" value="admin_delete_car">
                                                                         <input type="submit" class="dropdown-item" value="Delete">
                                                                     </form>
                                                                 </li>
                                                                 <li>
                                                                     <form action="/controller" method="POST">
-                                                                        <input type="hidden" name="carId" value="${car.id}">
+                                                                        <input type="hidden" name="carId" value="<c:out value="${car.id}"/>">
                                                                         <input type="hidden" name="command" value="admin_change_car_active_status">
                                                                         <input type="hidden" name="carActive" value="<c:out value="${car.active}"/>">
                                                                         <c:if test="${car.active == true}">
@@ -128,6 +129,53 @@
                                     </table>
                                 </div>
                             </div>
+                            <nav>
+                                <ul class="pagination">
+                                    <c:if test="${page - 2 >= 1}">
+                                        <li class="page-item">
+                                            <form action="/controller" method="POST" class="m-0">
+                                                <input type="hidden" name="page" value="<c:out value="${page - 2}"/>">
+                                                <input type="hidden" name="command" value="admin_to_all_cars">
+                                                <input class="page-link" type="submit" value="<c:out value="${page - 2}"/>">
+                                            </form>
+                                        </li>
+                                    </c:if>
+                                    <c:if test="${page - 1 >= 1}">
+                                        <li class="page-item">
+                                            <form action="/controller" method="POST" class="m-0">
+                                                <input type="hidden" name="page" value="<c:out value="${page - 1}"/>">
+                                                <input type="hidden" name="command" value="admin_to_all_cars">
+                                                <input class="page-link" type="submit" value="<c:out value="${page - 1}"/>">
+                                            </form>
+                                        </li>
+                                    </c:if>
+                                    <li class="page-item disabled active">
+                                        <form action="/controller" method="POST" class="m-0">
+                                            <input type="hidden" name="page" value="${page}">
+                                            <input type="hidden" name="command" value="admin_to_all_cars">
+                                            <input class="page-link" type="submit" value="${page}">
+                                        </form>
+                                    </li>
+                                    <c:if test="${page + 1 <= pagesCount}">
+                                        <li class="page-item">
+                                            <form action="/controller" method="POST" class="m-0">
+                                                <input type="hidden" name="page" value="<c:out value="${page + 1}"/>">
+                                                <input type="hidden" name="command" value="admin_to_all_cars">
+                                                <input class="page-link" type="submit" value="<c:out value="${page + 1}"/>">
+                                            </form>
+                                        </li>
+                                    </c:if>
+                                    <c:if test="${page + 2 <= pagesCount}">
+                                        <li class="page-item">
+                                            <form action="/controller" method="POST" class="m-0">
+                                                <input type="hidden" name="page" value="<c:out value="${page + 2}"/>">
+                                                <input type="hidden" name="command" value="admin_to_all_cars">
+                                                <input class="page-link" type="submit" value="<c:out value="${page + 2}"/>">
+                                            </form>
+                                        </li>
+                                    </c:if>
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>

@@ -41,34 +41,34 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="example-content row g-3">
-                                            <div class="col-8">
-                                                <c:if test="${car.image ne null}">
-                                                    <img src="data:image/jpg;base64,${car.image}" class="full-width rounded"/>
-                                                </c:if>
-                                                <c:if test="${car.image eq null}">
-                                                    <img src="../resources/images/car-coming-soon.png" class="full-width rounded"/>
-                                                </c:if>
-                                            </div>
-                                            <div class="col-4">
-                                                <h1 class="mb-3"><c:out value="${car.brand}"/> <c:out value="${car.model}"/></h1>
-                                                <p><fmt:message key="label.car_acceleration"/> 0-100: <c:out value="${car.info.acceleration}"/>s</p>
-                                                <p><fmt:message key="label.car_power"/>: <c:out value="${car.info.power}"/>hp</p>
-                                                <p><fmt:message key="label.car_drivetrain"/>: <c:out value="${car.info.drivetrain}"/></p>
-                                                <c:if test="${car.salePrice.isEmpty()}">
-                                                    <p class="bold">Price per day: $<c:out value="${car.regularPrice}"/></p>
-                                                </c:if>
-                                                <c:if test="${car.salePrice.isPresent()}">
-                                                    <p class="bold">Price per day: $<c:out value="${car.salePrice.get()}"/></p>
-                                                </c:if>
-                                                <form class="mb-3" action="/controller" method="POST">
-                                                    <input name="orderDateRange" class="form-control flatpickr1 mb-4" type="text" placeholder="<fmt:message key='label.date_label'/>">
-                                                    <h4 id="final_price" class="mb-4">Final price: choose rent date</h4>
-                                                    <input type="hidden" id="hidden_price" name="hiddenPrice">
-                                                    <input type="hidden" name="command" value="create_order">
-                                                    <input type="hidden" name="carId" value="<c:out value='${car.id}'/>">
-                                                    <input type="submit" class="btn btn-primary" value="Rent"/>
-                                                </form>
-                                            </div>
+                                        <div class="col-8">
+                                            <c:if test="${car.image ne null}">
+                                                <img src="data:image/jpg;base64,<c:out value="${car.image}"/>" class="full-width rounded"/>
+                                            </c:if>
+                                            <c:if test="${car.image eq null}">
+                                                <img src="../resources/images/car-coming-soon.png" class="full-width rounded"/>
+                                            </c:if>
+                                        </div>
+                                        <div class="col-4">
+                                            <h1 class="mb-3"><c:out value="${car.brand}"/> <c:out value="${car.model}"/></h1>
+                                            <p><fmt:message key="label.car_acceleration"/> 0-100: <c:out value="${car.info.acceleration}"/>s</p>
+                                            <p><fmt:message key="label.car_power"/>: <c:out value="${car.info.power}"/>hp</p>
+                                            <p><fmt:message key="label.car_drivetrain"/>: <c:out value="${car.info.drivetrain}"/></p>
+                                            <c:if test="${car.salePrice.isEmpty()}">
+                                                <p class="bold">Price per day: $<c:out value="${car.regularPrice}"/></p>
+                                            </c:if>
+                                            <c:if test="${car.salePrice.isPresent()}">
+                                                <p class="bold">Price per day: $<c:out value="${car.salePrice.get()}"/></p>
+                                            </c:if>
+                                            <form class="mb-3" action="/controller" method="POST">
+                                                <input name="orderDateRange" class="form-control flatpickr1 mb-4" type="text" placeholder="<fmt:message key='label.date_label'/>">
+                                                <h4 id="final_price" class="mb-4">Final price: choose rent date</h4>
+                                                <input type="hidden" id="hidden_price" name="hiddenPrice">
+                                                <input type="hidden" name="command" value="create_order">
+                                                <input type="hidden" name="carId" value="<c:out value='${car.id}'/>">
+                                                <input type="submit" class="btn btn-primary" value="Rent"/>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

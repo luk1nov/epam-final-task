@@ -41,7 +41,6 @@
                                         </c:when>
                                         <c:otherwise>Car category</c:otherwise>
                                     </c:choose>
-<%--                                    <c:out value="${carCategoryTitle}"/>--%>
                                 </h1>
                             </div>
                         </div>

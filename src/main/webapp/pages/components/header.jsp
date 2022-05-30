@@ -35,6 +35,9 @@
             </div>
             <div class="d-flex">
                 <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link"><c:out value="${applicationScope.myAttr}"/></a>
+                    </li>
                     <c:if test="${empty sessionScope.loggedUser}" >
                         <li class="nav-item hidden-on-mobile">
                             <a class="nav-link" href="${pageContext.request.contextPath}/controller?command=to_signup_page"><fmt:message key="label.sign_up"/></a>

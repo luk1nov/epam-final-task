@@ -58,7 +58,11 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="inputModel" class="form-label">Model</label>
-                                                <input name="carModel" type="text" class="form-control" id="inputModel" value="${car.model}">
+                                                <input name="carModel" type="text" class="form-control" id="inputModel" value="<c:out value="${car.model}"/>">
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="inputVin" class="form-label">Vin code</label>
+                                                <input name="carVinCode" type="text" class="form-control" id="inputVin" maxlength="17" minlength="17" value="<c:out value="${car.vinCode}"/>">
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="inputCarCategory" class="form-label">Category</label>
@@ -70,11 +74,11 @@
                                             </div>
                                             <div class="col-3">
                                                 <label for="inputPower" class="form-label">Power</label>
-                                                <input name="carInfoPower" type="text" class="form-control" id="inputPower" value="${car.info.power}">
+                                                <input name="carInfoPower" type="text" class="form-control" id="inputPower" value="<c:out value="${car.info.power}"/>">
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="inputAcceleration" class="form-label">Acceleration 0-100</label>
-                                                <input name="carInfoAcceleration" type="text" class="form-control" id="inputAcceleration" value="${car.info.acceleration}">
+                                                <input name="carInfoAcceleration" type="text" class="form-control" id="inputAcceleration" value="<c:out value="${car.info.acceleration}"/>">
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="inputDrivetrain" class="form-label">Drivetrain</label>
@@ -86,11 +90,11 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <label for="inputPrice" class="form-label">Price</label>
-                                                <input name="carRegularPrice" type="text" class="form-control" id="inputPrice" value="${car.regularPrice}">
+                                                <input name="carRegularPrice" type="text" class="form-control" id="inputPrice" value="<c:out value="${car.regularPrice}"/>">
                                             </div>
                                             <div class="col-md-4">
                                                 <label for="inputSalePrice" class="form-label">Sale Price</label>
-                                                <input name="carSalePrice" type="text" class="form-control" id="inputSalePrice" value="<c:if test="${car.salePrice.isPresent()}">${car.salePrice.get()}</c:if>">
+                                                <input name="carSalePrice" type="text" class="form-control" id="inputSalePrice" value="<c:if test="${car.salePrice.isPresent()}"><c:out value="${car.salePrice.get()}"/></c:if>">
                                             </div>
                                             <div class="col-md-4">
                                                 <label for="inputActive" class="form-label">Active</label>
@@ -109,10 +113,10 @@
                                                 </div>
                                             </div>
                                             <c:if test="${car.image ne null}">
-                                                <img src="data:image/jpg;base64,${car.image}"/>
+                                                <img src="data:image/jpg;base64,<c:out value="${car.image}"/>"/>
                                             </c:if>
                                             <input type="hidden" name="command" value="admin_edit_car">
-                                            <input type="hidden" name="carId" value="${car.id}">
+                                            <input type="hidden" name="carId" value="<c:out value="${car.id}"/>">
                                             <div class="col-12">
                                                 <input type="submit" class="btn btn-primary" value="Save"/>
                                             </div>

@@ -120,7 +120,7 @@
                                 <div class="card-body">
                                     <div class="example-content">
                                         <c:if test="${sessionScope.loggedUser.driverLicense != null}">
-                                            <img class="mb-4 full-width" src="data:image/jpg;base64,${sessionScope.loggedUser.driverLicense}"/>
+                                            <img class="mb-4 full-width" src="data:image/jpg;base64,<c:out value="${sessionScope.loggedUser.driverLicense}"/>"/>
                                         </c:if>
                                         <c:if test="${sessionScope.loggedUser.driverLicense == null}">
                                             <div class="alert alert-danger alert-style-light" role="alert">

@@ -17,12 +17,12 @@
         <h5>Oops!</h5>
         <div class="card error-card">
             <span class="error-stacktrace">
-                Request from ${pageContext.errorData.requestURI} is failed<br/>
-                Status code : ${pageContext.errorData.statusCode}<br/>
-                Servlet name : ${pageContext.errorData.servletName}<br/>
-                Exception: ${pageContext.exception} Message:${error}<br/>
+                Request from <c:out value="${pageContext.errorData.requestURI}"/> is failed<br/>
+                Status code : <c:out value="${pageContext.errorData.statusCode}"/><br/>
+                Servlet name : <c:out value="${pageContext.errorData.servletName}"/><br/>
+                Exception: <c:out value="${pageContext.exception}"/> Message:<c:out value="${error}"/><br/>
                 <c:forEach var="trace" items="${pageContext.exception.stackTrace}">
-                    ${trace}<br/>
+                    <c:out value="${trace}"/><br/>
                 </c:forEach>
             </span>
         </div>

@@ -30,7 +30,7 @@
                         <div class="alert alert-custom alert-indicator-top indicator-danger" role="alert">
                             <div class="alert-content">
                                 <span class="alert-title">Failed!</span>
-                                <span class="alert-text">${message}</span>
+                                <span class="alert-text"><c:out value="${message}"/></span>
                             </div>
                         </div>
                     </div>

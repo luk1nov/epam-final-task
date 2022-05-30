@@ -31,6 +31,7 @@
                                 <div class="alert-content">
                                     <span class="alert-title">Success!</span>
                                     <span class="alert-text">Order placed!</span>
+<%--                                    do fmt message--%>
                                 </div>
                             </div>
                         </div>

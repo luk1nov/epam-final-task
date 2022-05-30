@@ -55,8 +55,8 @@
                                         <tbody>
                                         <c:forEach var="category" items="${list}">
                                             <tr>
-                                                <td>${category.id}</td>
-                                                <td>${category.title}</td>
+                                                <td><c:out value="${category.id}"/></td>
+                                                <td><c:out value="${category.title}"/></td>
                                                 <td>
                                                     <div class="btn-group" role="group" aria-label="Basic example">
                                                         <form action="/controller" method="POST">

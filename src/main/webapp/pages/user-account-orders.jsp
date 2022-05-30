@@ -117,21 +117,22 @@
                                                             <td>
                                                                 <c:choose>
                                                                     <c:when test="${order.orderStatus eq 'PROCESSING'}">
-                                                                        <span class="badge badge-style-light rounded-pill badge-warning">Processing</span>
+                                                                        <span class="badge badge-style-light rounded-pill badge-warning">
                                                                     </c:when>
                                                                     <c:when test="${order.orderStatus eq 'ACTIVE'}">
-                                                                        <span class="badge badge-style-light rounded-pill badge-success">Active</span>
+                                                                        <span class="badge badge-style-light rounded-pill badge-success">
                                                                     </c:when>
-                                                                    <c:when test="${order.orderStatus eq 'REJECTED'}">
-                                                                        <span class="badge badge-style-light rounded-pill badge-danger">Rejected</span>
+                                                                    <c:when test="${order.orderStatus eq 'CANCELED'}">
+                                                                        <span class="badge badge-style-light rounded-pill badge-danger" <c:if test="${order.message.isPresent()}">data-bs-toggle="tooltip" data-bs-placement="top" title="<c:out value="${order.message.get()}"/>"</c:if>>
                                                                     </c:when>
                                                                     <c:when test="${order.orderStatus eq 'FINISHED'}">
-                                                                        <span class="badge badge-style-light rounded-pill badge-primary">Finished</span>
+                                                                        <span class="badge badge-style-light rounded-pill badge-primary">
                                                                     </c:when>
                                                                     <c:otherwise>
-                                                                        <span class="badge badge-style-light rounded-pill badge-light"><c:out value="${order.orderStatus}"/></span>
+                                                                        <span class="badge badge-style-light rounded-pill badge-light">
                                                                     </c:otherwise>
                                                                 </c:choose>
+                                                                <c:out value="${order.orderStatus}"/></span>
                                                             </td>
                                                             <td>
                                                                 <c:choose>
@@ -181,6 +182,7 @@
 
 <!-- Javascripts -->
 <script src="${pageContext.request.contextPath}/resources/plugins/jquery/jquery-3.5.1.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/plugins/bootstrap/js/popper.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/main.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/custom.js"></script>

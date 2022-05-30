@@ -47,22 +47,22 @@
                                         <form class="row g-3" action="controller" method="post">
                                             <div class="col-md-4">
                                                 <label for="inputName" class="form-label">Name</label>
-                                                <input name="userName" type="text" class="form-control" id="inputName" value="${user.name}"/>
+                                                <input name="userName" type="text" class="form-control" id="inputName" value="<c:out value="${user.name}"/>"/>
                                             </div>
                                             <div class="col-md-4">
                                                 <label for="inputSurname" class="form-label">Surname</label>
-                                                <input name="userSurname" type="text" class="form-control" id="inputSurname" value="${user.surname}"/>
+                                                <input name="userSurname" type="text" class="form-control" id="inputSurname" value="<c:out value="${user.surname}"/>"/>
                                             </div>
                                             <div class="col-md-4">
                                                 <label for="inputPhone" class="form-label">Phone</label>
                                                 <div class="input-group">
                                                     <span class="input-group-text" id="basic-addon1">+375</span>
-                                                    <input type="text" name="userPhone" class="form-control" id="inputPhone" aria-describedby="inputPhone" value="${user.phone}">
+                                                    <input type="text" name="userPhone" class="form-control" id="inputPhone" aria-describedby="inputPhone" value="<c:out value="${user.phone}"/>">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <label for="inputEmail" class="form-label">Email</label>
-                                                <input name="userEmail" type="email" class="form-control" id="inputEmail" value="${user.email}"/>
+                                                <input name="userEmail" type="email" class="form-control" id="inputEmail" value="<c:out value="${user.email}"/>"/>
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="inputRole" class="form-label">Role</label>
@@ -81,8 +81,7 @@
                                                     <option <c:if test="${user.status == 'BLOCKED'}">selected</c:if>>Blocked</option>
                                                 </select>
                                             </div>
-                                            <input type="hidden" name="userId" value="${user.id}">
-
+                                            <input type="hidden" name="userId" value="<c:out value="${user.id}"/>">
                                             <div class="col-12">
                                                 <c:if test="${user == null}">
                                                     <input type="hidden" name="command" value="admin_add_new_user">

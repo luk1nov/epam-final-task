@@ -81,7 +81,13 @@
                                             <tr>
                                                 <td><c:out value="${order.id}"/></td>
                                                 <td><c:out value="${order.user.name}"/> <c:out value="${order.user.surname}"/></td>
-                                                <td><c:out value="${order.car.brand}"/> <c:out value="${order.car.model}"/></td>
+                                                <td>
+                                                    <form action="/controller" method="POST" class="m-0">
+                                                        <input type="hidden" name="command" value="to_car_page">
+                                                        <input type="hidden" name="carId" value="<c:out value="${order.car.id}"/>">
+                                                        <input class="order-car-link" type="submit" value="<c:out value="${order.car.brand}"/> <c:out value="${order.car.model}"/>">
+                                                    </form>
+                                                </td>
                                                 <td>
                                                     <fmt:parseDate value="${order.beginDate}" pattern="yyyy-MM-dd" var="parsedDate" type="date" />
                                                     <fmt:formatDate value="${parsedDate}" type="date" pattern="dd MMMM yyyy" />
@@ -140,6 +146,53 @@
                                     </c:if>
                                 </div>
                             </div>
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination">
+                                    <c:if test="${page - 2 >= 1}">
+                                        <li class="page-item">
+                                            <form action="/controller" method="POST" class="m-0">
+                                                <input type="hidden" name="page" value="<c:out value="${page - 2}"/>">
+                                                <input type="hidden" name="command" value="admin_find_processing_orders">
+                                                <input class="page-link" type="submit" value="<c:out value="${page - 2}"/>">
+                                            </form>
+                                        </li>
+                                    </c:if>
+                                    <c:if test="${page - 1 >= 1}">
+                                        <li class="page-item">
+                                            <form action="/controller" method="POST" class="m-0">
+                                                <input type="hidden" name="page" value="<c:out value="${page - 1}"/>">
+                                                <input type="hidden" name="command" value="admin_find_processing_orders">
+                                                <input class="page-link" type="submit" value="<c:out value="${page - 1}"/>">
+                                            </form>
+                                        </li>
+                                    </c:if>
+                                    <li class="page-item disabled active">
+                                        <form action="/controller" method="POST" class="m-0">
+                                            <input type="hidden" name="page" value="${page}">
+                                            <input type="hidden" name="command" value="admin_find_processing_orders">
+                                            <input class="page-link" type="submit" value="${page}">
+                                        </form>
+                                    </li>
+                                    <c:if test="${page + 1 <= pagesCount}">
+                                        <li class="page-item">
+                                            <form action="/controller" method="POST" class="m-0">
+                                                <input type="hidden" name="page" value="<c:out value="${page + 1}"/>">
+                                                <input type="hidden" name="command" value="admin_find_processing_orders">
+                                                <input class="page-link" type="submit" value="<c:out value="${page + 1}"/>">
+                                            </form>
+                                        </li>
+                                    </c:if>
+                                    <c:if test="${page + 2 <= pagesCount}">
+                                        <li class="page-item">
+                                            <form action="/controller" method="POST" class="m-0">
+                                                <input type="hidden" name="page" value="<c:out value="${page + 2}"/>">
+                                                <input type="hidden" name="command" value="admin_find_processing_orders">
+                                                <input class="page-link" type="submit" value="<c:out value="${page + 2}"/>">
+                                            </form>
+                                        </li>
+                                    </c:if>
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>

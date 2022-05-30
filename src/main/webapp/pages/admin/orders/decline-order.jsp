@@ -42,7 +42,7 @@
                                                 <label for="inputOrderMessage" class="form-label">Decline message</label>
                                                 <textarea name="orderMessage" class="form-control" rows="3" maxlength="200" id="inputOrderMessage"></textarea>
                                             </div>
-                                            <input type="hidden" name="orderId" value="${orderId}">
+                                            <input type="hidden" name="orderId" value="<c:out value="${orderId}"/>">
                                             <div class="col-12">
                                                 <input type="hidden" name="command" value="admin_decline_order">
                                                 <input type="submit" class="btn btn-danger" value="Decline">

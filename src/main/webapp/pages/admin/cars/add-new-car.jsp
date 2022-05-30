@@ -60,6 +60,10 @@
                                                 <label for="inputModel" class="form-label">Model</label>
                                                 <input name="carModel" type="text" class="form-control" id="inputModel">
                                             </div>
+                                            <div class="col-md-12">
+                                                <label for="inputVin" class="form-label">Vin code</label>
+                                                <input name="carVinCode" type="text" class="form-control" id="inputVin" maxlength="17" minlength="17">
+                                            </div>
                                             <div class="col-6">
                                                 <label for="inputPower" class="form-label">Power</label>
                                                 <input name="carInfoPower" type="text" class="form-control" id="inputPower">

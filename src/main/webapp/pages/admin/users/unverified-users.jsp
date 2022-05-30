@@ -80,6 +80,53 @@
                             </div>
                         </c:forEach>
                     </div>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <c:if test="${page - 2 >= 1}">
+                                <li class="page-item">
+                                    <form action="/controller" method="POST" class="m-0">
+                                        <input type="hidden" name="page" value="<c:out value="${page - 2}"/>">
+                                        <input type="hidden" name="command" value="admin_to_unverified_users">
+                                        <input class="page-link" type="submit" value="<c:out value="${page - 2}"/>">
+                                    </form>
+                                </li>
+                            </c:if>
+                            <c:if test="${page - 1 >= 1}">
+                                <li class="page-item">
+                                    <form action="/controller" method="POST" class="m-0">
+                                        <input type="hidden" name="page" value="<c:out value="${page - 1}"/>">
+                                        <input type="hidden" name="command" value="admin_to_unverified_users">
+                                        <input class="page-link" type="submit" value="<c:out value="${page - 1}"/>">
+                                    </form>
+                                </li>
+                            </c:if>
+                            <li class="page-item disabled active">
+                                <form action="/controller" method="POST" class="m-0">
+                                    <input type="hidden" name="page" value="${page}">
+                                    <input type="hidden" name="command" value="admin_to_unverified_users">
+                                    <input class="page-link" type="submit" value="${page}">
+                                </form>
+                            </li>
+                            <c:if test="${page + 1 <= pagesCount}">
+                                <li class="page-item">
+                                    <form action="/controller" method="POST" class="m-0">
+                                        <input type="hidden" name="page" value="<c:out value="${page + 1}"/>">
+                                        <input type="hidden" name="command" value="admin_to_unverified_users">
+                                        <input class="page-link" type="submit" value="<c:out value="${page + 1}"/>">
+                                    </form>
+                                </li>
+                            </c:if>
+                            <c:if test="${page + 2 <= pagesCount}">
+                                <li class="page-item">
+                                    <form action="/controller" method="POST" class="m-0">
+                                        <input type="hidden" name="page" value="<c:out value="${page + 2}"/>">
+                                        <input type="hidden" name="command" value="admin_to_unverified_users">
+                                        <input class="page-link" type="submit" value="<c:out value="${page + 2}"/>">
+                                    </form>
+                                </li>
+                            </c:if>
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>

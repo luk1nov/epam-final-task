@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="util" uri="customtags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -52,12 +53,12 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <c:forEach var="user" items="${all_users}">
+                                        <c:forEach var="user" items="${list}">
                                             <tr>
-                                                <td>${user.id}</td>
-                                                <td>${user.name}</td>
-                                                <td>${user.surname}</td>
-                                                <td>${user.role}</td>
+                                                <td><c:out value="${user.id}"/></td>
+                                                <td><c:out value="${user.name}"/></td>
+                                                <td><c:out value="${user.surname}"/></td>
+                                                <td><c:out value="${user.role}"/></td>
                                                 <td>
                                                     <c:choose>
                                                         <c:when test="${user.status == 'INACTIVE'}">
@@ -76,13 +77,12 @@
                                                             <span class="badge badge-style-light rounded-pill badge-light">
                                                         </c:otherwise>
                                                     </c:choose>
-                                                            ${user.status}
+                                                            <c:out value="${user.status}"/>
                                                          </span>
                                                     </td>
-                                                <td>${user.email}</td>
+                                                <td><c:out value="${user.email}"/></td>
                                                 <td>
-                                                    <fmt:setLocale value="en_US"/>
-                                                        <fmt:formatNumber value = "${user.balance}" type = "currency" maxFractionDigits = "2"/>
+                                                    $<fmt:formatNumber value = "${user.balance}" maxFractionDigits = "2"/>
                                                 </td>
                                                 <td>
                                                     <div class="btn-group dropstart">
@@ -92,14 +92,14 @@
                                                         <ul class="dropdown-menu">
                                                             <li>
                                                                 <form action="/controller" method="POST">
-                                                                    <input type="hidden" name="userId" value="${user.id}">
+                                                                    <input type="hidden" name="userId" value="<c:out value="${user.id}"/>">
                                                                     <input type="hidden" name="command" value="admin_to_edit_user">
                                                                     <input type="submit" class="dropdown-item" value="Edit">
                                                                 </form>
                                                             </li>
                                                             <li>
                                                                 <form action="/controller" method="POST">
-                                                                    <input type="hidden" name="userId" value="${user.id}">
+                                                                    <input type="hidden" name="userId" value="<c:out value="${user.id}"/>">
                                                                     <input type="hidden" name="command" value="admin_delete_user">
                                                                     <input type="submit" class="dropdown-item" value="Delete">
                                                                 </form>
@@ -113,6 +113,7 @@
                                     </table>
                                 </div>
                             </div>
+                            <util:Pagination command="admin_to_all_users"/>
                         </div>
                     </div>
                 </div>
