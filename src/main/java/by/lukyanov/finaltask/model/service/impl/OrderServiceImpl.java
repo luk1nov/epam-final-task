@@ -1,30 +1,46 @@
 package by.lukyanov.finaltask.model.service.impl;
 
-import by.lukyanov.finaltask.entity.Car;
-import by.lukyanov.finaltask.entity.Order;
-import by.lukyanov.finaltask.entity.OrderStatus;
-import by.lukyanov.finaltask.entity.User;
+import by.lukyanov.finaltask.entity.*;
 import by.lukyanov.finaltask.exception.DaoException;
 import by.lukyanov.finaltask.exception.ServiceException;
 import by.lukyanov.finaltask.model.dao.impl.OrderDaoImpl;
 import by.lukyanov.finaltask.model.service.OrderService;
 import by.lukyanov.finaltask.util.DateRangeParser;
+import by.lukyanov.finaltask.util.ResultCounter;
 import by.lukyanov.finaltask.validation.impl.ValidatorImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 import static by.lukyanov.finaltask.util.DateRangeParser.BEGIN_DATE_INDEX;
 import static by.lukyanov.finaltask.util.DateRangeParser.END_DATE_INDEX;
+import static by.lukyanov.finaltask.util.ResultCounter.ROWS_PER_PAGE;
 
 public class OrderServiceImpl implements OrderService {
     private static final Logger logger = LogManager.getLogger();
     private static final OrderDaoImpl orderDaoImpl = OrderDaoImpl.getInstance();
     private static final ValidatorImpl validator = ValidatorImpl.getInstance();
+
+    @Override
+    public List<Order> findAllOrders(String pageNumber) throws ServiceException {
+        List<Order> orderList;
+        try {
+            int orderPage = validator.isValidNumber(pageNumber) ? Integer.parseInt(pageNumber) : 1;
+            ResultCounter counter = new ResultCounter(orderPage);
+            orderList = orderDaoImpl.findAll(ROWS_PER_PAGE, counter.offset());
+        } catch (DaoException e) {
+            logger.error("Service exception trying find all orders", e);
+            throw new ServiceException(e);
+        }
+        return orderList;
+    }
 
     @Override
     public List<Order> findAllOrdersByUserId(long userId) throws ServiceException {
@@ -88,10 +104,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> findOrdersByOrderStatus(OrderStatus status) throws ServiceException {
+    public List<Order> findOrdersByOrderStatus(OrderStatus status, String pageNumber) throws ServiceException {
         List<Order> orderList;
         try {
-            orderList = orderDaoImpl.findOrdersByOrderStatus(status);
+            int orderPage = validator.isValidNumber(pageNumber) ? Integer.parseInt(pageNumber) : 1;
+            ResultCounter counter = new ResultCounter(orderPage);
+            orderList = orderDaoImpl.findOrdersByOrderStatus(status, ROWS_PER_PAGE, counter.offset());
         } catch (DaoException e) {
             logger.error("Service exception trying find processing orders", e);
             throw new ServiceException(e);
@@ -118,7 +136,11 @@ public class OrderServiceImpl implements OrderService {
         boolean result = false;
         try {
             if(validator.isValidId(orderId)){
-                result = orderDaoImpl.updateOrderStatus(orderStatus, Long.parseLong(orderId));
+                Order order = new Order.OrderBuilder()
+                        .id(Long.valueOf(orderId))
+                        .orderStatus(orderStatus)
+                        .build();
+                result = orderDaoImpl.update(order);
             }
         } catch (DaoException e) {
             logger.error("Service exception trying update order status", e);
@@ -128,16 +150,37 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public boolean declineOrder(String orderId, String message) throws ServiceException {
+    public boolean cancelOrder(String orderId, String message) throws ServiceException {
         boolean result = false;
         try {
-            if(validator.isValidDeclineMessage(message) && validator.isValidId(orderId)){
-                Order order = new Order.OrderBuilder()
-                        .id(Long.valueOf(orderId))
-                        .message(message)
-                        .orderStatus(OrderStatus.REJECTED)
-                        .build();
-                result = orderDaoImpl.declineOrder(order);
+            if(validator.isValidMessage(message) && validator.isValidId(orderId)){
+                Optional<Order> optionalOrder = orderDaoImpl.findById(Long.parseLong(orderId));
+                if(optionalOrder.isPresent()){
+                    Order order = optionalOrder.get();
+                    order.setOrderStatus(OrderStatus.CANCELED);
+                    order.setMessage(message);
+                    result = orderDaoImpl.cancelOrder(order);
+                }
+            }
+        } catch (DaoException e) {
+            logger.error("Service exception trying decline order", e);
+            throw new ServiceException(e);
+        }
+        return result;
+    }
+
+
+    @Override
+    public boolean cancelOrder(String orderId) throws ServiceException {
+        boolean result = false;
+        try {
+            if(validator.isValidId(orderId)){
+                Optional<Order> optionalOrder = orderDaoImpl.findById(Long.parseLong(orderId));
+                if(optionalOrder.isPresent()){
+                    Order order = optionalOrder.get();
+                    order.setOrderStatus(OrderStatus.CANCELED);
+                    result = orderDaoImpl.cancelOrder(order);
+                }
             }
         } catch (DaoException e) {
             logger.error("Service exception trying decline order", e);
@@ -147,15 +190,91 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public boolean cancelOrder(Order order) throws ServiceException {
-        boolean result;
+    public boolean deleteOrder(String orderId) throws ServiceException {
+        boolean result = false;
         try {
-            order.setOrderStatus(OrderStatus.FINISHED);
-            result = orderDaoImpl.cancelOrder(order);
+            if(validator.isValidId(orderId)){
+                Optional<Order> optionalOrder = orderDaoImpl.findById(Long.parseLong(orderId));
+                if(optionalOrder.isPresent()){
+                    Order order = optionalOrder.get();
+                    OrderStatus orderStatus = order.getOrderStatus();
+                    if(orderStatus == OrderStatus.CANCELED || orderStatus == OrderStatus.FINISHED){
+                        result = orderDaoImpl.delete(Long.parseLong(orderId));
+                    }
+                }
+            }
         } catch (DaoException e) {
-            logger.error("Service exception trying cancel order", e);
+            logger.error("Service exception trying delete order", e);
             throw new ServiceException(e);
         }
         return result;
+    }
+
+    @Override
+    public boolean completeOrder(Map<String, String> reportData, InputStream reportPhoto) throws ServiceException {
+        String reportStatus = reportData.get(ORDER_REPORT_STATUS);
+        String reportText = reportData.get(ORDER_REPORT_TEXT);
+        String orderId = reportData.get(ORDER_ID);
+        boolean result = false;
+        if (validator.isValidId(orderId) && validator.isValidMessage(reportText)){
+            try {
+                Optional<Order> optionalOrder = orderDaoImpl.findById(Long.parseLong(orderId));
+                if (optionalOrder.isPresent()){
+                    Order order = createReport(reportText, reportStatus, orderId);
+                    result = orderDaoImpl.completeOrder(order, reportPhoto);
+                }
+            } catch (DaoException | IllegalArgumentException e) {
+                logger.error("Service exception trying complete order", e);
+                throw new ServiceException(e);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public Optional<OrderReport> findOrderReportById(String reportId) throws ServiceException {
+        Optional<OrderReport> optionalOrderReport = Optional.empty();
+        try {
+            if (validator.isValidId(reportId)){
+                optionalOrderReport = orderDaoImpl.findOrderReportById(Long.parseLong(reportId));
+            }
+        } catch (DaoException e) {
+            logger.error("Service exception trying find order report by id", e);
+            throw new ServiceException(e);
+        }
+        return optionalOrderReport;
+    }
+
+    @Override
+    public int countAllOrders() throws ServiceException {
+        try {
+            return orderDaoImpl.countAllOrders();
+        } catch (DaoException e) {
+            logger.error("Service exception trying count all orders", e);
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public int countOrdersByStatus(OrderStatus status) throws ServiceException {
+        try {
+            return orderDaoImpl.countOrdersByStatus(status);
+        } catch (DaoException e) {
+            logger.error("Service exception trying count orders by status", e);
+            throw new ServiceException(e);
+        }
+    }
+
+    private Order createReport(String text, String status, String orderId) throws IllegalArgumentException{
+        OrderReport report = new OrderReport();
+        if (!text.isBlank()){
+            report.setReportText(text);
+        }
+        report.setReportStatus(OrderReportStatus.valueOf(status.toUpperCase()));
+        return new Order.OrderBuilder()
+                .id(Long.valueOf(orderId))
+                .orderStatus(OrderStatus.FINISHED)
+                .report(report)
+                .build();
     }
 }
