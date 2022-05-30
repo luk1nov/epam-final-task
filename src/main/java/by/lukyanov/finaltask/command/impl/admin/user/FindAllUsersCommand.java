@@ -4,15 +4,20 @@ import by.lukyanov.finaltask.command.Command;
 import by.lukyanov.finaltask.command.PagePath;
 import by.lukyanov.finaltask.command.ParameterAttributeName;
 import by.lukyanov.finaltask.command.Router;
+import by.lukyanov.finaltask.entity.OrderStatus;
 import by.lukyanov.finaltask.entity.User;
 import by.lukyanov.finaltask.exception.CommandException;
 import by.lukyanov.finaltask.exception.ServiceException;
 import by.lukyanov.finaltask.model.service.impl.UserServiceImpl;
+import by.lukyanov.finaltask.util.ResultCounter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
+
+import static by.lukyanov.finaltask.command.PagePath.ADMIN_ALL_USERS;
+import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class FindAllUsersCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -20,12 +25,14 @@ public class FindAllUsersCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Router router = new Router();
+        Router router = new Router(ADMIN_ALL_USERS);
+        String currentResultPage = request.getParameter(RESULT_PAGE);
         try {
-            List<User> users = userService.findAllUsers();
-            request.setAttribute(ParameterAttributeName.ALL_USERS, users);
-            router.setType(Router.Type.FORWARD);
-            router.setPagePath(PagePath.ADMIN_ALL_USERS);
+            int pagesCount = ResultCounter.countPages(userService.countAllUsers());
+            request.setAttribute(PAGES_COUNT, pagesCount);
+            request.setAttribute(RESULT_PAGE, currentResultPage);
+            List<User> users = userService.findAllUsers(currentResultPage);
+            request.setAttribute(LIST, users);
         } catch (ServiceException e) {
             logger.error("Command exception trying find all users", e);
             throw new CommandException(e);

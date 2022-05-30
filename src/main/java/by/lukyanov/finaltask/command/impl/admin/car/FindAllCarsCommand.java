@@ -5,9 +5,11 @@ import by.lukyanov.finaltask.command.PagePath;
 import by.lukyanov.finaltask.command.ParameterAttributeName;
 import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.entity.Car;
+import by.lukyanov.finaltask.entity.UserStatus;
 import by.lukyanov.finaltask.exception.CommandException;
 import by.lukyanov.finaltask.exception.ServiceException;
 import by.lukyanov.finaltask.model.service.impl.CarServiceImpl;
+import by.lukyanov.finaltask.util.ResultCounter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
@@ -16,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 import static by.lukyanov.finaltask.command.PagePath.TO_ALL_CARS;
-import static by.lukyanov.finaltask.command.ParameterAttributeName.CURRENT_PAGE;
+import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class FindAllCarsCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -27,9 +29,13 @@ public class FindAllCarsCommand implements Command {
         Router router = new Router();
         HttpSession session = request.getSession();
         session.setAttribute(CURRENT_PAGE, TO_ALL_CARS);
+        String currentResultPage = request.getParameter(RESULT_PAGE);
         try {
-            List<Car> cars = carService.findAllCars();
-            request.setAttribute(ParameterAttributeName.ALL_CARS, cars);
+            int pagesCount = ResultCounter.countPages(carService.countAllCars());
+            request.setAttribute(PAGES_COUNT, pagesCount);
+            request.setAttribute(RESULT_PAGE, currentResultPage);
+            List<Car> cars = carService.findAllCars(currentResultPage);
+            request.setAttribute(LIST, cars);
             router.setPagePath(PagePath.ADMIN_ALL_CARS);
         } catch (ServiceException e) {
             logger.error("Command exception trying find all cars", e);
