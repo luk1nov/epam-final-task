@@ -12,21 +12,21 @@
                 <ul class="navbar-nav custom-nav-bar">
                     <li class="nav-item hidden-on-mobile">
                         <form action="/controller" method="POST">
-                            <input type="hidden" name="carCategory" value="1">
+                            <input type="hidden" name="carCategoryId" value="1">
                             <input type="hidden" name="command" value="to_car_category_page">
                             <input type="submit" value="<fmt:message key="label.category_cars"/>" class="nav-link">
                         </form>
                     </li>
                     <li class="nav-item hidden-on-mobile">
                         <form action="/controller" method="POST">
-                            <input type="hidden" name="carCategory" value="2">
+                            <input type="hidden" name="carCategoryId" value="2">
                             <input type="hidden" name="command" value="to_car_category_page">
                             <input type="submit" value="<fmt:message key="label.category_e_cars"/>" class="nav-link">
                         </form>
                     </li>
                     <li class="nav-item hidden-on-mobile">
                         <form action="/controller" method="POST">
-                            <input type="hidden" name="carCategory" value="3">
+                            <input type="hidden" name="carCategoryId" value="3">
                             <input type="hidden" name="command" value="to_car_category_page">
                             <input type="submit" value="<fmt:message key="label.category_premium"/>" class="nav-link">
                         </form>
