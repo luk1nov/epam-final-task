@@ -1,14 +1,12 @@
 package by.lukyanov.finaltask.controller;
 
-import java.io.*;
-
+import java.io.IOException;
 import by.lukyanov.finaltask.command.*;
-import by.lukyanov.finaltask.model.connection.ConnectionPool;
 import by.lukyanov.finaltask.exception.CommandException;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import jakarta.servlet.http.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
