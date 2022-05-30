@@ -28,6 +28,7 @@ public class AddNewCarCommand implements Command {
         Router router = new Router();
         String brand = request.getParameter(CAR_BRAND).strip();
         String model = request.getParameter(CAR_MODEL).strip();
+        String vinCode = request.getParameter(CAR_VIN_CODE).strip();
         String regularPrice = request.getParameter(CAR_REGULAR_PRICE).strip();
         String salePrice = request.getParameter(CAR_SALE_PRICE).strip();
         String carActive = request.getParameter(CAR_ACTIVE).strip();
@@ -39,6 +40,7 @@ public class AddNewCarCommand implements Command {
         Map<String, String> carData = new HashMap<>();
         carData.put(CAR_BRAND, brand);
         carData.put(CAR_MODEL, model);
+        carData.put(CAR_VIN_CODE, vinCode);
         carData.put(CAR_REGULAR_PRICE, regularPrice);
         carData.put(CAR_ACTIVE, carActive);
         carData.put(CAR_CATEGORY_ID, carCategoryId);
