@@ -122,7 +122,6 @@ li.admin-home-link form input[type="submit"], .accordion-menu li form input[type
 .car-card-img{
     display: block;
     width: inherit;
-    height: inherit;
     object-fit: fill;
 }
 
