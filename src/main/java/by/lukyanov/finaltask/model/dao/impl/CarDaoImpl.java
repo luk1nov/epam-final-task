@@ -28,11 +28,12 @@ public class CarDaoImpl implements CarDao {
     private static final String SQL_UPDATE_CAR_BY_ID = "UPDATE cars SET brand = ?, model = ?, vin_code = ?, regular_price = ?, sale_price = ?, is_active = ?, car_category_car_category_id = ? WHERE car_id = ?";
     private static final String SQL_UPDATE_CAR_WITH_IMAGE_BY_ID = "UPDATE cars SET brand = ?, model = ?, vin_code = ?, regular_price = ?, sale_price = ?, is_active = ?, car_category_car_category_id = ?, image = ? WHERE car_id = ?";
     private static final String SQL_UPDATE_CAR_INFO_BY_CAR_ID = "UPDATE car_info SET acceleration = ?, power = ?, drivetrain = ? WHERE cars_car_id = ?";
-    private static final String SQL_FIND_CARS_BY_CATEGORY_ID = "SELECT cars.car_id, cars.brand, cars.model, cars.vin_code, cars.regular_price, cars.sale_price, cars.is_active, cars.image, car_info.acceleration, car_info.power, car_info.drivetrain FROM cars LEFT JOIN car_info ON cars.car_id = car_info.cars_car_id WHERE car_category_car_category_id = ?";
+    private static final String SQL_FIND_CARS_BY_CATEGORY_ID = "SELECT cars.car_id, cars.brand, cars.model, cars.vin_code, cars.regular_price, cars.sale_price, cars.is_active, cars.image, car_info.acceleration, car_info.power, car_info.drivetrain FROM cars LEFT JOIN car_info ON cars.car_id = car_info.cars_car_id WHERE car_category_car_category_id = ? LIMIT ? OFFSET ?";
     private static final String SQL_DELETE_CAR_BY_ID = "DELETE FROM cars WHERE car_id = ?";
     private static final String SQL_UPDATE_STATUS_CAR_BY_ID = "UPDATE cars SET is_active = ? WHERE car_id = ?";
     private static final String SQL_COUNT_ALL_CARS = "SELECT COUNT(car_id) from cars";
     private static final String SQL_COUNT_ALL_CARS_BY_ACTIVE = "SELECT COUNT(car_id) from cars WHERE is_active = ?";
+    private static final String SQL_COUNT_ALL_CARS_BY_CATEGORY = "SELECT COUNT(car_id) from cars WHERE car_category_car_category_id = ?";
     private static CarDaoImpl instance;
     private final ConnectionPool pool = ConnectionPool.getInstance();
 
@@ -249,11 +250,13 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public List<Car> findCarsByCategoryId(long id) throws DaoException {
+    public List<Car> findCarsByCategoryId(long id, int limit, int offset) throws DaoException {
         List<Car> cars = new ArrayList<>();
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_FIND_CARS_BY_CATEGORY_ID)){
             statement.setLong(1, id);
+            statement.setInt(2, limit);
+            statement.setInt(3, offset);
             try (ResultSet resultSet = statement.executeQuery()){
                 while (resultSet.next()){
                     Car car = new Car.CarBuilder()
@@ -357,6 +360,24 @@ public class CarDaoImpl implements CarDao {
             }
         } catch (SQLException e) {
             logger.error("Dao exception trying count cars by active", e);
+            throw new DaoException(e);
+        }
+        return orderCount;
+    }
+
+    @Override
+    public int countAllCarsByCategoryId(long categoryId) throws DaoException {
+        int orderCount = 0;
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_COUNT_ALL_CARS_BY_CATEGORY)){
+            statement.setLong(1, categoryId);
+            try (ResultSet rs = statement.executeQuery()){
+                if(rs.next()){
+                    orderCount = rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Dao exception trying count cars by category", e);
             throw new DaoException(e);
         }
         return orderCount;

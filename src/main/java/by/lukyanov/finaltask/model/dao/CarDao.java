@@ -14,7 +14,7 @@ public interface CarDao extends BaseDao<Car>{
 
     boolean updateWithImage(Car car, InputStream carImage) throws DaoException;
 
-    List<Car> findCarsByCategoryId(long id) throws DaoException;
+    List<Car> findCarsByCategoryId(long id, int limit, int offset) throws DaoException;
 
     boolean changeCarActiveById(long id, boolean isActive) throws DaoException;
 
@@ -23,4 +23,6 @@ public interface CarDao extends BaseDao<Car>{
     int countAllCars() throws DaoException;
 
     int countAllCarsByActive(Boolean active) throws DaoException;
+
+    int countAllCarsByCategoryId(long categoryId) throws DaoException;
 }
