@@ -2,6 +2,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="util" uri="customtags" %>
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="pagecontent"/>
 <!DOCTYPE html>
@@ -172,6 +173,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <util:Pagination command="find_all_user_orders"/>
                         </div>
                     </div>
                 </div>

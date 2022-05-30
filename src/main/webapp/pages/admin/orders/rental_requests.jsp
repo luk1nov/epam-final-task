@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="util" uri="customtags" %>
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="pagecontent"/>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -146,53 +147,7 @@
                                     </c:if>
                                 </div>
                             </div>
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination">
-                                    <c:if test="${page - 2 >= 1}">
-                                        <li class="page-item">
-                                            <form action="/controller" method="POST" class="m-0">
-                                                <input type="hidden" name="page" value="<c:out value="${page - 2}"/>">
-                                                <input type="hidden" name="command" value="admin_find_processing_orders">
-                                                <input class="page-link" type="submit" value="<c:out value="${page - 2}"/>">
-                                            </form>
-                                        </li>
-                                    </c:if>
-                                    <c:if test="${page - 1 >= 1}">
-                                        <li class="page-item">
-                                            <form action="/controller" method="POST" class="m-0">
-                                                <input type="hidden" name="page" value="<c:out value="${page - 1}"/>">
-                                                <input type="hidden" name="command" value="admin_find_processing_orders">
-                                                <input class="page-link" type="submit" value="<c:out value="${page - 1}"/>">
-                                            </form>
-                                        </li>
-                                    </c:if>
-                                    <li class="page-item disabled active">
-                                        <form action="/controller" method="POST" class="m-0">
-                                            <input type="hidden" name="page" value="${page}">
-                                            <input type="hidden" name="command" value="admin_find_processing_orders">
-                                            <input class="page-link" type="submit" value="${page}">
-                                        </form>
-                                    </li>
-                                    <c:if test="${page + 1 <= pagesCount}">
-                                        <li class="page-item">
-                                            <form action="/controller" method="POST" class="m-0">
-                                                <input type="hidden" name="page" value="<c:out value="${page + 1}"/>">
-                                                <input type="hidden" name="command" value="admin_find_processing_orders">
-                                                <input class="page-link" type="submit" value="<c:out value="${page + 1}"/>">
-                                            </form>
-                                        </li>
-                                    </c:if>
-                                    <c:if test="${page + 2 <= pagesCount}">
-                                        <li class="page-item">
-                                            <form action="/controller" method="POST" class="m-0">
-                                                <input type="hidden" name="page" value="<c:out value="${page + 2}"/>">
-                                                <input type="hidden" name="command" value="admin_find_processing_orders">
-                                                <input class="page-link" type="submit" value="<c:out value="${page + 2}"/>">
-                                            </form>
-                                        </li>
-                                    </c:if>
-                                </ul>
-                            </nav>
+                            <util:Pagination command="admin_find_processing_orders"/>
                         </div>
                     </div>
                 </div>
