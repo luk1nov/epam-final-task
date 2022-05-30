@@ -24,6 +24,7 @@ public final class Message {
     public static final String CAR_NOT_FOUND = "error.car_not_found";
     public static final String USER_NOT_VERIFIED = "label.user_not_verified";
     public static final String USER_NOT_DECLINED = "label.user_not_declined";
+    public static final String REPORT_NOT_FOUND = "label.report_not_found";
 
     private Message() {
     }
