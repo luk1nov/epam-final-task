@@ -1,6 +1,6 @@
 package by.lukyanov.finaltask.entity;
 
-public final class CarInfo extends AbstractEntity implements Cloneable{
+public final class CarInfo extends AbstractEntity{
     private Double acceleration;
     private Integer power;
     private Drivetrain drivetrain;
@@ -40,12 +40,6 @@ public final class CarInfo extends AbstractEntity implements Cloneable{
 
     public void setDrivetrain(Drivetrain drivetrain) {
         this.drivetrain = drivetrain;
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        //todo clone method
-        return super.clone();
     }
 
     @Override

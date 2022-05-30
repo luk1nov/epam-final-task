@@ -15,7 +15,7 @@ public interface OrderDao extends BaseDao<Order>{
 
     List<Order> findActiveOrderDatesByCarId(long carId) throws DaoException;
 
-    boolean checkCarAvailabilityByDateRange(LocalDate beginDate, LocalDate endDate, long carId) throws DaoException; //todo
+    boolean checkCarAvailabilityByDateRange(LocalDate beginDate, LocalDate endDate, long carId) throws DaoException;
 
     List<Order> findOrdersByOrderStatus(OrderStatus orderStatus, int limit, int offset) throws DaoException;
 
