@@ -12,7 +12,7 @@ public interface CarService {
 
     boolean addCar(Map<String, String> carData, InputStream carImage) throws ServiceException;
 
-    List<Car> findAllCars() throws ServiceException;
+    List<Car> findAllCars(String pageNumber) throws ServiceException;
 
     Optional<Car> findCarById(String id) throws ServiceException;
 
@@ -23,4 +23,10 @@ public interface CarService {
     boolean deleteCarById(String carId) throws ServiceException;
 
     boolean changeCarActive(String carId, String active) throws ServiceException;
+
+    List<Car> findCarsByActiveStatus(boolean active, String pageNumber) throws ServiceException;
+
+    int countAllCars() throws ServiceException;
+
+    int countAllCarsByActive(Boolean active) throws ServiceException;
 }
