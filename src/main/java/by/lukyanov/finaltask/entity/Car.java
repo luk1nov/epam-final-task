@@ -6,6 +6,7 @@ import java.util.Optional;
 public final class Car extends AbstractEntity{
     private String brand;
     private String model;
+    private String vinCode;
     private BigDecimal regularPrice;
     private BigDecimal salePrice;
     private boolean active = true;
@@ -35,6 +36,14 @@ public final class Car extends AbstractEntity{
 
     public void setModel(String model) {
         this.model = model;
+    }
+
+    public String getVinCode() {
+        return vinCode;
+    }
+
+    public void setVinCode(String vinCode) {
+        this.vinCode = vinCode;
     }
 
     public BigDecimal getRegularPrice() {
@@ -90,10 +99,13 @@ public final class Car extends AbstractEntity{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
+
         Car car = (Car) o;
+
         if (active != car.active) return false;
         if (brand != null ? !brand.equals(car.brand) : car.brand != null) return false;
         if (model != null ? !model.equals(car.model) : car.model != null) return false;
+        if (vinCode != null ? !vinCode.equals(car.vinCode) : car.vinCode != null) return false;
         if (regularPrice != null ? !regularPrice.equals(car.regularPrice) : car.regularPrice != null) return false;
         if (salePrice != null ? !salePrice.equals(car.salePrice) : car.salePrice != null) return false;
         if (image != null ? !image.equals(car.image) : car.image != null) return false;
@@ -106,6 +118,7 @@ public final class Car extends AbstractEntity{
         int result = super.hashCode();
         result = 31 * result + (brand != null ? brand.hashCode() : 0);
         result = 31 * result + (model != null ? model.hashCode() : 0);
+        result = 31 * result + (vinCode != null ? vinCode.hashCode() : 0);
         result = 31 * result + (regularPrice != null ? regularPrice.hashCode() : 0);
         result = 31 * result + (salePrice != null ? salePrice.hashCode() : 0);
         result = 31 * result + (active ? 1 : 0);
@@ -121,6 +134,7 @@ public final class Car extends AbstractEntity{
         sb.append("id='").append(this.getId()).append('\'');
         sb.append(", brand='").append(brand).append('\'');
         sb.append(", model='").append(model).append('\'');
+        sb.append(", vinCode='").append(vinCode).append('\'');
         sb.append(", regularPrice=").append(regularPrice);
         sb.append(", salePrice=").append(salePrice);
         sb.append(", active=").append(active);
@@ -150,6 +164,11 @@ public final class Car extends AbstractEntity{
 
         public CarBuilder model(String model){
             car.model = model;
+            return this;
+        }
+
+        public CarBuilder vin(String vinCode){
+            car.vinCode = vinCode;
             return this;
         }
 
