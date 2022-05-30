@@ -18,7 +18,7 @@ public interface UserService {
 
     Optional<User> findUserByEmail(String email) throws ServiceException;
 
-    List<User> findAllUsers(String pageNumber) throws ServiceException;
+    List<User> findAllUsers(String pageNumber, int postsPerPage) throws ServiceException;
 
     Optional<User> findUserById(String id) throws ServiceException;
 
@@ -32,7 +32,7 @@ public interface UserService {
 
     boolean changeUserPassword(long id, String password) throws ServiceException;
 
-    List<User> findUsersByStatus(UserStatus status, String pageNumber) throws ServiceException;
+    List<User> findUsersByStatus(UserStatus status, String pageNumber, int postsPerPage) throws ServiceException;
 
     boolean updateUserStatus(String id, UserStatus status) throws ServiceException;
 

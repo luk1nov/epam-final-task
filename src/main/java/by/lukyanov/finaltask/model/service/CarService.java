@@ -12,21 +12,23 @@ public interface CarService {
 
     boolean addCar(Map<String, String> carData, InputStream carImage) throws ServiceException;
 
-    List<Car> findAllCars(String pageNumber) throws ServiceException;
+    List<Car> findAllCars(String pageNumber, int postsPerPage) throws ServiceException;
 
     Optional<Car> findCarById(String id) throws ServiceException;
 
     boolean updateCar(Map<String, String> carData, InputStream carImage) throws ServiceException;
 
-    List<Car> findCarsByCategoryId(String id) throws ServiceException;
+    List<Car> findCarsByCategoryId(String id, String pageNumber, int postsPerPage) throws ServiceException;
 
     boolean deleteCarById(String carId) throws ServiceException;
 
     boolean changeCarActive(String carId, String active) throws ServiceException;
 
-    List<Car> findCarsByActiveStatus(boolean active, String pageNumber) throws ServiceException;
+    List<Car> findCarsByActiveStatus(boolean active, String pageNumber, int postsPerPage) throws ServiceException;
 
     int countAllCars() throws ServiceException;
 
     int countAllCarsByActive(Boolean active) throws ServiceException;
+
+    int countAllCarsByCategoryId(long categoryId) throws ServiceException;
 }

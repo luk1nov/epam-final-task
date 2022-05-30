@@ -25,6 +25,7 @@ public class CarServiceImpl implements CarService {
     private static final Logger logger = LogManager.getLogger();
     private static final CarDaoImpl carDao = CarDaoImpl.getInstance();
     private static final ValidatorImpl validator = ValidatorImpl.getInstance();
+    private static final int DEFAULT_RESULT_PAGE = 1;
 
     @Override
     public boolean addCar(Map<String, String> carData, InputStream carImage) throws ServiceException {
@@ -67,12 +68,12 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<Car> findAllCars(String pageNumber) throws ServiceException {
+    public List<Car> findAllCars(String pageNumber, int postsPerPage) throws ServiceException {
         List<Car> cars;
         try {
-            int carsPage = validator.isValidNumber(pageNumber) ? Integer.parseInt(pageNumber) : 1;
-            ResultCounter counter = new ResultCounter(carsPage);
-            cars = carDao.findAll(ResultCounter.ROWS_PER_PAGE, counter.offset());
+            int carsPage = validator.isValidNumber(pageNumber) ? Integer.parseInt(pageNumber) : DEFAULT_RESULT_PAGE;
+            ResultCounter counter = new ResultCounter(carsPage, postsPerPage);
+            cars = carDao.findAll(postsPerPage, counter.offset());
         } catch (DaoException e) {
             logger.error("Service exception trying find all cars", e);
             throw new ServiceException(e);
@@ -140,11 +141,13 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<Car> findCarsByCategoryId(String id) throws ServiceException {
+    public List<Car> findCarsByCategoryId(String id, String pageNumber, int postsPerPage) throws ServiceException {
         List<Car> cars = new ArrayList<>();
         if (validator.isValidId(id)) {
             try {
-                cars = carDao.findCarsByCategoryId(Long.parseLong(id));
+                int carsPage = validator.isValidNumber(pageNumber) ? Integer.parseInt(pageNumber) : DEFAULT_RESULT_PAGE;
+                ResultCounter counter = new ResultCounter(carsPage, postsPerPage);
+                cars = carDao.findCarsByCategoryId(Long.parseLong(id), postsPerPage, counter.offset());
             } catch (DaoException e) {
                 logger.error("Service exception trying find cars by category id", e);
                 throw new ServiceException(e);
@@ -187,12 +190,12 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<Car> findCarsByActiveStatus(boolean active, String pageNumber) throws ServiceException {
+    public List<Car> findCarsByActiveStatus(boolean active, String pageNumber, int postsPerPage) throws ServiceException {
         List<Car> cars;
         try {
-            int carsPage = validator.isValidNumber(pageNumber) ? Integer.parseInt(pageNumber) : 1;
-            ResultCounter counter = new ResultCounter(carsPage);
-            cars = carDao.findCarsByActive(active, ResultCounter.ROWS_PER_PAGE, counter.offset());
+            int carsPage = validator.isValidNumber(pageNumber) ? Integer.parseInt(pageNumber) : DEFAULT_RESULT_PAGE;
+            ResultCounter counter = new ResultCounter(carsPage, postsPerPage);
+            cars = carDao.findCarsByActive(active, postsPerPage, counter.offset());
         } catch (DaoException e) {
             logger.error("Service exception trying find cars by active", e);
             throw new ServiceException(e);
@@ -214,6 +217,16 @@ public class CarServiceImpl implements CarService {
     public int countAllCarsByActive(Boolean active) throws ServiceException {
         try {
             return carDao.countAllCarsByActive(active);
+        } catch (DaoException e) {
+            logger.error("Service exception trying count all cars by active", e);
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public int countAllCarsByCategoryId(long categoryId) throws ServiceException {
+        try {
+            return carDao.countAllCarsByCategoryId(categoryId);
         } catch (DaoException e) {
             logger.error("Service exception trying count all cars by active", e);
             throw new ServiceException(e);

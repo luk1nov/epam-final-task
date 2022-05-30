@@ -1,12 +1,12 @@
 package by.lukyanov.finaltask.model.service.impl;
 
 import by.lukyanov.finaltask.command.ParameterAttributeName;
+import by.lukyanov.finaltask.entity.User;
 import by.lukyanov.finaltask.entity.UserRole;
 import by.lukyanov.finaltask.entity.UserStatus;
-import by.lukyanov.finaltask.model.dao.impl.UserDaoImpl;
-import by.lukyanov.finaltask.entity.User;
 import by.lukyanov.finaltask.exception.DaoException;
 import by.lukyanov.finaltask.exception.ServiceException;
+import by.lukyanov.finaltask.model.dao.impl.UserDaoImpl;
 import by.lukyanov.finaltask.model.service.UserService;
 import by.lukyanov.finaltask.util.PasswordEncoder;
 import by.lukyanov.finaltask.util.ResultCounter;
@@ -21,13 +21,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static by.lukyanov.finaltask.util.ResultCounter.ROWS_PER_PAGE;
-
 public class UserServiceImpl implements UserService {
     private static final Logger logger = LogManager.getLogger();
     private static final UserDaoImpl userDao = UserDaoImpl.getInstance();
     private static final ValidatorImpl validator = ValidatorImpl.getInstance();
     private static final String PHONE_CODE_BY = "+375-";
+    private static final int DEFAULT_RESULT_PAGE = 1;
 
     @Override
     public Optional<User> authenticate(String email, String password) throws ServiceException {
@@ -114,12 +113,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAllUsers(String pageNumber) throws ServiceException {
+    public List<User> findAllUsers(String pageNumber, int postsPerPage) throws ServiceException {
         List<User> users;
         try {
-            int requestedPage = validator.isValidNumber(pageNumber) ? Integer.parseInt(pageNumber) : 1;
-            ResultCounter counter = new ResultCounter(requestedPage);
-            users = userDao.findAll(ROWS_PER_PAGE, counter.offset());
+            int requestedPage = validator.isValidNumber(pageNumber) ? Integer.parseInt(pageNumber) : DEFAULT_RESULT_PAGE;;
+            ResultCounter counter = new ResultCounter(requestedPage, postsPerPage);
+            users = userDao.findAll(postsPerPage, counter.offset());
         } catch (DaoException e) {
             logger.error("Service exception trying find all users", e);
             throw new ServiceException(e);
@@ -256,12 +255,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findUsersByStatus(UserStatus status, String pageNumber) throws ServiceException {
+    public List<User> findUsersByStatus(UserStatus status, String pageNumber, int postsPerPage) throws ServiceException {
         List<User> users;
         try {
-            int requestedPage = validator.isValidNumber(pageNumber) ? Integer.parseInt(pageNumber) : 1;
-            ResultCounter counter = new ResultCounter(requestedPage);
-            users = userDao.findUsersByStatus(status, ROWS_PER_PAGE, counter.offset());
+            int requestedPage = validator.isValidNumber(pageNumber) ? Integer.parseInt(pageNumber) : DEFAULT_RESULT_PAGE;
+            ResultCounter counter = new ResultCounter(requestedPage, postsPerPage);
+            users = userDao.findUsersByStatus(status, postsPerPage, counter.offset());
         } catch (DaoException e) {
             logger.error("Service exception trying find users by status", e);
             throw new ServiceException(e);
