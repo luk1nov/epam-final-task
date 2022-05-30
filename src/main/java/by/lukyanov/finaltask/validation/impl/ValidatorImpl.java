@@ -2,9 +2,6 @@ package by.lukyanov.finaltask.validation.impl;
 
 import by.lukyanov.finaltask.validation.Validator;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class ValidatorImpl implements Validator {
     private static final String ONE_WORD_PATTERN = "^[\\p{Alpha}А-яЁё]{2,40}$";
     private static final String SURNAME_PATTERN = "^[\\p{Alpha}А-яЁё]{2,20}-[\\p{Alpha}А-яЁё]{2,20}$|^[\\p{Alpha}А-яЁё]{2,45}$";
@@ -12,13 +9,15 @@ public class ValidatorImpl implements Validator {
     private static final String EMAIL_PATTERN = "^(?=.{1,64}@)[\\w\\-]+(\\.[\\w\\-]+)*@[^-][\\w\\-]+(\\.[\\p{Alpha}\\d\\-]+)*(\\.[\\p{Alpha}]{2,})$";
     private static final String PHONE_PATTERN = "^\\d{2}-\\d{3}-\\d{2}-\\d{2}$";
     private static final String ID_PATTERN = "^\\d{1,6}$";
-    private static final String CAR_MODEL_PATTERN = "^[\\p{Alpha}А-яЁё\\-\\d]{2,20}$";
+    private static final String CAR_MODEL_PATTERN = "^([\\p{Alpha}А-яЁё\\-\\d]\\s?){2,20}$";
+    private static final String VIN_CODE_PATTERN = "^[A-HJ-NPR-Z0-9]{17}$";
     private static final String PRICE_PATTERN = "^\\d{1,5}\\.\\d{1,2}$|^\\d{1,5}$";
     private static final String CAR_POWER_PATTERN = "^\\d{3}$";
     private static final String CAR_ACCELERATION_PATTERN = "^([1-5]\\d|[1-9])(\\.\\d)?$";
     private static final String LOCALE_PATTERN = "^en_US$|^ru_RU$";
     private static final String DATE_RANGE_PATTERN = "^\\d{4}-\\d{2}-\\d{2}\\sto\\s\\d{4}-\\d{2}-\\d{2}$|^\\d{4}-\\d{2}-\\d{2}$";
-    private static final String DECLINE_MESSAGE_PATTERN = "^[\\s\\wА-яЁё.,!?]{0,200}$";
+    private static final String MESSAGE_PATTERN = "^[\\s\\wА-яЁё.,!?]{0,200}$";
+    private static final String NUMBER_PATTERN = "^\\d+$";
     private static ValidatorImpl instance;
 
     private ValidatorImpl() {
@@ -67,6 +66,11 @@ public class ValidatorImpl implements Validator {
     }
 
     @Override
+    public boolean isValidVinCode(String vinCode) {
+        return vinCode != null && vinCode.matches(VIN_CODE_PATTERN);
+    }
+
+    @Override
     public boolean isValidPrice(String price){
         return price != null && price.matches(PRICE_PATTERN);
     }
@@ -92,7 +96,12 @@ public class ValidatorImpl implements Validator {
     }
 
     @Override
-    public boolean isValidDeclineMessage(String declineMessage) {
-        return declineMessage != null && declineMessage.matches(DECLINE_MESSAGE_PATTERN);
+    public boolean isValidMessage(String declineMessage) {
+        return declineMessage != null && declineMessage.matches(MESSAGE_PATTERN);
+    }
+
+    @Override
+    public boolean isValidNumber(String number) {
+        return number != null && number.matches(NUMBER_PATTERN);
     }
 }

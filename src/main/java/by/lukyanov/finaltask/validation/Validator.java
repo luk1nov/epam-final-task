@@ -15,6 +15,8 @@ public interface Validator {
 
     boolean isValidCarModel(String model);
 
+    boolean isValidVinCode(String vinCode);
+
     boolean isValidPrice(String price);
 
     boolean isValidAcceleration(String acceleration);
@@ -25,5 +27,7 @@ public interface Validator {
 
     boolean isValidDateRange(String dateRange);
 
-    boolean isValidDeclineMessage(String declineMessage);
+    boolean isValidMessage(String declineMessage);
+
+    boolean isValidNumber(String number);
 }
