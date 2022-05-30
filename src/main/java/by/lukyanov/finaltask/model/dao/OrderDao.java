@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrderDao extends BaseDao<Order>{
-    List<Order> findOrdersByUserId(long userId) throws DaoException;
+    List<Order> findOrdersByUserId(long userId, int limit, int offset) throws DaoException;
 
     List<Order> findActiveOrderDatesByCarId(long carId) throws DaoException;
 
@@ -30,5 +30,7 @@ public interface OrderDao extends BaseDao<Order>{
     int countAllOrders() throws DaoException;
 
     int countOrdersByStatus(OrderStatus status) throws DaoException;
+
+    int countOrdersByUserId(long userId) throws DaoException;
 }
 

@@ -21,20 +21,20 @@ import java.util.Optional;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 import static by.lukyanov.finaltask.util.DateRangeParser.BEGIN_DATE_INDEX;
 import static by.lukyanov.finaltask.util.DateRangeParser.END_DATE_INDEX;
-import static by.lukyanov.finaltask.util.ResultCounter.ROWS_PER_PAGE;
 
 public class OrderServiceImpl implements OrderService {
     private static final Logger logger = LogManager.getLogger();
     private static final OrderDaoImpl orderDaoImpl = OrderDaoImpl.getInstance();
     private static final ValidatorImpl validator = ValidatorImpl.getInstance();
+    private static final int DEFAULT_RESULT_PAGE = 1;
 
     @Override
-    public List<Order> findAllOrders(String pageNumber) throws ServiceException {
+    public List<Order> findAllOrders(String pageNumber, int postsPerPage) throws ServiceException {
         List<Order> orderList;
         try {
-            int orderPage = validator.isValidNumber(pageNumber) ? Integer.parseInt(pageNumber) : 1;
-            ResultCounter counter = new ResultCounter(orderPage);
-            orderList = orderDaoImpl.findAll(ROWS_PER_PAGE, counter.offset());
+            int orderPage = validator.isValidNumber(pageNumber) ? Integer.parseInt(pageNumber) : DEFAULT_RESULT_PAGE;
+            ResultCounter counter = new ResultCounter(orderPage, postsPerPage);
+            orderList = orderDaoImpl.findAll(postsPerPage, counter.offset());
         } catch (DaoException e) {
             logger.error("Service exception trying find all orders", e);
             throw new ServiceException(e);
@@ -43,10 +43,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> findAllOrdersByUserId(long userId) throws ServiceException {
+    public List<Order> findAllOrdersByUserId(long userId, String pageNumber, int postsPerPage) throws ServiceException {
         List<Order> orderList;
         try {
-            orderList = orderDaoImpl.findOrdersByUserId(userId);
+            int ordersPage = validator.isValidNumber(pageNumber) ? Integer.parseInt(pageNumber) : DEFAULT_RESULT_PAGE;
+            ResultCounter counter = new ResultCounter(ordersPage, postsPerPage);
+            orderList = orderDaoImpl.findOrdersByUserId(userId, postsPerPage, counter.offset());
         } catch (DaoException e) {
             logger.error("Service exception trying find all user orders", e);
             throw new ServiceException(e);
@@ -104,12 +106,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> findOrdersByOrderStatus(OrderStatus status, String pageNumber) throws ServiceException {
+    public List<Order> findOrdersByOrderStatus(OrderStatus status, String pageNumber, int postsPerPage) throws ServiceException {
         List<Order> orderList;
         try {
-            int orderPage = validator.isValidNumber(pageNumber) ? Integer.parseInt(pageNumber) : 1;
-            ResultCounter counter = new ResultCounter(orderPage);
-            orderList = orderDaoImpl.findOrdersByOrderStatus(status, ROWS_PER_PAGE, counter.offset());
+            int orderPage = validator.isValidNumber(pageNumber) ? Integer.parseInt(pageNumber) : DEFAULT_RESULT_PAGE;
+            ResultCounter counter = new ResultCounter(orderPage, postsPerPage);
+            orderList = orderDaoImpl.findOrdersByOrderStatus(status, postsPerPage, counter.offset());
         } catch (DaoException e) {
             logger.error("Service exception trying find processing orders", e);
             throw new ServiceException(e);
@@ -259,6 +261,16 @@ public class OrderServiceImpl implements OrderService {
     public int countOrdersByStatus(OrderStatus status) throws ServiceException {
         try {
             return orderDaoImpl.countOrdersByStatus(status);
+        } catch (DaoException e) {
+            logger.error("Service exception trying count orders by status", e);
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public int countOrdersByUserId(long userId) throws ServiceException {
+        try {
+            return orderDaoImpl.countOrdersByUserId(userId);
         } catch (DaoException e) {
             logger.error("Service exception trying count orders by status", e);
             throw new ServiceException(e);

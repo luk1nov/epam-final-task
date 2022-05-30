@@ -31,7 +31,9 @@ public class OrderDaoImpl implements OrderDao {
             FROM orders AS o
             JOIN cars AS c
             ON o.cars_car_id = c.car_id
-            WHERE o.users_user_id = ?;
+            WHERE o.users_user_id = ?
+            LIMIT ?
+            OFFSET ?
             """;
     private static final String SQL_FIND_ALL_ORDERS = """
             SELECT o.order_id, o.begin_date, o.end_date, o.order_status, o.message, o.users_user_id, u.name, u.surname, u.user_status, o.cars_car_id, c.brand, c.model, c.is_active, o.price, r.report_id
@@ -86,6 +88,7 @@ public class OrderDaoImpl implements OrderDao {
     private static final String SQL_FIND_ORDER_REPORT_BY_ID = "SELECT report_photo, report_text, report_status FROM order_report WHERE report_id = ?";
     private static final String SQL_COUNT_ORDERS = "SELECT COUNT(order_id) from orders";
     private static final String SQL_COUNT_ORDERS_BY_STATUS = "SELECT COUNT(order_id) from orders WHERE order_status = ?";
+    private static final String SQL_COUNT_ORDERS_BY_USER_ID = "SELECT COUNT(order_id) from orders WHERE users_user_id = ?";
     private static OrderDaoImpl instance;
     private final ConnectionPool pool = ConnectionPool.getInstance();
 
@@ -195,11 +198,13 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public List<Order> findOrdersByUserId(long userId) throws DaoException {
+    public List<Order> findOrdersByUserId(long userId, int limit, int offset) throws DaoException {
         List<Order> orderList = new ArrayList<>();
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_FIND_ALL_ORDERS_BY_USER_ID)){
             statement.setLong(1, userId);
+            statement.setInt(2, limit);
+            statement.setInt(3, offset);
             try (ResultSet rs = statement.executeQuery()){
                 while (rs.next()){
                     Car car = new Car.CarBuilder()
@@ -435,6 +440,24 @@ public class OrderDaoImpl implements OrderDao {
             }
         } catch (SQLException e) {
             logger.error("Dao exception trying count orders by status", e);
+            throw new DaoException(e);
+        }
+        return orderCount;
+    }
+
+    @Override
+    public int countOrdersByUserId(long userId) throws DaoException {
+        int orderCount = 0;
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_COUNT_ORDERS_BY_USER_ID)){
+            statement.setLong(1, userId);
+            try (ResultSet rs = statement.executeQuery()){
+                if(rs.next()){
+                    orderCount = rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Dao exception trying count orders by user id", e);
             throw new DaoException(e);
         }
         return orderCount;
