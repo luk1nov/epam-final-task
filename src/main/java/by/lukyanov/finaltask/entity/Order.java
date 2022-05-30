@@ -4,6 +4,7 @@ import com.oracle.wls.shaded.org.apache.xpath.operations.Or;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Optional;
 
 public class Order extends AbstractEntity {
     private LocalDate beginDate;
@@ -13,6 +14,7 @@ public class Order extends AbstractEntity {
     private BigDecimal price;
     private User user;
     private Car car;
+    private OrderReport report;
 
     public Order() {
     }
@@ -45,8 +47,8 @@ public class Order extends AbstractEntity {
         this.orderStatus = orderStatus;
     }
 
-    public String getMessage() {
-        return message;
+    public Optional<String> getMessage() {
+        return Optional.ofNullable(message);
     }
 
     public void setMessage(String message) {
@@ -77,6 +79,14 @@ public class Order extends AbstractEntity {
         this.car = car;
     }
 
+    public Optional<OrderReport> getReport() {
+        return Optional.ofNullable(report);
+    }
+
+    public void setReport(OrderReport report) {
+        this.report = report;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -91,7 +101,8 @@ public class Order extends AbstractEntity {
         if (message != null ? !message.equals(order.message) : order.message != null) return false;
         if (price != null ? !price.equals(order.price) : order.price != null) return false;
         if (user != null ? !user.equals(order.user) : order.user != null) return false;
-        return car != null ? car.equals(order.car) : order.car == null;
+        if (car != null ? !car.equals(order.car) : order.car != null) return false;
+        return report != null ? report.equals(order.report) : order.report == null;
     }
 
     @Override
@@ -104,6 +115,7 @@ public class Order extends AbstractEntity {
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + (user != null ? user.hashCode() : 0);
         result = 31 * result + (car != null ? car.hashCode() : 0);
+        result = 31 * result + (report != null ? report.hashCode() : 0);
         return result;
     }
 
@@ -118,6 +130,7 @@ public class Order extends AbstractEntity {
         sb.append(", price=").append(price);
         sb.append(", user=").append(user);
         sb.append(", car=").append(car);
+        sb.append(", report=").append(report);
         sb.append('}');
         return sb.toString();
     }
@@ -166,6 +179,11 @@ public class Order extends AbstractEntity {
 
         public OrderBuilder price(BigDecimal price){
             order.price = price;
+            return this;
+        }
+
+        public OrderBuilder report(OrderReport report){
+            order.report = report;
             return this;
         }
 
