@@ -3,8 +3,10 @@ package by.lukyanov.finaltask.model.service.impl;
 import by.lukyanov.finaltask.entity.CarCategory;
 import by.lukyanov.finaltask.exception.DaoException;
 import by.lukyanov.finaltask.exception.ServiceException;
+import by.lukyanov.finaltask.model.connection.ConnectionPool;
 import by.lukyanov.finaltask.model.dao.impl.CarCategoryDaoImpl;
 import by.lukyanov.finaltask.model.service.CarCategoryService;
+import by.lukyanov.finaltask.util.ResultCounter;
 import by.lukyanov.finaltask.validation.impl.ValidatorImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,7 +42,7 @@ public class CarCategoryServiceImpl implements CarCategoryService {
     public List<CarCategory> findAllCarCategories() throws ServiceException {
         List<CarCategory> carCategories;
         try {
-            carCategories = carCategoryDao.findAll();
+            carCategories = carCategoryDao.findAll(Integer.MAX_VALUE, 0);
         } catch (DaoException e) {
             logger.error("Service exception trying find all users");
             throw new ServiceException(e);

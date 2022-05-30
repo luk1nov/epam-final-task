@@ -68,14 +68,17 @@ public class CarCategoryDaoImpl implements CarCategoryDao {
     }
 
     @Override
-    public List<CarCategory> findAll() throws DaoException {
+    public List<CarCategory> findAll(int limit, int offset) throws DaoException {
         List<CarCategory> carCategories = new ArrayList<>();
         try (Connection connection = pool.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ALL_CAR_CATEGORIES);
-             ResultSet rs = statement.executeQuery()){
-            while (rs.next()){
-                CarCategory category = new CarCategory(rs.getLong(1), rs.getString(2));
-                carCategories.add(category);
+             PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ALL_CAR_CATEGORIES)){
+            statement.setInt(1, limit);
+            statement.setInt(2, offset);
+            try (ResultSet rs = statement.executeQuery()){
+                while (rs.next()){
+                    CarCategory category = new CarCategory(rs.getLong(1), rs.getString(2));
+                    carCategories.add(category);
+                }
             }
         } catch (SQLException e) {
              throw new DaoException(e);
