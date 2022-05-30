@@ -1,7 +1,6 @@
 package by.lukyanov.finaltask.command.impl.admin.order;
 
 import by.lukyanov.finaltask.command.Command;
-import by.lukyanov.finaltask.command.PagePath;
 import by.lukyanov.finaltask.command.ParameterAttributeName;
 import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.exception.CommandException;
@@ -25,7 +24,7 @@ public class DeclineOrderCommand implements Command {
         String orderMessage = request.getParameter(ORDER_MESSAGE);
         String orderId = request.getParameter(ORDER_ID);
         try {
-            if(orderService.declineOrder(orderId, orderMessage)){
+            if(orderService.cancelOrder(orderId, orderMessage)){
                 router.setType(Router.Type.REDIRECT);
             } else {
                 request.setAttribute(ParameterAttributeName.MESSAGE, ""); //todo add property message
