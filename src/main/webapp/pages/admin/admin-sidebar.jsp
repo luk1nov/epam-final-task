@@ -9,16 +9,24 @@
             </li>
             <li>
                 <form action="/controller" method="POST">
+                    <input type="hidden" name="command" value="admin_find_all_orders">
+                    <i class="material-icons-two-tone">list_alt</i>
+                    <input type="submit" value="All orders">
+                </form>
+            </li>
+            <li>
+                <form action="/controller" method="POST">
                     <input type="hidden" name="command" value="admin_find_processing_orders">
                     <i class="material-icons-two-tone">upload</i>
                     <input type="submit" value="Rental requests">
                 </form>
             </li>
             <li>
-                <a href="orders/return_requests.jsp"><i class="material-icons-two-tone">download</i>Return requests</a>
-            </li>
-            <li>
-                <a href="calendar.html"><i class="material-icons-two-tone">check_circle</i>Completed orders</a>
+                <form action="/controller" method="POST">
+                    <input type="hidden" name="command" value="admin_find_completed_orders">
+                    <i class="material-icons-two-tone">check_circle</i>
+                    <input type="submit" value="Completed orders">
+                </form>
             </li>
             <li class="sidebar-title">
                 Users
@@ -69,7 +77,11 @@
                 </form>
             </li>
             <li>
-                <a href="cars/repairing-cars.jsp"><i class="material-icons-two-tone">car_crash</i>Repairing cars</a>
+                <form action="/controller" method="POST">
+                    <input type="hidden" name="command" value="admin_to_repairing_cars">
+                    <i class="material-icons-two-tone">car_crash</i>
+                    <input type="submit" value="Repairing cars">
+                </form>
             </li>
         </ul>
     </div>
