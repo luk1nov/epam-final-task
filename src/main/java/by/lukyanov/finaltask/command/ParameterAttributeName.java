@@ -22,9 +22,9 @@ public class ParameterAttributeName {
     public static final String CAR_ID = "carId";
     public static final String CAR_BRAND = "carBrand";
     public static final String CAR_MODEL = "carModel";
+    public static final String CAR_VIN_CODE = "carVinCode";
     public static final String CAR_REGULAR_PRICE = "carRegularPrice";
     public static final String CAR_SALE_PRICE = "carSalePrice";
-    public static final String CAR_PRICE = "carPrice";
     public static final String CAR_ACTIVE = "carActive";
     public static final String CAR_IMAGE = "carImage";
     public static final String CAR_CATEGORY = "carCategory";
@@ -41,6 +41,11 @@ public class ParameterAttributeName {
     public static final String ORDER_DATE_RANGE = "orderDateRange";
     public static final String ORDER_ID = "orderId";
     public static final String ORDER_MESSAGE = "orderMessage";
+    public static final String ORDER_REPORT = "report";
+    public static final String ORDER_REPORT_ID = "reportId";
+    public static final String ORDER_REPORT_STATUS = "reportStatus";
+    public static final String ORDER_REPORT_TEXT = "reportText";
+    public static final String ORDER_REPORT_PHOTO = "reportPhoto";
 
     /* session */
     public static final String LOGGED_USER = "loggedUser";
@@ -50,6 +55,11 @@ public class ParameterAttributeName {
 
     /* util */
     public static final String LIST = "list";
+    public static final String RESULT_PAGE = "page";
+    public static final String PAGES_COUNT = "pagesCount";
+    public static final String MESSAGE_ATTR = "&message=";
+    public static final String CAR_CATEGORY_ATTR = "&carCategory=";
+
 
     private ParameterAttributeName() {
     }
