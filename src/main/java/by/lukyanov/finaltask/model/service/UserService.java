@@ -18,7 +18,7 @@ public interface UserService {
 
     Optional<User> findUserByEmail(String email) throws ServiceException;
 
-    List<User> findAllUsers() throws ServiceException;
+    List<User> findAllUsers(String pageNumber) throws ServiceException;
 
     Optional<User> findUserById(String id) throws ServiceException;
 
@@ -32,7 +32,11 @@ public interface UserService {
 
     boolean changeUserPassword(long id, String password) throws ServiceException;
 
-    List<User> findUsersByStatus(UserStatus status) throws ServiceException;
+    List<User> findUsersByStatus(UserStatus status, String pageNumber) throws ServiceException;
 
     boolean updateUserStatus(String id, UserStatus status) throws ServiceException;
+
+    int countAllUsers() throws ServiceException;
+
+    int countAllUsersByStatus(UserStatus status) throws ServiceException;
 }

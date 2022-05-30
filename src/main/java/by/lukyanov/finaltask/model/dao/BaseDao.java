@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface BaseDao<T extends AbstractEntity>{
     boolean delete(long id) throws DaoException;
-    List<T> findAll() throws DaoException;
+    List<T> findAll(int from, int to) throws DaoException;
     boolean update(T t) throws DaoException;
 }

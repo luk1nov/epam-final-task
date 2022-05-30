@@ -23,7 +23,7 @@ public class UserDaoImpl implements UserDao {
     private static final String SQL_ADD_USER = "INSERT INTO users (email,password,name,surname,user_status,user_role,phone) values(?,?,?,?,?,?,?)";
     private static final String SQL_FIND_USER_BY_EMAIL = "SELECT users.user_id, users.email, users.password, users.name, users.surname, users.user_status, users.user_role, users.phone, users.balance FROM users WHERE email = ?";
     private static final String SQL_AUTHENTICATE_USER_BY_EMAIL_AND_PASS = "SELECT users.user_id, users.email, users.name, users.surname, users.user_status, users.user_role, users.phone, users.balance FROM users WHERE email = ? AND password = ?";
-    private static final String SQL_FIND_ALL_USERS = "SELECT users.user_id, users.email, users.name, users.surname , users.user_status , users.user_role, users.phone, users.balance FROM users";
+    private static final String SQL_FIND_ALL_USERS = "SELECT users.user_id, users.email, users.name, users.surname , users.user_status , users.user_role, users.phone, users.balance FROM users order by user_id LIMIT ? OFFSET ?";
     private static final String SQL_FIND_USER_BY_ID = "SELECT users.user_id, users.email, users.name, users.surname, users.user_status, users.user_role, users.phone, users.balance, users.driver_license_photo FROM users WHERE user_id = ?";
     private static final String SQL_EDIT_USER_BY_ID = "UPDATE users SET email = ?, name = ?, surname = ?, user_status = ?, user_role = ?, phone = ? WHERE user_id = ?";
     private static final String SQL_EDIT_USER_INFO_BY_ID = "UPDATE users SET name = ?, surname = ?, email = ?, phone = ? WHERE user_id = ?";
@@ -33,7 +33,9 @@ public class UserDaoImpl implements UserDao {
     private static final String SQL_UPDATE_DRIVER_LICENSE_AND_STATUS_BY_ID = "UPDATE users SET driver_license_photo = ?, user_status = ? WHERE user_id = ?";
     private static final String SQL_UPDATE_USER_STATUS_BY_ID = "UPDATE users SET user_status = ? WHERE user_id = ?";
     private static final String SQL_UPDATE_USER_PASSWORD_BY_ID = "UPDATE users SET password = ? WHERE user_id = ?";
-    private static final String SQL_FIND_USERS_BY_STATUS = "SELECT user_id, email, name, surname, driver_license_photo FROM users WHERE user_status = ?";
+    private static final String SQL_FIND_USERS_BY_STATUS = "SELECT user_id, email, name, surname, driver_license_photo FROM users WHERE user_status = ? order by user_id limit ? offset ?";
+    private static final String SQL_COUNT_USERS = "SELECT COUNT(user_id) FROM users";
+    private static final String SQL_COUNT_USERS_BY_STATUS = "SELECT COUNT(user_id) FROM users WHERE user_status = ?";
     private static final String PHONE_CODE_BY = "\\+375-";
     private static final ConnectionPool pool = ConnectionPool.getInstance();
     private static UserDaoImpl instance;
@@ -89,23 +91,26 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> findAll() throws DaoException {
+    public List<User> findAll(int limit, int offset) throws DaoException {
         List<User> users = new ArrayList<>();
         try (Connection connection = pool.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL_FIND_ALL_USERS);
-             ResultSet resultSet = statement.executeQuery()){
-            while (resultSet.next()){
-                User user = new User.UserBuilder()
-                        .id(Long.parseLong(resultSet.getString(1)))
-                        .email(resultSet.getString(2))
-                        .name(resultSet.getString(3))
-                        .surname(resultSet.getString(4))
-                        .status(UserStatus.valueOf(resultSet.getString(5)))
-                        .role(UserRole.valueOf(resultSet.getString(6)))
-                        .phone(resultSet.getString(7))
-                        .balance(new BigDecimal(resultSet.getString(8)))
-                        .build();
-                users.add(user);
+             PreparedStatement statement = connection.prepareStatement(SQL_FIND_ALL_USERS)){
+            statement.setInt(1, limit);
+            statement.setInt(2, offset);
+            try(ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    User user = new User.UserBuilder()
+                            .id(Long.parseLong(resultSet.getString(1)))
+                            .email(resultSet.getString(2))
+                            .name(resultSet.getString(3))
+                            .surname(resultSet.getString(4))
+                            .status(UserStatus.valueOf(resultSet.getString(5)))
+                            .role(UserRole.valueOf(resultSet.getString(6)))
+                            .phone(resultSet.getString(7))
+                            .balance(new BigDecimal(resultSet.getString(8)))
+                            .build();
+                    users.add(user);
+                }
             }
         } catch (SQLException e) {
             logger.error("Dao exception trying find all users", e);
@@ -328,11 +333,13 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> findUsersByStatus(UserStatus status) throws DaoException {
+    public List<User> findUsersByStatus(UserStatus status, int limit, int offset) throws DaoException {
         List<User> userList = new ArrayList<>();
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_FIND_USERS_BY_STATUS)) {
             statement.setString(1, String.valueOf(status));
+            statement.setInt(2, limit);
+            statement.setInt(3, offset);
             try (ResultSet rs = statement.executeQuery()){
                 while (rs.next()){
                     User user = new User.UserBuilder()
@@ -367,5 +374,39 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException(e);
         }
         return result;
+    }
+
+    @Override
+    public int countAllUsers() throws DaoException {
+        int usersCount = 0;
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_COUNT_USERS);
+             ResultSet rs = statement.executeQuery()){
+            if(rs.next()){
+                usersCount = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            logger.error("Dao exception trying count all users", e);
+            throw new DaoException(e);
+        }
+        return usersCount;
+    }
+
+    @Override
+    public int countAllUsersByStatus(UserStatus status) throws DaoException {
+        int usersCount = 0;
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_COUNT_USERS_BY_STATUS)){
+            statement.setString(1, String.valueOf(status));
+            try (ResultSet rs = statement.executeQuery()){
+                if (rs.next()) {
+                    usersCount = rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Dao exception trying count users by status", e);
+            throw new DaoException(e);
+        }
+        return usersCount;
     }
 }

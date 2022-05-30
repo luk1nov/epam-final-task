@@ -9,6 +9,7 @@ import by.lukyanov.finaltask.exception.DaoException;
 import by.lukyanov.finaltask.exception.ServiceException;
 import by.lukyanov.finaltask.model.service.UserService;
 import by.lukyanov.finaltask.util.PasswordEncoder;
+import by.lukyanov.finaltask.util.ResultCounter;
 import by.lukyanov.finaltask.validation.impl.ValidatorImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +20,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static by.lukyanov.finaltask.util.ResultCounter.ROWS_PER_PAGE;
 
 public class UserServiceImpl implements UserService {
     private static final Logger logger = LogManager.getLogger();
@@ -111,10 +114,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAllUsers() throws ServiceException {
+    public List<User> findAllUsers(String pageNumber) throws ServiceException {
         List<User> users;
         try {
-            users = userDao.findAll();
+            int requestedPage = validator.isValidNumber(pageNumber) ? Integer.parseInt(pageNumber) : 1;
+            ResultCounter counter = new ResultCounter(requestedPage);
+            users = userDao.findAll(ROWS_PER_PAGE, counter.offset());
         } catch (DaoException e) {
             logger.error("Service exception trying find all users", e);
             throw new ServiceException(e);
@@ -251,10 +256,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findUsersByStatus(UserStatus status) throws ServiceException {
+    public List<User> findUsersByStatus(UserStatus status, String pageNumber) throws ServiceException {
         List<User> users;
         try {
-            users = userDao.findUsersByStatus(status);
+            int requestedPage = validator.isValidNumber(pageNumber) ? Integer.parseInt(pageNumber) : 1;
+            ResultCounter counter = new ResultCounter(requestedPage);
+            users = userDao.findUsersByStatus(status, ROWS_PER_PAGE, counter.offset());
         } catch (DaoException e) {
             logger.error("Service exception trying find users by status", e);
             throw new ServiceException(e);
@@ -274,5 +281,25 @@ public class UserServiceImpl implements UserService {
             }
         }
         return result;
+    }
+
+    @Override
+    public int countAllUsers() throws ServiceException {
+        try {
+            return userDao.countAllUsers();
+        } catch (DaoException e) {
+            logger.error("Service exception trying count all users", e);
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public int countAllUsersByStatus(UserStatus status) throws ServiceException {
+        try {
+            return userDao.countAllUsersByStatus(status);
+        } catch (DaoException e) {
+            logger.error("Service exception trying count all users", e);
+            throw new ServiceException(e);
+        }
     }
 }

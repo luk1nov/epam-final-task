@@ -24,7 +24,11 @@ public interface UserDao extends BaseDao<User>{
 
     boolean updatePassword(long id, String password) throws DaoException;
 
-    List<User> findUsersByStatus(UserStatus status) throws DaoException;
+    List<User> findUsersByStatus(UserStatus status, int limit, int offset) throws DaoException;
 
     boolean updateUserStatus(long id, UserStatus status) throws DaoException;
+
+    int countAllUsers() throws DaoException;
+
+    int countAllUsersByStatus(UserStatus status) throws DaoException;
 }
