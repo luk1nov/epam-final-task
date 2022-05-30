@@ -1,20 +1,21 @@
 package by.lukyanov.finaltask.util;
 
 public class ResultCounter {
-    public static final int ROWS_PER_PAGE = 6;
+    private int postsPerPage;
     private int page;
 
-    public ResultCounter(int page) {
+    public ResultCounter(int page, int postsPerPage) {
         this.page = page;
+        this.postsPerPage = postsPerPage;
     }
 
     public Integer offset(){
-        return (page - 1) * ROWS_PER_PAGE;
+        return (page - 1) * postsPerPage;
     }
 
-    public static Integer countPages(int rows){
+    public static Integer countPages(int rows, int postsPerPage){
         double pages = rows;
-        pages /= ROWS_PER_PAGE;
+        pages /= postsPerPage;
         return (int) Math.ceil(pages);
     }
 }
