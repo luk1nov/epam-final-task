@@ -28,7 +28,7 @@ public class CarRowMapper implements RowMapper<Car> {
     }
 
     @Override
-    public Optional<Car> mapRow(ResultSet resultSet) throws DaoException {
+    public Optional<Car> mapRow(ResultSet resultSet) {
         ImageEncoder imageEncoder = ImageEncoder.getInstance();
         Optional<Car> optionalCar;
         try {
