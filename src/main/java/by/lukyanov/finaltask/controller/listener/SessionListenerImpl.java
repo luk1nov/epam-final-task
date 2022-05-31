@@ -13,7 +13,6 @@ public class SessionListenerImpl implements HttpSessionListener{
 
     @Override
     public void sessionCreated(HttpSessionEvent se) {
-        System.out.println("session created");
         HttpSession session = se.getSession();
         session.setAttribute(CURRENT_PAGE, PagePath.MAIN_PAGE);
         session.setAttribute(LOCALE, DEFAULT_LOCALE);
