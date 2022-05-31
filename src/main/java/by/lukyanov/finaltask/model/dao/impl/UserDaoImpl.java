@@ -1,7 +1,7 @@
 package by.lukyanov.finaltask.model.dao.impl;
 
-import by.lukyanov.finaltask.entity.UserRole;
 import by.lukyanov.finaltask.entity.UserStatus;
+import by.lukyanov.finaltask.mapper.impl.UserRowMapper;
 import by.lukyanov.finaltask.model.dao.UserDao;
 import by.lukyanov.finaltask.entity.User;
 import by.lukyanov.finaltask.exception.DaoException;
@@ -10,7 +10,6 @@ import by.lukyanov.finaltask.util.ImageEncoder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.*;
@@ -36,8 +35,9 @@ public class UserDaoImpl implements UserDao {
     private static final String SQL_FIND_USERS_BY_STATUS = "SELECT user_id, email, name, surname, driver_license_photo FROM users WHERE user_status = ? order by user_id limit ? offset ?";
     private static final String SQL_COUNT_USERS = "SELECT COUNT(user_id) FROM users";
     private static final String SQL_COUNT_USERS_BY_STATUS = "SELECT COUNT(user_id) FROM users WHERE user_status = ?";
-    private static final String PHONE_CODE_BY = "\\+375-";
     private static final ConnectionPool pool = ConnectionPool.getInstance();
+    private static final ImageEncoder imageEncoder = ImageEncoder.getInstance();
+    private static final UserRowMapper mapper = UserRowMapper.getInstance();
     private static UserDaoImpl instance;
 
     private UserDaoImpl() {
@@ -79,8 +79,7 @@ public class UserDaoImpl implements UserDao {
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_DELETE_USER_BY_ID)){
             statement.setLong(1, id);
-            int resultLines = statement.executeUpdate();
-            if(resultLines != 0){
+            if(statement.executeUpdate() != 0){
                 result = true;
             }
         } catch (SQLException e) {
@@ -99,16 +98,7 @@ public class UserDaoImpl implements UserDao {
             statement.setInt(2, offset);
             try(ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    User user = new User.UserBuilder()
-                            .id(Long.parseLong(resultSet.getString(1)))
-                            .email(resultSet.getString(2))
-                            .name(resultSet.getString(3))
-                            .surname(resultSet.getString(4))
-                            .status(UserStatus.valueOf(resultSet.getString(5)))
-                            .role(UserRole.valueOf(resultSet.getString(6)))
-                            .phone(resultSet.getString(7))
-                            .balance(new BigDecimal(resultSet.getString(8)))
-                            .build();
+                    User user = mapper.mapRow(resultSet).get();
                     users.add(user);
                 }
             }
@@ -131,8 +121,7 @@ public class UserDaoImpl implements UserDao {
             statement.setString(5, String.valueOf(user.getRole()));
             statement.setString(6, user.getPhone());
             statement.setLong(7, user.getId());
-            int updatedLines = statement.executeUpdate();
-            if (updatedLines != 0){
+            if (statement.executeUpdate() != 0){
                 result = true;
                 logger.info("updated user " + user);
             }
@@ -152,18 +141,7 @@ public class UserDaoImpl implements UserDao {
             statement.setString(2, password);
             try (ResultSet resultSet = statement.executeQuery()){
                 if (resultSet.next()){
-                    User user = new User.UserBuilder()
-                            .id(Long.parseLong(resultSet.getString(1)))
-                            .email(resultSet.getString(2))
-                            .name(resultSet.getString(3))
-                            .surname(resultSet.getString(4))
-                            .status(UserStatus.valueOf(resultSet.getString(5)))
-                            .role(UserRole.valueOf(resultSet.getString(6)))
-                            .phone(resultSet.getString(7))
-                            .balance(resultSet.getBigDecimal(8))
-                            .build();
-                    logger.info("found user in db " + user.toString());
-                    foundUser = Optional.of(user);
+                    foundUser = mapper.mapRow(resultSet);
                 } else {
                     foundUser = Optional.empty();
                 }
@@ -183,18 +161,12 @@ public class UserDaoImpl implements UserDao {
             statement.setString(1, email);
             try (ResultSet resultSet = statement.executeQuery()){
                 if (resultSet.next()){
-                    User user = new User.UserBuilder()
-                            .id(Long.parseLong(resultSet.getString(1)))
-                            .email(resultSet.getString(2))
-                            .password(resultSet.getString(3))
-                            .name(resultSet.getString(4))
-                            .surname(resultSet.getString(5))
-                            .status(UserStatus.valueOf(resultSet.getString(6)))
-                            .role(UserRole.valueOf(resultSet.getString(7)))
-                            .phone(resultSet.getString(8).replaceAll(PHONE_CODE_BY, ""))
-                            .balance(new BigDecimal(resultSet.getString(9)))
-                            .build();
-                    foundUser = Optional.of(user);
+                    foundUser = mapper.mapRow(resultSet);
+                    if (foundUser.isPresent()){
+                        User user = foundUser.get();
+                        user.setPassword(resultSet.getString("password"));
+                        foundUser = Optional.of(user);
+                    }
                 } else {
                     foundUser = Optional.empty();
                 }
@@ -214,18 +186,12 @@ public class UserDaoImpl implements UserDao {
             statement.setLong(1, id);
             try (ResultSet resultSet = statement.executeQuery()){
                 if (resultSet.next()){
-                    User user = new User.UserBuilder()
-                            .id(Long.parseLong(resultSet.getString(1)))
-                            .email(resultSet.getString(2))
-                            .name(resultSet.getString(3))
-                            .surname(resultSet.getString(4))
-                            .status(UserStatus.valueOf(resultSet.getString(5)))
-                            .role(UserRole.valueOf(resultSet.getString(6)))
-                            .phone(resultSet.getString(7).replaceAll(PHONE_CODE_BY, ""))
-                            .balance(new BigDecimal(resultSet.getString(8)))
-                            .driverLicense(ImageEncoder.getInstance().decodeBlob(resultSet.getBlob(9)))
-                            .build();
-                    foundUser = Optional.of(user);
+                    foundUser = mapper.mapRow(resultSet);
+                    if (foundUser.isPresent()){
+                        User user = foundUser.get();
+                        user.setDriverLicense(imageEncoder.decodeImage(resultSet.getBytes("driver_license_photo")));
+                        foundUser = Optional.of(user);
+                    }
                 } else {
                     foundUser = Optional.empty();
                 }
@@ -249,7 +215,6 @@ public class UserDaoImpl implements UserDao {
                     if (rs.next()){
                         BigDecimal userBalance = rs.getBigDecimal(1);
                         userBalance = subtract ? userBalance.subtract(amount) : userBalance.add(amount);
-                        logger.debug("upd balance " + userBalance);
                         updateBalanceStmt.setBigDecimal(1, userBalance);
                         updateBalanceStmt.setLong(2, id);
                         if (updateBalanceStmt.executeUpdate() != 0){
@@ -285,8 +250,7 @@ public class UserDaoImpl implements UserDao {
             statement.setString(3, user.getEmail());
             statement.setString(4, user.getPhone());
             statement.setLong(5, user.getId());
-            int updatedLines = statement.executeUpdate();
-            if (updatedLines != 0){
+            if (statement.executeUpdate() != 0){
                 result = true;
                 logger.info("updated user " + user);
             }
@@ -347,7 +311,7 @@ public class UserDaoImpl implements UserDao {
                             .email(rs.getString(2))
                             .name(rs.getString(3))
                             .surname(rs.getString(4))
-                            .driverLicense(ImageEncoder.getInstance().decodeBlob(rs.getBlob(5)))
+                            .driverLicense(imageEncoder.decodeImage(rs.getBytes(5)))
                             .build();
                     userList.add(user);
                 }
