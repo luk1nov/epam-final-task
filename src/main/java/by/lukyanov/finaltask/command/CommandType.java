@@ -54,6 +54,7 @@ public enum CommandType {
     ADMIN_TO_REPAIRING_CARS(new FindCarsOnRepairCommand()),
     ADMIN_TO_ADD_NEW_CAR(new ToAddNewCarCommand()),
     ADMIN_ADD_NEW_CAR(new AddNewCarCommand()),
+    ADMIN_SEARCH_CAR(new SearchCarsCommand()),
     ADMIN_TO_EDIT_CAR(new ToEditCarCommand()),
     ADMIN_EDIT_CAR(new EditCarCommand()),
     ADMIN_DELETE_CAR(new DeleteCarCommand()),

@@ -25,4 +25,6 @@ public interface CarDao extends BaseDao<Car>{
     int countAllCarsByActive(Boolean active) throws DaoException;
 
     int countAllCarsByCategoryId(long categoryId) throws DaoException;
+
+    List<Car> searchCars(String searchQuery) throws DaoException;
 }

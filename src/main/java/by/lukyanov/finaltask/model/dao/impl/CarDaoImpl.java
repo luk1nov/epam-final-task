@@ -32,6 +32,19 @@ public class CarDaoImpl implements CarDao {
     private static final String SQL_COUNT_ALL_CARS = "SELECT COUNT(car_id) from cars";
     private static final String SQL_COUNT_ALL_CARS_BY_ACTIVE = "SELECT COUNT(car_id) from cars WHERE is_active = ?";
     private static final String SQL_COUNT_ALL_CARS_BY_CATEGORY = "SELECT COUNT(car_id) from cars WHERE car_category_car_category_id = ?";
+    private static final String SQL_SEARCH_CARS = """
+            SELECT c.car_id, c.brand, c.model, c.vin_code, c.regular_price, c.sale_price, c.is_active, c.image,
+            info.acceleration, info.power, info.drivetrain, cat.car_category_title
+            FROM cars as c
+            LEFT JOIN car_info as info
+            ON c.car_id = info.cars_car_id 
+            INNER JOIN car_category as cat
+            ON c.car_category_car_category_id = cat.car_category_id
+            WHERE c.brand like ?
+                    OR c.model LIKE ?
+                    OR c.vin_code LIKE ?
+    """;
+    private static final String GLOBAL_SEARCH_SIGN = "%";
     private static final CarRowMapper mapper = CarRowMapper.getInstance();
     private static CarDaoImpl instance;
     private final ConnectionPool pool = ConnectionPool.getInstance();
@@ -72,8 +85,8 @@ public class CarDaoImpl implements CarDao {
             statement.setInt(2, offset);
             try(ResultSet resultSet = statement.executeQuery()){
                 while (resultSet.next()){
-                    Car car = mapper.mapRow(resultSet).get();
-                    cars.add(car);
+                    Optional<Car> optionalCar = mapper.mapRow(resultSet);
+                    optionalCar.ifPresent(cars::add);
                 }
             }
         } catch (SQLException e) {
@@ -234,8 +247,8 @@ public class CarDaoImpl implements CarDao {
             statement.setInt(3, offset);
             try (ResultSet resultSet = statement.executeQuery()){
                 while (resultSet.next()){
-                    Car car = mapper.mapRow(resultSet).get();
-                    cars.add(car);
+                    Optional<Car> optionalCar = mapper.mapRow(resultSet);
+                    optionalCar.ifPresent(cars::add);
                 }
             }
         } catch (SQLException e) {
@@ -272,8 +285,8 @@ public class CarDaoImpl implements CarDao {
             statement.setInt(3, offset);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    Car car = mapper.mapRow(resultSet).get();
-                    cars.add(car);
+                    Optional<Car> optionalCar = mapper.mapRow(resultSet);
+                    optionalCar.ifPresent(cars::add);
                 }
             }
         } catch (SQLException e) {
@@ -333,5 +346,30 @@ public class CarDaoImpl implements CarDao {
             throw new DaoException(e);
         }
         return orderCount;
+    }
+
+    @Override
+    public List<Car> searchCars(String searchQuery) throws DaoException {
+        List<Car> cars = new ArrayList<>();
+        searchQuery = new StringBuilder().append(GLOBAL_SEARCH_SIGN)
+                .append(searchQuery)
+                .append(GLOBAL_SEARCH_SIGN)
+                .toString();
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_SEARCH_CARS)) {
+            statement.setString(1, searchQuery);
+            statement.setString(2, searchQuery);
+            statement.setString(3, searchQuery);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Optional<Car> optionalCar = mapper.mapRow(resultSet);
+                    optionalCar.ifPresent(cars::add);
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Dao exception trying search car", e);
+            throw new DaoException(e);
+        }
+        return cars;
     }
 }

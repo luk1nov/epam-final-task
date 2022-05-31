@@ -233,6 +233,20 @@ public class CarServiceImpl implements CarService {
         }
     }
 
+    @Override
+    public List<Car> searchCars(String searchQuery) throws ServiceException {
+        List<Car> cars = new ArrayList<>();
+        try {
+            if (validator.isValidSearchCarPattern(searchQuery)){
+                cars = carDao.searchCars(searchQuery.strip());
+            }
+        } catch (DaoException e) {
+            logger.error("Service exception trying search cars", e);
+            throw new ServiceException(e);
+        }
+        return cars;
+    }
+
     private boolean comparePrices(String regularPrice, String salePrice){
         BigDecimal decimalSalePrice = new BigDecimal(salePrice);
         BigDecimal decimalRegularPrice = new BigDecimal(regularPrice);

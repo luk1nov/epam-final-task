@@ -37,6 +37,17 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
+                            <form action="/controller" method="GET">
+                                <div class="col-md-3 mb-3 ms-auto">
+                                    <div class="input-group">
+                                        <input type="text" name="search" class="form-control" id="inputSearchQuery" value="<c:out value="${search}"/>">
+                                        <input type="hidden" name="command" value="admin_search_car">
+                                        <span class="input-group-text p-0" id="basic-addon1">
+                                            <input type="submit" class="custom-search" value="Search">
+                                        </span>
+                                    </div>
+                                </div>
+                            </form>
                             <div class="card">
                                 <div class="card-body">
                                     <table class="table">
@@ -56,7 +67,6 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-
                                             <c:forEach var="car" items="${list}">
                                                 <tr>
                                                     <td><c:out value="${car.id}"/></td>
