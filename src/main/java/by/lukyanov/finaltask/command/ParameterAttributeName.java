@@ -55,6 +55,7 @@ public class ParameterAttributeName {
 
     /* util */
     public static final String LIST = "list";
+    public static final String SEARCH = "search";
     public static final String RESULT_PAGE = "page";
     public static final String PAGES_COUNT = "pagesCount";
     public static final String MESSAGE_ATTR = "&message=";
