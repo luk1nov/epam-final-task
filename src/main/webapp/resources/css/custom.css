@@ -172,3 +172,9 @@ li.admin-home-link form input[type="submit"], .accordion-menu li form input[type
     text-decoration: underline;
 }
 
+.custom-search {
+    padding: 10px 14px;
+    border: none;
+    background: no-repeat;
+}
+
