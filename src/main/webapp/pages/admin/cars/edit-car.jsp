@@ -68,7 +68,9 @@
                                                 <label for="inputCarCategory" class="form-label">Category</label>
                                                 <select name="carCategoryId" id="inputCarCategory" class="form-select">
                                                     <c:forEach var="category" items="${list}">
-                                                        <option value="<c:out value="${category.id}"/>"><c:out value="${category.title}"/></option>
+                                                        <option value="<c:out value="${category.id}"/>" <c:if test="${car.carCategory.title eq category.title}">selected</c:if>>
+                                                            <c:out value="${category.title}"/>
+                                                        </option>
                                                     </c:forEach>
                                                 </select>
                                             </div>
@@ -142,7 +144,7 @@
 <script src="${pageContext.request.contextPath}/resources/js/main.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/custom.js"></script>
 <script>
-    document.querySelector('#inputBrand option[value="${car.brand}"]').setAttribute('selected', 'selected');
+    document.querySelector('#inputBrand option[value="<c:out value="${car.brand}"/>"]').setAttribute('selected', 'selected');
     $('#inputBrand').select2();
 </script>
 </body>
