@@ -5,12 +5,15 @@ import by.lukyanov.finaltask.entity.OrderReportStatus;
 import by.lukyanov.finaltask.exception.DaoException;
 import by.lukyanov.finaltask.mapper.RowMapper;
 import by.lukyanov.finaltask.util.ImageEncoder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
 public class OrderReportMapper implements RowMapper<OrderReport> {
+    private static final Logger logger = LogManager.getLogger();
     private static OrderReportMapper instance;
 
     private OrderReportMapper() {
@@ -22,15 +25,24 @@ public class OrderReportMapper implements RowMapper<OrderReport> {
         }
         return instance;
     }
+
     @Override
-    public Optional<OrderReport> mapRow(ResultSet rs) throws SQLException, DaoException {
-        OrderReport report = new OrderReport();
-        report.setPhoto(ImageEncoder.getInstance().decodeBlob(rs.getBlob("report_photo")));
-        report.setReportStatus(OrderReportStatus.valueOf(rs.getString("report_status")));
-        String reportText = rs.getString("report_text");
-        if(reportText != null){
-            report.setReportText(reportText);
+    public Optional<OrderReport> mapRow(ResultSet rs) {
+        ImageEncoder imageEncoder = ImageEncoder.getInstance();
+        Optional<OrderReport> optionalOrderReport;
+        try {
+            OrderReport report = new OrderReport();
+            report.setPhoto(imageEncoder.decodeImage(rs.getBytes("report_photo")));
+            report.setReportStatus(OrderReportStatus.valueOf(rs.getString("report_status")));
+            String reportText = rs.getString("report_text");
+            if(reportText != null){
+                report.setReportText(reportText);
+            }
+            optionalOrderReport = Optional.of(report);
+        } catch (SQLException e){
+            logger.error("Can not read resultset", e);
+            optionalOrderReport = Optional.empty();
         }
-        return Optional.of(report);
+        return optionalOrderReport;
     }
 }
