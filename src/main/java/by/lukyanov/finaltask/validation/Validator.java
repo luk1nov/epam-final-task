@@ -30,4 +30,6 @@ public interface Validator {
     boolean isValidMessage(String declineMessage);
 
     boolean isValidNumber(String number);
+
+    boolean isValidSearchCarPattern(String searchQuery);
 }
