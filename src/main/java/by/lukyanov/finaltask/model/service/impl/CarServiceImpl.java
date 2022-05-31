@@ -51,7 +51,7 @@ public class CarServiceImpl implements CarService {
                         .model(model)
                         .vin(vinCode)
                         .regularPrice(new BigDecimal(regularPrice))
-                        .salePrice(salePrice.isPresent() ? new BigDecimal(salePrice.get()) : null)
+                        .salePrice(salePrice.map(BigDecimal::new).orElse(null))
                         .active(Boolean.parseBoolean(isActive))
                         .category(new CarCategory(Long.parseLong(categoryId)))
                         .carInfo(carInfo)
