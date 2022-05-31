@@ -84,18 +84,14 @@ public enum CommandType {
         return command;
     }
 
-    public static Command define(String command){
-        Command definedCommand;
+    public static Command of(String command){
+        Command definedCommand = DEFAULT.command;
         try {
-            if(command == null){
-                logger.error("Command is null");
-                definedCommand = DEFAULT.getCommand();
-            } else {
+            if(command != null){
                 definedCommand = valueOf(command.toUpperCase()).getCommand();
             }
         } catch (IllegalArgumentException e){
             logger.error(e.getMessage());
-            definedCommand = DEFAULT.getCommand();
         }
         return definedCommand;
     }

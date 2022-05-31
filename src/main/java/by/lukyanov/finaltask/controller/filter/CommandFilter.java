@@ -38,7 +38,7 @@ public class CommandFilter implements Filter {
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         HttpSession session = httpServletRequest.getSession(false);
         String commandParameter = request.getParameter(COMMAND);
-        Command command = CommandType.define(commandParameter);
+        Command command = CommandType.of(commandParameter);
 
         boolean loggedIn = (session != null && session.getAttribute(LOGGED_USER) != null);
 

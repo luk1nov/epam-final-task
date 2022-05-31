@@ -33,7 +33,7 @@ public class Controller extends HttpServlet {
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try {
             String commandParameter = request.getParameter(COMMAND);
-            Command command = CommandType.define(commandParameter);
+            Command command = CommandType.of(commandParameter);
             logger.info(commandParameter);
             Router router = command.execute(request);
             switch (router.getType()) {
