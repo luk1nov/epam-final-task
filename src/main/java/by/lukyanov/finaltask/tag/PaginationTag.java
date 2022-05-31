@@ -41,24 +41,24 @@ public class PaginationTag extends SimpleTagSupport{
     private String buildPaginationElement(int page, int currentPage){
         String catId = (String) getJspContext().findAttribute(CAR_CATEGORY_ID);
         StringBuilder sb = new StringBuilder();
-        sb.append(page == currentPage ? "<li class='page-item disabled active'>" : "<li class='page-item'>");
-        sb.append("<form action='/controller' method='POST' class='m-0'>");
-        sb.append("<input type='hidden' name='page' value='");
-        sb.append(page);
-        sb.append("'>");
-        sb.append("<input type='hidden' name='command' value='");
-        sb.append(command);
-        sb.append("'>");
+        sb.append(page == currentPage ? "<li class='page-item disabled active'>" : "<li class='page-item'>")
+            .append("<form action='/controller' method='POST' class='m-0'>")
+            .append("<input type='hidden' name='page' value='")
+            .append(page)
+            .append("'>")
+            .append("<input type='hidden' name='command' value='")
+            .append(command)
+            .append("'>");
         if(catId != null){
-            sb.append("<input type='hidden' name='carCategoryId' value='");
-            sb.append(catId);
-            sb.append("'>");
+            sb.append("<input type='hidden' name='carCategoryId' value='")
+                .append(catId)
+                .append("'>");
         }
-        sb.append("<input class='page-link' type='submit' value='");
-        sb.append(page);
-        sb.append("'>");
-        sb.append("</form>");
-        sb.append("</li>");
+        sb.append("<input class='page-link' type='submit' value='")
+            .append(page)
+            .append("'>")
+            .append("</form>")
+            .append("</li>");
         return sb.toString();
     }
 }
