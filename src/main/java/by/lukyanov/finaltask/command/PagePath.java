@@ -7,7 +7,9 @@ public final class PagePath {
     public static final String ERROR_500 = "pages/error/404_error.jsp";
     public static final String SIGNIN_PAGE = "pages/signin.jsp";
     public static final String ADMIN_ALL_USERS = "pages/admin/users/all-users.jsp";
+    public static final String ADMIN_SEARCH_USERS_RESULTS = "pages/admin/users/user-search-results.jsp";
     public static final String ADMIN_ALL_ORDERS = "pages/admin/orders/all-orders.jsp";
+    public static final String ADMIN_SEARCH_ORDERS_RESULTS = "pages/admin/orders/order-search-results.jsp";
     public static final String ADMIN_COMPLETED_ORDERS = "pages/admin/orders/completed-orders.jsp";
     public static final String ADMIN_PROCESSING_ORDERS = "pages/admin/orders/rental_requests.jsp";
     public static final String ADMIN_DECLINE_ORDER = "pages/admin/orders/decline-order.jsp";
@@ -42,7 +44,8 @@ public final class PagePath {
     public static final String TO_UNVERIFIED_USERS = "controller?command=admin_to_unverified_users";
     public static final String TO_ADMIN_PROCESSING_ORDERS = "controller?command=admin_find_processing_orders";
     public static final String TO_ADMIN_ALL_ORDERS = "controller?command=admin_find_all_orders";
-    public static final String TO_ALL_CARS = "controller?command=admin_to_all_cars";
+    public static final String TO_ADMIN_ALL_CARS = "controller?command=admin_to_all_cars";
+    public static final String TO_ADMIN_ALL_USERS = "controller?command=admin_to_all_users";
 
     private PagePath() {
     }
