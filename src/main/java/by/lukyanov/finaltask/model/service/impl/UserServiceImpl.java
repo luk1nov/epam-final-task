@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -300,5 +301,19 @@ public class UserServiceImpl implements UserService {
             logger.error("Service exception trying count all users", e);
             throw new ServiceException(e);
         }
+    }
+
+    @Override
+    public List<User> searchUsers(String searchQuery) throws ServiceException {
+        List<User> users = new ArrayList<>();
+        try {
+            if (validator.isValidSearchPattern(searchQuery)){
+                users = userDao.searchUsers(searchQuery.strip());
+            }
+        } catch (DaoException e) {
+            logger.error("Service exception trying search users", e);
+            throw new ServiceException(e);
+        }
+        return users;
     }
 }

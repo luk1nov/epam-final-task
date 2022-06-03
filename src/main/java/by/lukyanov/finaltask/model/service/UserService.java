@@ -39,4 +39,6 @@ public interface UserService {
     int countAllUsers() throws ServiceException;
 
     int countAllUsersByStatus(UserStatus status) throws ServiceException;
+
+    List<User> searchUsers(String searchQuery) throws ServiceException;
 }

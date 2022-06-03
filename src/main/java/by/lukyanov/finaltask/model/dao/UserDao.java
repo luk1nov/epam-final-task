@@ -31,4 +31,6 @@ public interface UserDao extends BaseDao<User>{
     int countAllUsers() throws DaoException;
 
     int countAllUsersByStatus(UserStatus status) throws DaoException;
+
+    List<User> searchUsers(String searchQuery) throws DaoException;
 }
