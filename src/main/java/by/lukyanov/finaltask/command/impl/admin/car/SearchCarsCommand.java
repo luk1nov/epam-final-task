@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 import static by.lukyanov.finaltask.command.PagePath.ADMIN_SEARCH_CARS_RESULTS;
+import static by.lukyanov.finaltask.command.PagePath.TO_ADMIN_ALL_CARS;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.LIST;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.SEARCH;
 
@@ -22,12 +23,15 @@ public class SearchCarsCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Router router = new Router(ADMIN_SEARCH_CARS_RESULTS);
+        Router router = new Router(TO_ADMIN_ALL_CARS);
         String searchQuery = request.getParameter(SEARCH);
         try {
-            List<Car> cars = carService.searchCars(searchQuery);
-            request.setAttribute(LIST, cars);
-            request.setAttribute(SEARCH, searchQuery.trim());
+            if(searchQuery != null && !searchQuery.isBlank()) {
+                router.setPagePath(ADMIN_SEARCH_CARS_RESULTS);
+                List<Car> cars = carService.searchCars(searchQuery);
+                request.setAttribute(LIST, cars);
+                request.setAttribute(SEARCH, searchQuery.trim());
+            }
         } catch (ServiceException e) {
             logger.error("Command exception trying search cars", e);
             throw new CommandException(e);
