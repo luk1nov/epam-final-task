@@ -9,4 +9,13 @@ public interface BaseDao<T extends AbstractEntity>{
     boolean delete(long id) throws DaoException;
     List<T> findAll(int from, int to) throws DaoException;
     boolean update(T t) throws DaoException;
+
+    default String generateSQLSearchQuery(String searchQuery){
+        String globalSearchSign = "%";
+        StringBuilder stringBuilder = new StringBuilder();
+        return stringBuilder.append(globalSearchSign)
+                .append(searchQuery)
+                .append(globalSearchSign)
+                .toString();
+    }
 }
