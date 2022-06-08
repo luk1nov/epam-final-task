@@ -1,12 +1,10 @@
-package by.lukyanov.finaltask.mapper.impl;
+package by.lukyanov.finaltask.model.dao.mapper.impl;
 
 import by.lukyanov.finaltask.entity.*;
-import by.lukyanov.finaltask.mapper.RowMapper;
-import by.lukyanov.finaltask.util.ImageEncoder;
+import by.lukyanov.finaltask.model.dao.mapper.RowMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;

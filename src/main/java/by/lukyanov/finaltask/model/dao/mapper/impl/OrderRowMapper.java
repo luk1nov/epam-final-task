@@ -1,7 +1,7 @@
-package by.lukyanov.finaltask.mapper.impl;
+package by.lukyanov.finaltask.model.dao.mapper.impl;
 
 import by.lukyanov.finaltask.entity.*;
-import by.lukyanov.finaltask.mapper.RowMapper;
+import by.lukyanov.finaltask.model.dao.mapper.RowMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

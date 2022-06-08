@@ -1,4 +1,4 @@
-package by.lukyanov.finaltask.mapper;
+package by.lukyanov.finaltask.model.dao.mapper;
 
 import by.lukyanov.finaltask.entity.AbstractEntity;
 

@@ -1,10 +1,9 @@
-package by.lukyanov.finaltask.mapper.impl;
+package by.lukyanov.finaltask.model.dao.mapper.impl;
 
 import by.lukyanov.finaltask.entity.Car;
 import by.lukyanov.finaltask.entity.CarCategory;
 import by.lukyanov.finaltask.entity.CarInfo;
-import by.lukyanov.finaltask.exception.DaoException;
-import by.lukyanov.finaltask.mapper.RowMapper;
+import by.lukyanov.finaltask.model.dao.mapper.RowMapper;
 import by.lukyanov.finaltask.util.ImageEncoder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
