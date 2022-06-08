@@ -2,7 +2,7 @@ package by.lukyanov.finaltask.model.dao.impl;
 
 import by.lukyanov.finaltask.entity.Car;
 import by.lukyanov.finaltask.exception.DaoException;
-import by.lukyanov.finaltask.mapper.impl.CarRowMapper;
+import by.lukyanov.finaltask.model.dao.mapper.impl.CarRowMapper;
 import by.lukyanov.finaltask.model.connection.ConnectionPool;
 import by.lukyanov.finaltask.model.dao.CarDao;
 import org.apache.logging.log4j.LogManager;

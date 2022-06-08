@@ -1,7 +1,7 @@
 package by.lukyanov.finaltask.model.dao.impl;
 
 import by.lukyanov.finaltask.entity.UserStatus;
-import by.lukyanov.finaltask.mapper.impl.UserRowMapper;
+import by.lukyanov.finaltask.model.dao.mapper.impl.UserRowMapper;
 import by.lukyanov.finaltask.model.dao.UserDao;
 import by.lukyanov.finaltask.entity.User;
 import by.lukyanov.finaltask.exception.DaoException;

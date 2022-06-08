@@ -2,8 +2,8 @@ package by.lukyanov.finaltask.model.dao.impl;
 
 import by.lukyanov.finaltask.entity.*;
 import by.lukyanov.finaltask.exception.DaoException;
-import by.lukyanov.finaltask.mapper.impl.OrderReportMapper;
-import by.lukyanov.finaltask.mapper.impl.OrderRowMapper;
+import by.lukyanov.finaltask.model.dao.mapper.impl.OrderReportMapper;
+import by.lukyanov.finaltask.model.dao.mapper.impl.OrderRowMapper;
 import by.lukyanov.finaltask.model.connection.ConnectionPool;
 import by.lukyanov.finaltask.model.dao.OrderDao;
 import org.apache.logging.log4j.LogManager;
