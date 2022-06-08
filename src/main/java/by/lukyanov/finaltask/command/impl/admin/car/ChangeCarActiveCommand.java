@@ -18,7 +18,7 @@ public class ChangeCarActiveCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Router router = new Router(TO_ALL_CARS);
+        Router router = new Router(TO_ADMIN_ALL_CARS);
         String carId = request.getParameter(ParameterAttributeName.CAR_ID);
         String active = request.getParameter(ParameterAttributeName.CAR_ACTIVE);
         try {

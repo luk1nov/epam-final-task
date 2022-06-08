@@ -1,5 +1,6 @@
 package by.lukyanov.finaltask.model.dao.impl;
 
+import by.lukyanov.finaltask.entity.Car;
 import by.lukyanov.finaltask.entity.UserStatus;
 import by.lukyanov.finaltask.model.dao.mapper.impl.UserRowMapper;
 import by.lukyanov.finaltask.model.dao.UserDao;
@@ -35,6 +36,13 @@ public class UserDaoImpl implements UserDao {
     private static final String SQL_FIND_USERS_BY_STATUS = "SELECT user_id, email, name, surname, driver_license_photo FROM users WHERE user_status = ? order by user_id limit ? offset ?";
     private static final String SQL_COUNT_USERS = "SELECT COUNT(user_id) FROM users";
     private static final String SQL_COUNT_USERS_BY_STATUS = "SELECT COUNT(user_id) FROM users WHERE user_status = ?";
+    private static final String SQL_SEARCH_USERS = """
+            SELECT u.user_id, u.email, u.name, u.surname , u.user_status , u.user_role, u.phone, u.balance
+            FROM users as u
+            WHERE u.email like ?
+                    OR u.name LIKE ?
+                    OR u.surname LIKE ?
+            """;
     private static final ConnectionPool pool = ConnectionPool.getInstance();
     private static final ImageEncoder imageEncoder = ImageEncoder.getInstance();
     private static final UserRowMapper mapper = UserRowMapper.getInstance();
@@ -372,5 +380,27 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException(e);
         }
         return usersCount;
+    }
+
+    @Override
+    public List<User> searchUsers(String searchQuery) throws DaoException {
+        List<User> users = new ArrayList<>();
+        searchQuery = generateSQLSearchQuery(searchQuery);
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_SEARCH_USERS)) {
+            statement.setString(1, searchQuery);
+            statement.setString(2, searchQuery);
+            statement.setString(3, searchQuery);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Optional<User> optionalUser = mapper.mapRow(resultSet);
+                    optionalUser.ifPresent(users::add);
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Dao exception trying search users", e);
+            throw new DaoException(e);
+        }
+        return users;
     }
 }

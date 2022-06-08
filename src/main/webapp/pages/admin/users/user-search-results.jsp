@@ -4,7 +4,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>All cars</title>
+    <title>Title</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
@@ -22,9 +22,9 @@
 </head>
 <body>
 <div class="app align-content-stretch d-flex flex-wrap">
-    <%@include file="../admin-sidebar.jsp"%>
+    <c:import url="../admin-sidebar.jsp"/>
     <div class="app-container">
-        <%@include file="../admin-header.jsp"%>
+        <c:import url="../admin-header.jsp"/>
         <div class="app-content">
             <div class="content-wrapper">
                 <div class="container-fluid">
@@ -40,8 +40,8 @@
                             <form action="/controller" method="GET">
                                 <div class="col-md-3 mb-3 ms-auto">
                                     <div class="input-group">
-                                        <input type="text" name="search" class="form-control" placeholder="Enter brand, model or vin code" id="inputSearchQuery" value="<c:out value="${search}"/>">
-                                        <input type="hidden" name="command" value="admin_search_car">
+                                        <input type="text" name="search" class="form-control" placeholder="Enter name, surname or email" id="inputSearchQuery" value="<c:out value="${search}"/>">
+                                        <input type="hidden" name="command" value="admin_search_user">
                                         <span class="input-group-text p-0" id="basic-addon1">
                                             <input type="submit" class="custom-search" value="Search">
                                         </span>
@@ -54,49 +54,46 @@
                                         <thead>
                                         <tr>
                                             <th scope="col">ID</th>
-                                            <th scope="col">Category</th>
-                                            <th scope="col">Brand</th>
-                                            <th scope="col">Model</th>
-                                            <th scope="col">Vin</th>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Surname</th>
+                                            <th scope="col">Role</th>
                                             <th scope="col">Status</th>
-                                            <th scope="col">0-100</th>
-                                            <th scope="col">Drivetrain</th>
-                                            <th scope="col">Power</th>
-                                            <th scope="col">Price</th>
-                                            <th scope="col">Action</th>
+                                            <th scope="col">Email</th>
+                                            <th scope="col">Balance</th>
+                                            <th scope="col">Actions</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <c:forEach var="car" items="${list}">
+                                        <c:forEach var="user" items="${list}">
                                             <tr>
-                                                <td><c:out value="${car.id}"/></td>
-                                                <td><c:out value="${car.carCategory.title}"/></td>
-                                                <td><c:out value="${car.brand}"/></td>
-                                                <td><c:out value="${car.model}"/></td>
-                                                <td><c:out value="${car.vinCode}"/></td>
+                                                <td><c:out value="${user.id}"/></td>
+                                                <td><c:out value="${user.name}"/></td>
+                                                <td><c:out value="${user.surname}"/></td>
+                                                <td><c:out value="${user.role}"/></td>
                                                 <td>
                                                     <c:choose>
-                                                        <c:when test="${car.active eq 'true'}">
-                                                            <span class="badge badge-style-light rounded-pill badge-success">Active</span>
+                                                    <c:when test="${user.status == 'INACTIVE'}">
+                                                    <span class="badge badge-style-light rounded-pill badge-warning">
                                                         </c:when>
-                                                        <c:when test="${car.active eq 'false'}">
-                                                            <span class="badge badge-style-light rounded-pill badge-danger">Repair</span>
+                                                        <c:when test="${user.status == 'ACTIVE'}">
+                                                            <span class="badge badge-style-light rounded-pill badge-success">
+                                                        </c:when>
+                                                        <c:when test="${user.status == 'BLOCKED'}">
+                                                            <span class="badge badge-style-light rounded-pill badge-danger">
+                                                        </c:when>
+                                                        <c:when test="${user.status == 'VERIFICATION'}">
+                                                            <span class="badge badge-style-light rounded-pill badge-primary">
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <span class="badge badge-style-light rounded-pill badge-light"><c:out value="${car.active}"/></span>
+                                                            <span class="badge badge-style-light rounded-pill badge-light">
                                                         </c:otherwise>
                                                     </c:choose>
+                                                            <c:out value="${user.status}"/>
+                                                         </span>
                                                 </td>
-                                                <td><c:out value="${car.info.acceleration}"/></td>
-                                                <td><c:out value="${car.info.drivetrain}"/></td>
-                                                <td><c:out value="${car.info.power}"/></td>
+                                                <td><c:out value="${user.email}"/></td>
                                                 <td>
-                                                    <c:if test="${car.salePrice.isEmpty()}">
-                                                        $<fmt:formatNumber value = "${car.regularPrice}" maxFractionDigits = "2"/>
-                                                    </c:if>
-                                                    <c:if test="${car.salePrice.isPresent()}">
-                                                        <del>$<c:out value="${car.regularPrice}"/></del> $<fmt:formatNumber value = "${car.salePrice.get()}" maxFractionDigits = "2"/>
-                                                    </c:if>
+                                                    $<fmt:formatNumber value = "${user.balance}" maxFractionDigits = "2"/>
                                                 </td>
                                                 <td>
                                                     <div class="btn-group dropstart">
@@ -106,29 +103,16 @@
                                                         <ul class="dropdown-menu">
                                                             <li>
                                                                 <form action="/controller" method="POST">
-                                                                    <input type="hidden" name="carId" value="<c:out value="${car.id}"/>">
-                                                                    <input type="hidden" name="command" value="admin_to_edit_car">
+                                                                    <input type="hidden" name="userId" value="<c:out value="${user.id}"/>">
+                                                                    <input type="hidden" name="command" value="admin_to_edit_user">
                                                                     <input type="submit" class="dropdown-item" value="Edit">
                                                                 </form>
                                                             </li>
                                                             <li>
                                                                 <form action="/controller" method="POST">
-                                                                    <input type="hidden" name="carId" value="<c:out value="${car.id}"/>">
-                                                                    <input type="hidden" name="command" value="admin_delete_car">
+                                                                    <input type="hidden" name="userId" value="<c:out value="${user.id}"/>">
+                                                                    <input type="hidden" name="command" value="admin_delete_user">
                                                                     <input type="submit" class="dropdown-item" value="Delete">
-                                                                </form>
-                                                            </li>
-                                                            <li>
-                                                                <form action="/controller" method="POST">
-                                                                    <input type="hidden" name="carId" value="<c:out value="${car.id}"/>">
-                                                                    <input type="hidden" name="command" value="admin_change_car_active_status">
-                                                                    <input type="hidden" name="carActive" value="<c:out value="${car.active}"/>">
-                                                                    <c:if test="${car.active == true}">
-                                                                        <input type="submit" class="dropdown-item" value="Send for repair">
-                                                                    </c:if>
-                                                                    <c:if test="${car.active == false}">
-                                                                        <input type="submit" class="dropdown-item" value="Receive from repair">
-                                                                    </c:if>
                                                                 </form>
                                                             </li>
                                                         </ul>
@@ -140,7 +124,6 @@
                                     </table>
                                 </div>
                             </div>
-                            <util:Pagination command="admin_to_all_cars"/>
                         </div>
                     </div>
                 </div>

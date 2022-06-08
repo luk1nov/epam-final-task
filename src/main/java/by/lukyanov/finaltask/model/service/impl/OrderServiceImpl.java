@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -275,6 +276,20 @@ public class OrderServiceImpl implements OrderService {
             logger.error("Service exception trying count orders by status", e);
             throw new ServiceException(e);
         }
+    }
+
+    @Override
+    public List<Order> searchOrders(String searchQuery) throws ServiceException {
+        List<Order> orders = new ArrayList<>();
+        try {
+            if (validator.isValidSearchPattern(searchQuery)){
+                orders = orderDaoImpl.searchOrders(searchQuery.strip());
+            }
+        } catch (DaoException e) {
+            logger.error("Service exception trying search users", e);
+            throw new ServiceException(e);
+        }
+        return orders;
     }
 
     private Order createReport(String text, String status, String orderId) throws IllegalArgumentException{

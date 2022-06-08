@@ -4,6 +4,7 @@ import by.lukyanov.finaltask.entity.Order;
 import by.lukyanov.finaltask.entity.OrderReport;
 import by.lukyanov.finaltask.entity.OrderStatus;
 import by.lukyanov.finaltask.exception.DaoException;
+import by.lukyanov.finaltask.exception.ServiceException;
 
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -32,5 +33,7 @@ public interface OrderDao extends BaseDao<Order>{
     int countOrdersByStatus(OrderStatus status) throws DaoException;
 
     int countOrdersByUserId(long userId) throws DaoException;
+
+    List<Order> searchOrders(String searchQuery) throws DaoException;
 }
 

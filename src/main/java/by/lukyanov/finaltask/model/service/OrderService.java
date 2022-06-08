@@ -38,4 +38,6 @@ public interface OrderService {
     int countOrdersByStatus(OrderStatus status) throws ServiceException;
 
     int countOrdersByUserId(long userId) throws ServiceException;
+
+    List<Order> searchOrders(String searchQuery) throws ServiceException;
 }

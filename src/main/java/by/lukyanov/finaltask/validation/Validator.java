@@ -32,4 +32,6 @@ public interface Validator {
     boolean isValidNumber(String number);
 
     boolean isValidSearchCarPattern(String searchQuery);
+
+    boolean isValidSearchPattern(String searchQuery);
 }

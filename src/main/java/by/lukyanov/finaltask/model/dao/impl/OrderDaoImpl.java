@@ -89,8 +89,23 @@ public class OrderDaoImpl implements OrderDao {
     private static final String SQL_COUNT_ORDERS = "SELECT COUNT(order_id) from orders";
     private static final String SQL_COUNT_ORDERS_BY_STATUS = "SELECT COUNT(order_id) from orders WHERE order_status = ?";
     private static final String SQL_COUNT_ORDERS_BY_USER_ID = "SELECT COUNT(order_id) from orders WHERE users_user_id = ?";
+    private static final String SQL_SEARCH_ORDERS = """
+            SELECT o.order_id, o.begin_date, o.end_date, o.order_status, o.message, o.users_user_id, u.name, u.surname, u.user_status, u.email, o.cars_car_id, c.brand, c.model, c.is_active, c.vin_code, o.price, r.report_id
+            FROM orders as o
+                    JOIN users as u
+                         ON u.user_id = o.users_user_id
+                    JOIN cars as c
+                         ON c.car_id = o.cars_car_id
+                    LEFT JOIN order_report as r
+                              ON o.order_id = r.orders_order_id
+            WHERE u.email like ?
+                    OR c.vin_code LIKE ?
+                    OR o.order_id LIKE ?
+            """;
+    private static final ConnectionPool pool = ConnectionPool.getInstance();
+    private static final OrderRowMapper mapper = OrderRowMapper.getInstance();
     private static OrderDaoImpl instance;
-    private final ConnectionPool pool = ConnectionPool.getInstance();
+
 
 
     private OrderDaoImpl() {
@@ -164,14 +179,13 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public List<Order> findAll(int limit, int offset) throws DaoException {
         List<Order> orderList = new ArrayList<>();
-        OrderRowMapper rowMapper = OrderRowMapper.getInstance();
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_FIND_ALL_ORDERS)){
             statement.setInt(1, limit);
             statement.setInt(2, offset);
             try(ResultSet rs = statement.executeQuery()){
                 while (rs.next()){
-                    Order order = rowMapper.mapRow(rs).get();
+                    Order order = mapper.mapRow(rs).get();
                     orderList.add(order);
                 }
             }
@@ -276,7 +290,6 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public List<Order> findOrdersByOrderStatus(OrderStatus orderStatus, int limit, int offset) throws DaoException {
         List<Order> orderList = new ArrayList<>();
-        OrderRowMapper orderRowMapper = OrderRowMapper.getInstance();
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_FIND_ORDERS_BY_ORDER_STATUS)){
             statement.setString(1, String.valueOf(orderStatus));
@@ -284,7 +297,7 @@ public class OrderDaoImpl implements OrderDao {
             statement.setInt(3, offset);
             try (ResultSet rs = statement.executeQuery()){
                 while (rs.next()){
-                    Order order = orderRowMapper.mapRow(rs).get();
+                    Order order = mapper.mapRow(rs).get();
                     orderList.add(order);
                 }
             }
@@ -297,7 +310,6 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public Optional<Order> findById(long id) throws DaoException {
-        OrderRowMapper rowMapper = OrderRowMapper.getInstance();
         Optional<Order> optionalOrder = Optional.empty();
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_FIND_ORDER_BY_ID)){
@@ -305,7 +317,7 @@ public class OrderDaoImpl implements OrderDao {
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()){
                 if(rs.next()){
-                    optionalOrder = rowMapper.mapRow(rs);
+                    optionalOrder = mapper.mapRow(rs);
                 }
             }
         } catch (SQLException e) {
@@ -461,5 +473,27 @@ public class OrderDaoImpl implements OrderDao {
             throw new DaoException(e);
         }
         return orderCount;
+    }
+
+    @Override
+    public List<Order> searchOrders(String searchQuery) throws DaoException {
+        List<Order> orders = new ArrayList<>();
+        searchQuery = generateSQLSearchQuery(searchQuery);
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_SEARCH_ORDERS)) {
+            statement.setString(1, searchQuery);
+            statement.setString(2, searchQuery);
+            statement.setString(3, searchQuery);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Optional<Order> optionalUser = mapper.mapRow(resultSet);
+                    optionalUser.ifPresent(orders::add);
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Dao exception trying search users", e);
+            throw new DaoException(e);
+        }
+        return orders;
     }
 }

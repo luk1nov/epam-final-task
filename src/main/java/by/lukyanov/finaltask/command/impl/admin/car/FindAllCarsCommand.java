@@ -2,10 +2,8 @@ package by.lukyanov.finaltask.command.impl.admin.car;
 
 import by.lukyanov.finaltask.command.Command;
 import by.lukyanov.finaltask.command.PagePath;
-import by.lukyanov.finaltask.command.ParameterAttributeName;
 import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.entity.Car;
-import by.lukyanov.finaltask.entity.UserStatus;
 import by.lukyanov.finaltask.exception.CommandException;
 import by.lukyanov.finaltask.exception.ServiceException;
 import by.lukyanov.finaltask.model.service.impl.CarServiceImpl;
@@ -17,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-import static by.lukyanov.finaltask.command.PagePath.TO_ALL_CARS;
+import static by.lukyanov.finaltask.command.PagePath.TO_ADMIN_ALL_CARS;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class FindAllCarsCommand implements Command {
@@ -29,7 +27,7 @@ public class FindAllCarsCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         Router router = new Router();
         HttpSession session = request.getSession();
-        session.setAttribute(CURRENT_PAGE, TO_ALL_CARS);
+        session.setAttribute(CURRENT_PAGE, TO_ADMIN_ALL_CARS);
         String currentResultPage = request.getParameter(RESULT_PAGE);
         try {
             int pagesCount = ResultCounter.countPages(carService.countAllCars(), POSTS_PER_PAGE);

@@ -44,7 +44,6 @@ public class CarDaoImpl implements CarDao {
                     OR c.model LIKE ?
                     OR c.vin_code LIKE ?
     """;
-    private static final String GLOBAL_SEARCH_SIGN = "%";
     private static final CarRowMapper mapper = CarRowMapper.getInstance();
     private static CarDaoImpl instance;
     private final ConnectionPool pool = ConnectionPool.getInstance();
@@ -351,10 +350,7 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> searchCars(String searchQuery) throws DaoException {
         List<Car> cars = new ArrayList<>();
-        searchQuery = new StringBuilder().append(GLOBAL_SEARCH_SIGN)
-                .append(searchQuery)
-                .append(GLOBAL_SEARCH_SIGN)
-                .toString();
+        searchQuery = generateSQLSearchQuery(searchQuery);
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SEARCH_CARS)) {
             statement.setString(1, searchQuery);

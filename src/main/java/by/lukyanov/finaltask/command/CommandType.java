@@ -43,6 +43,7 @@ public enum CommandType {
 
     //ADMIN
     ADMIN_TO_ALL_USERS(new FindAllUsersCommand()),
+    ADMIN_SEARCH_USER(new SearchUsersCommand()),
     ADMIN_TO_ADD_NEW_USER(new ToAddNewUserCommand()),
     ADMIN_TO_EDIT_USER(new ToEditUserCommand()),
     ADMIN_EDIT_USER(new EditUserCommand()),
@@ -65,6 +66,7 @@ public enum CommandType {
     ADMIN_TO_EDIT_CAR_CATEGORY(new ToEditCarCategoryCommand()),
     ADMIN_DELETE_CAR_CATEGORY(new DeleteCarCategoryCommand()),
     ADMIN_FIND_ALL_ORDERS(new FinaAllOrdersCommand()),
+    ADMIN_SEARCH_ORDER(new SearchOrdersCommand()),
     ADMIN_FIND_COMPLETED_ORDERS(new FindCompletedOrdersCommand()),
     ADMIN_SHOW_ORDER_REPORT(new ShowOrderReportCommand()),
     ADMIN_FIND_PROCESSING_ORDERS(new FindProcessingOrdersCommand()),
