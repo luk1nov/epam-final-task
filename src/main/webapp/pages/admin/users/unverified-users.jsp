@@ -25,25 +25,21 @@
 </head>
 <body>
 <div class="app align-content-stretch d-flex flex-wrap">
-    <c:import url="../admin-sidebar.jsp"/>
+    <c:import url="${pageContext.request.contextPath}/pages/admin/admin-sidebar.jsp"/>
     <div class="app-container">
-        <c:import url="../admin-header.jsp"/>
+        <c:import url="${pageContext.request.contextPath}/pages/admin/admin-header.jsp"/>
         <div class="app-content">
             <div class="content-wrapper">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col">
                             <div class="page-description">
-                                <h1>Unverified users</h1>
+                                <h1><fmt:message key="label.unverified_users"/></h1>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <c:if test="${message ne null}">
-                            <div class="alert alert-primary" role="alert">
-                                <fmt:message key="${fn:escapeXml(message)}"/>
-                            </div>
-                        </c:if>
+                        <c:import url="${pageContext.request.contextPath}/pages/components/message.jsp"/>
                         <c:if test="${empty list}">
                             <div class="alert alert-primary alert-style-light" role="alert">
                                 <fmt:message key="label.users_empty"/>
@@ -58,21 +54,21 @@
                                     <div class="card-body">
                                         <h5 class="card-title"><c:out value="${user.name}"/> <c:out value="${user.surname}"/></h5>
                                         <p class="card-text">
-                                            Email: <c:out value="${user.email}"/>
+                                            <fmt:message key="label.email"/>: <c:out value="${user.email}"/>
                                         </p>
                                         <div class="row car-card-row align-items-start">
                                             <div class="col-6">
                                                 <form action="/controller" method="POST" class="m-0">
                                                     <input type="hidden" name="userId" value="<c:out value="${user.id}"/>">
                                                     <input type="hidden" name="command" value="admin_decline_user">
-                                                    <input class="btn btn-danger" type="submit" value="Decline">
+                                                    <input class="btn btn-danger" type="submit" value="<fmt:message key="label.decline"/>">
                                                 </form>
                                             </div>
                                             <div class="col-6">
                                                 <form action="/controller" method="POST" class="m-0">
                                                     <input type="hidden" name="userId" value="<c:out value="${user.id}"/>">
                                                     <input type="hidden" name="command" value="admin_verify_user">
-                                                    <input class="btn btn-success" type="submit" value="Accept">
+                                                    <input class="btn btn-success" type="submit" value="<fmt:message key="label.accept"/>">
                                                 </form>
                                             </div>
                                         </div>

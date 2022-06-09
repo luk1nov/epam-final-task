@@ -1,9 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<fmt:setLocale value="${locale}" scope="session"/>
+<fmt:setBundle basename="pagecontent"/>
 <html>
 <head>
-    <title>All cars</title>
+    <title><fmt:message key="label.all_categories"/></title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
@@ -30,26 +32,26 @@
                     <div class="row">
                         <div class="col">
                             <div class="page-description">
-                                <h1>All car categories</h1>
+                                <h1><fmt:message key="label.all_categories"/></h1>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6 mx-auto">
                             <div class="card">
                                 <div class="card-body">
                                     <form action="/controller" method="POST">
                                         <div class="col-12">
                                             <input type="hidden" name="command" value="admin_to_add_new_car_category">
-                                            <input type="submit" class="btn btn-primary" value="Add new category">
+                                            <input type="submit" class="btn btn-primary" value="<fmt:message key="label.add_new_category"/>">
                                         </div>
                                     </form>
                                     <table class="table">
                                         <thead>
                                         <tr>
                                             <th scope="col">ID</th>
-                                            <th scope="col">Title</th>
-                                            <th scope="col">Action</th>
+                                            <th scope="col"><fmt:message key="label.title"/></th>
+                                            <th scope="col"><fmt:message key="label.actions"/></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -62,13 +64,13 @@
                                                         <form action="/controller" method="POST">
                                                             <input type="hidden" name="carCategoryId" value="<c:out value="${category.id}"/>">
                                                             <input type="hidden" name="command" value="admin_to_edit_car_category">
-                                                            <input type="submit" class="btn btn-info" value="Edit">
+                                                            <input type="submit" class="btn btn-info" value="<fmt:message key="label.action_edit"/>">
                                                         </form>
                                                         <c:if test="${category.id != 1}">
                                                             <form action="/controller" method="POST">
                                                                 <input type="hidden" name="carCategoryId" value="<c:out value="${category.id}"/>">
                                                                 <input type="hidden" name="command" value="admin_delete_car_category">
-                                                                <input type="submit" class="btn btn-danger" value="Delete">
+                                                                <input type="submit" class="btn btn-danger" value="<fmt:message key="label.action_delete"/>">
                                                             </form>
                                                         </c:if>
                                                     </div>

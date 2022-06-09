@@ -27,6 +27,7 @@ public class ToUnverifiedUsersCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         Router router = new Router(UNVERIFIED_USERS);
         String currentResultPage = request.getParameter(RESULT_PAGE);
+        request.setAttribute(MESSAGE, request.getParameter(MESSAGE));
         try {
             int pagesCount = ResultCounter.countPages(userService.countAllUsersByStatus(UserStatus.VERIFICATION), POSTS_PER_PAGE);
             request.setAttribute(PAGES_COUNT, pagesCount);

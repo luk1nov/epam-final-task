@@ -25,7 +25,7 @@ public class AddNewCarCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Router router = new Router();
+        Router router = new Router(PagePath.TO_ADMIN_ALL_CARS);
         String brand = request.getParameter(CAR_BRAND).strip();
         String model = request.getParameter(CAR_MODEL).strip();
         String vinCode = request.getParameter(CAR_VIN_CODE).strip();
@@ -47,13 +47,12 @@ public class AddNewCarCommand implements Command {
         carData.put(CAR_INFO_ACCELERATION, acceleration);
         carData.put(CAR_INFO_POWER, power);
         carData.put(CAR_INFO_DRIVETRAIN, drivetrain);
-
         if(!salePrice.isBlank()){
             carData.put(CAR_SALE_PRICE, salePrice);
         }
+
         try (InputStream is = request.getPart(CAR_IMAGE).getInputStream()){
             if(carService.addCar(carData, is)){
-                router.setPagePath(PagePath.ADMIN_SUCCESS_PAGE);
                 router.setType(Router.Type.REDIRECT);
             } else {
                 router.setPagePath(PagePath.ADMIN_FAIL_PAGE);

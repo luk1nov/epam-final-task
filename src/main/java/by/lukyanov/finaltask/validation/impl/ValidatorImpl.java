@@ -18,8 +18,8 @@ public class ValidatorImpl implements Validator {
     private static final String DATE_RANGE_PATTERN = "^\\d{4}-\\d{2}-\\d{2}\\sto\\s\\d{4}-\\d{2}-\\d{2}$|^\\d{4}-\\d{2}-\\d{2}$";
     private static final String MESSAGE_PATTERN = "^[\\s\\wА-яЁё.,!?]{0,200}$";
     private static final String NUMBER_PATTERN = "^\\d+$";
-    private static final String SEARCH_CAR_PATTERN = "^([\\p{Alpha}А-яЁё\\-\\d]\\s?){2,40}$";
-    private static final String SEARCH_PATTERN = "^.{2,40}$";
+    private static final String SEARCH_CAR_PATTERN = "^([\\p{Alpha}А-яЁё\\-\\d]\\s?){0,40}$";
+    private static final String SEARCH_PATTERN = "^.{0,40}$";
     private static ValidatorImpl instance;
 
     private ValidatorImpl() {

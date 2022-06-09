@@ -10,7 +10,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import static by.lukyanov.finaltask.command.Message.USER_NOT_VERIFIED;
+import static by.lukyanov.finaltask.command.Message.USER_VERIFIED;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.MESSAGE;
+import static by.lukyanov.finaltask.command.ParameterAttributeName.MESSAGE_ATTR;
 
 public class VerifyUserCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -22,6 +24,8 @@ public class VerifyUserCommand implements Command {
         Router router = new Router(PagePath.TO_UNVERIFIED_USERS);
         try {
             if (userService.updateUserStatus(userId, UserStatus.ACTIVE)){
+                String path = PagePath.TO_UNVERIFIED_USERS + MESSAGE_ATTR + USER_VERIFIED;
+                router.setPagePath(path);
                 router.setType(Router.Type.REDIRECT);
             } else {
                 request.setAttribute(MESSAGE, USER_NOT_VERIFIED);

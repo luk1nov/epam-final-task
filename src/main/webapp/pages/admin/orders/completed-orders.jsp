@@ -12,31 +12,23 @@
     <meta name="description" content="Responsive Admin Dashboard Template">
     <meta name="keywords" content="admin,dashboard">
     <meta name="author" content="stacks">
-    <!-- The above 6 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-    <!-- Title -->
     <title>Completed orders</title>
 
-    <!-- Styles -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/resources/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/resources/plugins/perfectscroll/perfect-scrollbar.css" rel="stylesheet">
 
-    <!-- Theme Styles -->
     <link href="${pageContext.request.contextPath}/resources/css/main.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/resources/css/custom.css" rel="stylesheet">
 
     <link rel="icon" type="image/png" sizes="32x32" href="${pageContext.request.contextPath}/resources/images/neptune.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="${pageContext.request.contextPath}/resources/images/neptune.png" />
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
 </head>
 
 <body>
@@ -68,14 +60,14 @@
                                             <thead>
                                             <tr>
                                                 <th scope="col">ID</th>
-                                                <th scope="col">User</th>
-                                                <th scope="col">Car</th>
-                                                <th scope="col">From</th>
-                                                <th scope="col">To</th>
-                                                <th scope="col">Car status</th>
-                                                <th scope="col">User status</th>
-                                                <th scope="col">Order status</th>
-                                                <th scope="col">Actions</th>
+                                                <th scope="col"><fmt:message key="label.users"/></th>
+                                                <th scope="col"><fmt:message key="label.car"/></th>
+                                                <th scope="col"><fmt:message key="label.start_date"/></th>
+                                                <th scope="col"><fmt:message key="label.finish_date"/></th>
+                                                <th scope="col"><fmt:message key="label.car_status"/></th>
+                                                <th scope="col"><fmt:message key="label.user_status"/></th>
+                                                <th scope="col"><fmt:message key="label.order_status"/></th>
+                                                <th scope="col"><fmt:message key="label.actions"/></th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -100,52 +92,52 @@
                                                     </td>
                                                     <td>
                                                         <c:if test="${order.car.active}">
-                                                        <span class="badge badge-style-light rounded-pill badge-success">ACTIVE
+                                                        <span class="badge badge-style-light rounded-pill badge-success"><fmt:message key="label.active"/>
                                                         </c:if>
                                                         <c:if test="${not order.car.active}">
-                                                            <span class="badge badge-style-light rounded-pill badge-danger">REPAIR
+                                                            <span class="badge badge-style-light rounded-pill badge-danger"><fmt:message key="label.repair"/>
                                                         </c:if>
                                                         </span>
                                                     </td>
                                                     <td>
                                                         <c:choose>
-                                                        <c:when test="${order.user.status == 'INACTIVE'}">
-                                                        <span class="badge badge-style-light rounded-pill badge-warning">
+                                                            <c:when test="${order.user.status == 'INACTIVE'}">
+                                                                <span class="badge badge-style-light rounded-pill badge-warning"><fmt:message key="label.inactive"/></span>
                                                             </c:when>
                                                             <c:when test="${order.user.status == 'ACTIVE'}">
-                                                                <span class="badge badge-style-light rounded-pill badge-success">
+                                                                <span class="badge badge-style-light rounded-pill badge-success"><fmt:message key="label.active"/></span>
                                                             </c:when>
                                                             <c:when test="${order.user.status == 'BLOCKED'}">
-                                                                <span class="badge badge-style-light rounded-pill badge-danger">
+                                                                <span class="badge badge-style-light rounded-pill badge-danger"><fmt:message key="label.blocked"/></span>
                                                             </c:when>
                                                             <c:when test="${order.user.status == 'VERIFICATION'}">
-                                                                <span class="badge badge-style-light rounded-pill badge-primary">
+                                                                <span class="badge badge-style-light rounded-pill badge-primary"><fmt:message key="label.verification"/></span>
                                                             </c:when>
                                                             <c:otherwise>
-                                                                <span class="badge badge-style-light rounded-pill badge-light">
+                                                                <span class="badge badge-style-light rounded-pill badge-light"><c:out value="${order.user.status}"/></span>
                                                             </c:otherwise>
                                                         </c:choose>
-                                                        <c:out value="${order.user.status}"/></span>
                                                     </td>
                                                     <td>
                                                         <c:choose>
-                                                        <c:when test="${order.orderStatus eq 'PROCESSING'}">
-                                                        <span class="badge badge-style-light rounded-pill badge-warning">
+                                                            <c:when test="${order.orderStatus eq 'PROCESSING'}">
+                                                                <span class="badge badge-style-light rounded-pill badge-warning"><fmt:message key="label.processing"/></span>
                                                             </c:when>
                                                             <c:when test="${order.orderStatus eq 'ACTIVE'}">
-                                                                <span class="badge badge-style-light rounded-pill badge-success">
+                                                                <span class="badge badge-style-light rounded-pill badge-success"><fmt:message key="label.active"/></span>
                                                             </c:when>
                                                             <c:when test="${order.orderStatus eq 'CANCELED'}">
                                                                 <span class="badge badge-style-light rounded-pill badge-danger" data-bs-toggle="tooltip" data-bs-placement="top" title='<c:out value="${order.message.orElse(null)}" default="Canceled by user"/>'>
+                                                                    <fmt:message key="label.canceled"/>
+                                                                </span>
                                                             </c:when>
                                                             <c:when test="${order.orderStatus eq 'FINISHED'}">
-                                                                <span class="badge badge-style-light rounded-pill badge-primary">
+                                                                <span class="badge badge-style-light rounded-pill badge-primary"><fmt:message key="label.finished"/></span>
                                                             </c:when>
                                                             <c:otherwise>
-                                                                <span class="badge badge-style-light rounded-pill badge-light">
+                                                                <span class="badge badge-style-light rounded-pill badge-light"><c:out value="${order.orderStatus}"/></span>
                                                             </c:otherwise>
                                                         </c:choose>
-                                                        <c:out value="${order.orderStatus}"/></span>
                                                     </td>
                                                     <td>
                                                         <div class="btn-group" role="group" aria-label="Basic example">
@@ -154,26 +146,26 @@
                                                                     <form action="/controller" method="POST" class="m-0 me-2">
                                                                         <input type="hidden" name="orderId" value="<c:out value="${order.id}"/>">
                                                                         <input type="hidden" name="command" value="admin_to_decline_order">
-                                                                        <input class="btn btn-danger" type="submit" value="Decline">
+                                                                        <input class="btn btn-danger" type="submit" value="<fmt:message key="label.decline"/>">
                                                                     </form>
                                                                     <form action="/controller" method="POST" class="m-0">
                                                                         <input type="hidden" name="orderId" value="<c:out value="${order.id}"/>">
                                                                         <input type="hidden" name="command" value="admin_accept_order">
-                                                                        <input class="btn btn-success" type="submit" value="Accept">
+                                                                        <input class="btn btn-success" type="submit" value="<fmt:message key="label.accept"/>">
                                                                     </form>
                                                                 </c:when>
                                                                 <c:when test="${order.orderStatus eq 'CANCELED' or order.orderStatus eq 'FINISHED'}">
                                                                     <form action="/controller" method="POST" class="m-0 me-2" onsubmit="return confirm('Are you sure?')">
                                                                         <input type="hidden" name="orderId" value="<c:out value="${order.id}"/>">
                                                                         <input type="hidden" name="command" value="admin_delete_order">
-                                                                        <input class="btn btn-danger" type="submit" value="Delete">
+                                                                        <input class="btn btn-danger" type="submit" value="<fmt:message key="label.action_delete"/>">
                                                                     </form>
                                                                     <c:if test="${order.report.isPresent()}">
                                                                         <form action="/controller" method="POST" class="m-0">
                                                                             <input type="hidden" name="reportId" value="<c:out value="${order.report.get().id}"/>">
                                                                             <input type="hidden" name="orderId" value="<c:out value="${order.id}"/>">
                                                                             <input type="hidden" name="command" value="admin_show_order_report">
-                                                                            <input class="btn btn-primary" type="submit" value="Report">
+                                                                            <input class="btn btn-primary" type="submit" value="<fmt:message key="label.report"/>">
                                                                         </form>
                                                                     </c:if>
                                                                 </c:when>

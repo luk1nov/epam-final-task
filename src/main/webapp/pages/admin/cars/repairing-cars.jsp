@@ -2,9 +2,11 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="util" uri="customtags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<fmt:setLocale value="${locale}" scope="session"/>
+<fmt:setBundle basename="pagecontent"/>
 <html>
 <head>
-    <title>Repairing cars</title>
+    <title><fmt:message key="label.repairing_cars"/></title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
@@ -31,7 +33,7 @@
                     <div class="row">
                         <div class="col">
                             <div class="page-description">
-                                <h1>Repairing cars</h1>
+                                <h1><fmt:message key="label.repairing_cars"/></h1>
                             </div>
                         </div>
                     </div>
@@ -43,20 +45,19 @@
                                         <thead>
                                         <tr>
                                             <th scope="col">ID</th>
-                                            <th scope="col">Category</th>
-                                            <th scope="col">Brand</th>
-                                            <th scope="col">Model</th>
-                                            <th scope="col">Vin</th>
-                                            <th scope="col">Status</th>
+                                            <th scope="col"><fmt:message key="label.category"/></th>
+                                            <th scope="col"><fmt:message key="label.brand"/></th>
+                                            <th scope="col"><fmt:message key="label.model"/></th>
+                                            <th scope="col"><fmt:message key="label.vin_code"/></th>
+                                            <th scope="col"><fmt:message key="label.status"/></th>
                                             <th scope="col">0-100</th>
-                                            <th scope="col">Drivetrain</th>
-                                            <th scope="col">Power</th>
-                                            <th scope="col">Price</th>
-                                            <th scope="col">Action</th>
+                                            <th scope="col"><fmt:message key="label.car_drivetrain"/></th>
+                                            <th scope="col"><fmt:message key="label.car_power"/></th>
+                                            <th scope="col"><fmt:message key="label.price"/></th>
+                                            <th scope="col"><fmt:message key="label.actions"/></th>
                                         </tr>
                                         </thead>
                                         <tbody>
-
                                         <c:forEach var="car" items="${list}">
                                             <tr>
                                                 <td><c:out value="${car.id}"/></td>
@@ -67,10 +68,10 @@
                                                 <td>
                                                     <c:choose>
                                                         <c:when test="${car.active eq 'true'}">
-                                                            <span class="badge badge-style-light rounded-pill badge-success">Active</span>
+                                                            <span class="badge badge-style-light rounded-pill badge-success"><fmt:message key="label.active"/></span>
                                                         </c:when>
                                                         <c:when test="${car.active eq 'false'}">
-                                                            <span class="badge badge-style-light rounded-pill badge-danger">Repair</span>
+                                                            <span class="badge badge-style-light rounded-pill badge-danger"><fmt:message key="label.repair"/></span>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <span class="badge badge-style-light rounded-pill badge-light"><c:out value="${car.active}"/></span>
@@ -91,21 +92,21 @@
                                                 <td>
                                                     <div class="btn-group dropstart">
                                                         <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            Action
+                                                            <fmt:message key="label.actions"/>
                                                         </button>
                                                         <ul class="dropdown-menu">
                                                             <li>
                                                                 <form action="/controller" method="POST">
                                                                     <input type="hidden" name="carId" value="<c:out value="${car.id}"/>">
                                                                     <input type="hidden" name="command" value="admin_to_edit_car">
-                                                                    <input type="submit" class="dropdown-item" value="Edit">
+                                                                    <input type="submit" class="dropdown-item" value="<fmt:message key="label.action_edit"/>">
                                                                 </form>
                                                             </li>
                                                             <li>
                                                                 <form action="/controller" method="POST">
                                                                     <input type="hidden" name="carId" value="<c:out value="${car.id}"/>">
                                                                     <input type="hidden" name="command" value="admin_delete_car">
-                                                                    <input type="submit" class="dropdown-item" value="Delete">
+                                                                    <input type="submit" class="dropdown-item" value="<fmt:message key="label.action_delete"/>">
                                                                 </form>
                                                             </li>
                                                             <li>
@@ -114,10 +115,10 @@
                                                                     <input type="hidden" name="command" value="admin_change_car_active_status">
                                                                     <input type="hidden" name="carActive" value="<c:out value="${car.active}"/>">
                                                                     <c:if test="${car.active == true}">
-                                                                        <input type="submit" class="dropdown-item" value="Send for repair">
+                                                                        <input type="submit" class="dropdown-item" value="<fmt:message key="label.send_for_repair"/>">
                                                                     </c:if>
                                                                     <c:if test="${car.active == false}">
-                                                                        <input type="submit" class="dropdown-item" value="Receive from repair">
+                                                                        <input type="submit" class="dropdown-item" value="<fmt:message key="label.receive_from_repair"/>">
                                                                     </c:if>
                                                                 </form>
                                                             </li>

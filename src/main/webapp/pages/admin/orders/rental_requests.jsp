@@ -15,7 +15,7 @@
     <!-- The above 6 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
     <!-- Title -->
-    <title>Rental requests</title>
+    <title><fmt:message key="label.rental_requests"/></title>
 
     <!-- Styles -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -50,7 +50,7 @@
                     <div class="row">
                         <div class="col">
                             <div class="page-description">
-                                <h1>Rental requests</h1>
+                                <h1><fmt:message key="label.rental_requests"/></h1>
                             </div>
                         </div>
                     </div>
@@ -68,13 +68,13 @@
                                         <thead>
                                         <tr>
                                             <th scope="col">ID</th>
-                                            <th scope="col">User</th>
-                                            <th scope="col">Car</th>
-                                            <th scope="col">From</th>
-                                            <th scope="col">To</th>
-                                            <th scope="col">Car status</th>
-                                            <th scope="col">User status</th>
-                                            <th scope="col">Actions</th>
+                                            <th scope="col"><fmt:message key="label.user"/></th>
+                                            <th scope="col"><fmt:message key="label.car"/></th>
+                                            <th scope="col"><fmt:message key="label.start_date"/></th>
+                                            <th scope="col"><fmt:message key="label.finish_date"/></th>
+                                            <th scope="col"><fmt:message key="label.car_status"/></th>
+                                            <th scope="col"><fmt:message key="label.user_status"/></th>
+                                            <th scope="col"><fmt:message key="label.actions"/></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -99,44 +99,43 @@
                                                 </td>
                                                 <td>
                                                     <c:if test="${order.car.active}">
-                                                        <span class="badge badge-style-light rounded-pill badge-success">ACTIVE
-                                                    </c:if>
-                                                    <c:if test="${not order.car.active}">
-                                                        <span class="badge badge-style-light rounded-pill badge-danger">REPAIR
-                                                    </c:if>
+                                                    <span class="badge badge-style-light rounded-pill badge-success"><fmt:message key="label.active"/>
+                                                        </c:if>
+                                                        <c:if test="${not order.car.active}">
+                                                            <span class="badge badge-style-light rounded-pill badge-danger"><fmt:message key="label.repair"/>
+                                                        </c:if>
                                                         </span>
                                                 </td>
                                                 <td>
                                                     <c:choose>
-                                                    <c:when test="${order.user.status == 'INACTIVE'}">
-                                                    <span class="badge badge-style-light rounded-pill badge-warning">
+                                                        <c:when test="${order.user.status == 'INACTIVE'}">
+                                                            <span class="badge badge-style-light rounded-pill badge-warning"><fmt:message key="label.inactive"/></span>
                                                         </c:when>
                                                         <c:when test="${order.user.status == 'ACTIVE'}">
-                                                            <span class="badge badge-style-light rounded-pill badge-success">
+                                                            <span class="badge badge-style-light rounded-pill badge-success"><fmt:message key="label.active"/></span>
                                                         </c:when>
                                                         <c:when test="${order.user.status == 'BLOCKED'}">
-                                                            <span class="badge badge-style-light rounded-pill badge-danger">
+                                                            <span class="badge badge-style-light rounded-pill badge-danger"><fmt:message key="label.blocked"/></span>
                                                         </c:when>
                                                         <c:when test="${order.user.status == 'VERIFICATION'}">
-                                                            <span class="badge badge-style-light rounded-pill badge-primary">
+                                                            <span class="badge badge-style-light rounded-pill badge-primary"><fmt:message key="label.verification"/></span>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <span class="badge badge-style-light rounded-pill badge-light">
+                                                            <span class="badge badge-style-light rounded-pill badge-light"><c:out value="${order.user.status}"/></span>
                                                         </c:otherwise>
                                                     </c:choose>
-                                                    <c:out value="${order.user.status}"/></span>
                                                 </td>
                                                 <td>
                                                     <div class="btn-group" role="group" aria-label="Basic example">
                                                         <form action="/controller" method="POST" class="m-0">
                                                             <input type="hidden" name="orderId" value="<c:out value="${order.id}"/>">
                                                             <input type="hidden" name="command" value="admin_to_decline_order">
-                                                            <input class="btn btn-danger" type="submit" value="Decline">
+                                                            <input class="btn btn-danger" type="submit" value="<fmt:message key="label.decline"/>">
                                                         </form>
                                                         <form action="/controller" method="POST" class="m-0">
                                                             <input type="hidden" name="orderId" value="<c:out value="${order.id}"/>">
                                                             <input type="hidden" name="command" value="admin_accept_order">
-                                                            <input class="btn btn-success" type="submit" value="Accept">
+                                                            <input class="btn btn-success" type="submit" value="<fmt:message key="label.accept"/>">
                                                         </form>
                                                     </div>
                                                 </td>

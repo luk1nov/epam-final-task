@@ -1,8 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${locale}" scope="session"/>
+<fmt:setBundle basename="pagecontent"/>
 <html>
 <head>
-    <title>Edit car</title>
+    <title><fmt:message key="label.edit_car"/></title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -32,7 +35,7 @@
                     <div class="row">
                         <div class="col">
                             <div class="page-description">
-                                <h1>Edit car</h1>
+                                <h1><fmt:message key="label.edit_car"/></h1>
                             </div>
                         </div>
                     </div>
@@ -43,7 +46,7 @@
                                     <div class="example-content">
                                         <form class="row g-3" action="/controller" method="POST" enctype="multipart/form-data">
                                             <div class="col-md-6">
-                                                <label for="inputBrand" class="form-label">Brand</label>
+                                                <label for="inputBrand" class="form-label"><fmt:message key="label.brand"/></label>
                                                 <select name="carBrand" class="js-states form-control" tabindex="-1" id="inputBrand" style="display: none; width: 100%">
                                                     <option value="Audi">Audi</option>
                                                     <option value="BMW">BMW</option>
@@ -57,15 +60,15 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-6">
-                                                <label for="inputModel" class="form-label">Model</label>
+                                                <label for="inputModel" class="form-label"><fmt:message key="label.model"/></label>
                                                 <input name="carModel" type="text" class="form-control" id="inputModel" value="<c:out value="${car.model}"/>">
                                             </div>
                                             <div class="col-md-12">
-                                                <label for="inputVin" class="form-label">Vin code</label>
+                                                <label for="inputVin" class="form-label"><fmt:message key="label.vin_code"/></label>
                                                 <input name="carVinCode" type="text" class="form-control" id="inputVin" maxlength="17" minlength="17" value="<c:out value="${car.vinCode}"/>">
                                             </div>
                                             <div class="col-md-3">
-                                                <label for="inputCarCategory" class="form-label">Category</label>
+                                                <label for="inputCarCategory" class="form-label"><fmt:message key="label.category"/></label>
                                                 <select name="carCategoryId" id="inputCarCategory" class="form-select">
                                                     <c:forEach var="category" items="${list}">
                                                         <option value="<c:out value="${category.id}"/>" <c:if test="${car.carCategory.title eq category.title}">selected</c:if>>
@@ -75,15 +78,15 @@
                                                 </select>
                                             </div>
                                             <div class="col-3">
-                                                <label for="inputPower" class="form-label">Power</label>
+                                                <label for="inputPower" class="form-label"><fmt:message key="label.car_power"/></label>
                                                 <input name="carInfoPower" type="text" class="form-control" id="inputPower" value="<c:out value="${car.info.power}"/>">
                                             </div>
                                             <div class="col-md-3">
-                                                <label for="inputAcceleration" class="form-label">Acceleration 0-100</label>
+                                                <label for="inputAcceleration" class="form-label"><fmt:message key="label.car_acceleration"/> 0-100</label>
                                                 <input name="carInfoAcceleration" type="text" class="form-control" id="inputAcceleration" value="<c:out value="${car.info.acceleration}"/>">
                                             </div>
                                             <div class="col-md-3">
-                                                <label for="inputDrivetrain" class="form-label">Drivetrain</label>
+                                                <label for="inputDrivetrain" class="form-label"><fmt:message key="label.car_drivetrain"/></label>
                                                 <select name="carInfoDrivetrain" id="inputDrivetrain" class="form-select">
                                                     <option <c:if test="${car.info.drivetrain == 'AWD'}">selected</c:if>>AWD</option>
                                                     <option <c:if test="${car.info.drivetrain == 'RWD'}">selected</c:if>>RWD</option>
@@ -91,22 +94,22 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-4">
-                                                <label for="inputPrice" class="form-label">Price</label>
+                                                <label for="inputPrice" class="form-label"><fmt:message key="label.price"/></label>
                                                 <input name="carRegularPrice" type="text" class="form-control" id="inputPrice" value="<c:out value="${car.regularPrice}"/>">
                                             </div>
                                             <div class="col-md-4">
-                                                <label for="inputSalePrice" class="form-label">Sale Price</label>
+                                                <label for="inputSalePrice" class="form-label"><fmt:message key="label.sale_price"/></label>
                                                 <input name="carSalePrice" type="text" class="form-control" id="inputSalePrice" value="<c:if test="${car.salePrice.isPresent()}"><c:out value="${car.salePrice.get()}"/></c:if>">
                                             </div>
                                             <div class="col-md-4">
-                                                <label for="inputActive" class="form-label">Active</label>
+                                                <label for="inputActive" class="form-label"><fmt:message key="label.active"/></label>
                                                 <select name="carActive" id="inputActive" class="form-select">
-                                                    <option value="true" <c:if test="${car.active == true}">selected</c:if>>Active</option>
-                                                    <option value="false" <c:if test="${car.active == false}">selected</c:if>>Repair</option>
+                                                    <option value="true" <c:if test="${car.active == true}">selected</c:if>><fmt:message key="label.active"/></option>
+                                                    <option value="false" <c:if test="${car.active == false}">selected</c:if>><fmt:message key="label.repair"/></option>
                                                 </select>
                                             </div>
                                             <div class="col-md-12">
-                                                <label for="formFile" class="form-label">Photo</label>
+                                                <label for="formFile" class="form-label"><fmt:message key="label.photo"/></label>
                                                 <div class="input-group mb-3">
                                                     <div class="input-group-text">
                                                         <input name="uploadImage" class="form-check-input mt-0" type="checkbox" value="true" aria-label="Checkbox for following text input">
@@ -120,7 +123,7 @@
                                             <input type="hidden" name="command" value="admin_edit_car">
                                             <input type="hidden" name="carId" value="<c:out value="${car.id}"/>">
                                             <div class="col-12">
-                                                <input type="submit" class="btn btn-primary" value="Save"/>
+                                                <input type="submit" class="btn btn-primary" value="<fmt:message key="label.action_edit"/>"/>
                                             </div>
                                         </form>
                                     </div>

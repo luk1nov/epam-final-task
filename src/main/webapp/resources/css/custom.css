@@ -178,3 +178,9 @@ li.admin-home-link form input[type="submit"], .accordion-menu li form input[type
     background: no-repeat;
 }
 
+.wrapped-submit{
+    white-space: break-spaces;
+    text-align: start;
+    max-width: 160px;
+}
+

@@ -2,6 +2,8 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="util" uri="customtags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<fmt:setLocale value="${locale}" scope="session"/>
+<fmt:setBundle basename="pagecontent"/>
 <html>
 <head>
     <title>Title</title>
@@ -31,7 +33,7 @@
                     <div class="row">
                         <div class="col">
                             <div class="page-description">
-                                <h1>Search results: <c:out value="${search}"/></h1>
+                                <h1><fmt:message key="label.search_results"/>: <c:out value="${search}"/></h1>
                             </div>
                         </div>
                     </div>
@@ -40,10 +42,10 @@
                             <form action="/controller" method="GET">
                                 <div class="col-md-3 mb-3 ms-auto">
                                     <div class="input-group">
-                                        <input type="text" name="search" class="form-control" placeholder="Enter name, surname or email" id="inputSearchQuery" value="<c:out value="${search}"/>">
+                                        <input type="text" name="search" class="form-control" placeholder="<fmt:message key="label.search_user_placeholder"/>" id="inputSearchQuery" value="<c:out value="${search}"/>">
                                         <input type="hidden" name="command" value="admin_search_user">
                                         <span class="input-group-text p-0" id="basic-addon1">
-                                            <input type="submit" class="custom-search" value="Search">
+                                            <input type="submit" class="custom-search" value="<fmt:message key="label.search"/>">
                                         </span>
                                     </div>
                                 </div>
@@ -54,13 +56,13 @@
                                         <thead>
                                         <tr>
                                             <th scope="col">ID</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Surname</th>
-                                            <th scope="col">Role</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col">Email</th>
-                                            <th scope="col">Balance</th>
-                                            <th scope="col">Actions</th>
+                                            <th scope="col"><fmt:message key="label.name"/></th>
+                                            <th scope="col"><fmt:message key="label.surname"/></th>
+                                            <th scope="col"><fmt:message key="label.role"/></th>
+                                            <th scope="col"><fmt:message key="label.status"/></th>
+                                            <th scope="col"><fmt:message key="label.email"/></th>
+                                            <th scope="col"><fmt:message key="label.balance"/></th>
+                                            <th scope="col"><fmt:message key="label.actions"/></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -73,23 +75,21 @@
                                                 <td>
                                                     <c:choose>
                                                     <c:when test="${user.status == 'INACTIVE'}">
-                                                    <span class="badge badge-style-light rounded-pill badge-warning">
+                                                    <span class="badge badge-style-light rounded-pill badge-warning"><fmt:message key="label.inactive"/></span>
                                                         </c:when>
                                                         <c:when test="${user.status == 'ACTIVE'}">
-                                                            <span class="badge badge-style-light rounded-pill badge-success">
+                                                            <span class="badge badge-style-light rounded-pill badge-success"><fmt:message key="label.active"/></span>
                                                         </c:when>
                                                         <c:when test="${user.status == 'BLOCKED'}">
-                                                            <span class="badge badge-style-light rounded-pill badge-danger">
+                                                            <span class="badge badge-style-light rounded-pill badge-danger"><fmt:message key="label.blocked"/></span>
                                                         </c:when>
                                                         <c:when test="${user.status == 'VERIFICATION'}">
-                                                            <span class="badge badge-style-light rounded-pill badge-primary">
+                                                            <span class="badge badge-style-light rounded-pill badge-primary"><fmt:message key="label.verification"/></span>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <span class="badge badge-style-light rounded-pill badge-light">
+                                                            <span class="badge badge-style-light rounded-pill badge-light"><c:out value="${user.status}"/></span>
                                                         </c:otherwise>
                                                     </c:choose>
-                                                            <c:out value="${user.status}"/>
-                                                         </span>
                                                 </td>
                                                 <td><c:out value="${user.email}"/></td>
                                                 <td>
@@ -98,21 +98,21 @@
                                                 <td>
                                                     <div class="btn-group dropstart">
                                                         <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            Action
+                                                            <fmt:message key="label.actions"/>
                                                         </button>
                                                         <ul class="dropdown-menu">
                                                             <li>
                                                                 <form action="/controller" method="POST">
                                                                     <input type="hidden" name="userId" value="<c:out value="${user.id}"/>">
                                                                     <input type="hidden" name="command" value="admin_to_edit_user">
-                                                                    <input type="submit" class="dropdown-item" value="Edit">
+                                                                    <input type="submit" class="dropdown-item" value="<fmt:message key="label.action_edit"/>">
                                                                 </form>
                                                             </li>
                                                             <li>
                                                                 <form action="/controller" method="POST">
                                                                     <input type="hidden" name="userId" value="<c:out value="${user.id}"/>">
                                                                     <input type="hidden" name="command" value="admin_delete_user">
-                                                                    <input type="submit" class="dropdown-item" value="Delete">
+                                                                    <input type="submit" class="dropdown-item" value="<fmt:message key="label.action_delete"/>">
                                                                 </form>
                                                             </li>
                                                         </ul>

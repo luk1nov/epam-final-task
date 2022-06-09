@@ -1,8 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${locale}" scope="session"/>
+<fmt:setBundle basename="pagecontent"/>
 <html>
 <head>
-    <title>Add new car</title>
+    <title><fmt:message key="label.add_new_car"/></title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -32,7 +35,7 @@
                     <div class="row">
                         <div class="col">
                             <div class="page-description">
-                                <h1>Add new car</h1>
+                                <h1><fmt:message key="label.add_new_car"/></h1>
                             </div>
                         </div>
                     </div>
@@ -43,7 +46,7 @@
                                     <div class="example-content">
                                         <form class="row g-3" action="/controller" method="POST" enctype="multipart/form-data">
                                             <div class="col-md-6">
-                                                <label for="inputBrand" class="form-label">Brand</label>
+                                                <label for="inputBrand" class="form-label"><fmt:message key="label.brand"/></label>
                                                 <select name="carBrand" class="js-states form-control" tabindex="-1" id="inputBrand" style="display: none; width: 100%">
                                                     <option value="Audi">Audi</option>
                                                     <option value="BMW">BMW</option>
@@ -57,23 +60,23 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-6">
-                                                <label for="inputModel" class="form-label">Model</label>
+                                                <label for="inputModel" class="form-label"><fmt:message key="label.model"/></label>
                                                 <input name="carModel" type="text" class="form-control" id="inputModel">
                                             </div>
                                             <div class="col-md-12">
-                                                <label for="inputVin" class="form-label">Vin code</label>
+                                                <label for="inputVin" class="form-label"><fmt:message key="label.vin_code"/></label>
                                                 <input name="carVinCode" type="text" class="form-control" id="inputVin" maxlength="17" minlength="17">
                                             </div>
                                             <div class="col-6">
-                                                <label for="inputPower" class="form-label">Power</label>
+                                                <label for="inputPower" class="form-label"><fmt:message key="label.car_power"/></label>
                                                 <input name="carInfoPower" type="text" class="form-control" id="inputPower">
                                             </div>
                                             <div class="col-md-3">
-                                                <label for="inputAcceleration" class="form-label">Acceleration 0-100</label>
+                                                <label for="inputAcceleration" class="form-label"><fmt:message key="label.car_acceleration"/> 0-100</label>
                                                 <input name="carInfoAcceleration" type="text" class="form-control" id="inputAcceleration">
                                             </div>
                                             <div class="col-md-3">
-                                                <label for="inputDrivetrain" class="form-label">Drivetrain</label>
+                                                <label for="inputDrivetrain" class="form-label"><fmt:message key="label.car_drivetrain"/></label>
                                                 <select name="carInfoDrivetrain" id="inputDrivetrain" class="form-select">
                                                     <option selected>AWD</option>
                                                     <option>RWD</option>
@@ -81,7 +84,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
-                                                <label for="inputCarCategory" class="form-label">Category</label>
+                                                <label for="inputCarCategory" class="form-label"><fmt:message key="label.category"/></label>
                                                 <select name="carCategory" id="inputCarCategory" class="form-select">
                                                     <c:forEach var="category" items="${list}">
                                                         <option value="<c:out value="${category.id}"/>"><c:out value="${category.title}"/></option>
@@ -89,27 +92,27 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
-                                                <label for="inputPrice" class="form-label">Price</label>
+                                                <label for="inputPrice" class="form-label"><fmt:message key="label.price"/></label>
                                                 <input name="carRegularPrice" type="text" class="form-control" id="inputPrice">
                                             </div>
                                             <div class="col-md-3">
-                                                <label for="inputSalePrice" class="form-label">Sale Price</label>
+                                                <label for="inputSalePrice" class="form-label"><fmt:message key="label.sale_price"/></label>
                                                 <input name="carSalePrice" type="text" class="form-control" id="inputSalePrice">
                                             </div>
                                             <div class="col-md-3">
-                                                <label for="inputActive" class="form-label">Active</label>
+                                                <label for="inputActive" class="form-label"><fmt:message key="label.active"/></label>
                                                 <select name="carActive" id="inputActive" class="form-select">
-                                                    <option selected value="true">Active</option>
-                                                    <option value="false">Repair</option>
+                                                    <option selected value="true"><fmt:message key="label.active"/></option>
+                                                    <option value="false"><fmt:message key="label.repair"/></option>
                                                 </select>
                                             </div>
                                             <div class="col-md-12">
-                                                <label for="formFile" class="form-label">Photo</label>
+                                                <label for="formFile" class="form-label"><fmt:message key="label.photo"/></label>
                                                 <input name="carImage" class="form-control" type="file" id="formFile">
                                             </div>
                                             <input type="hidden" name="command" value="admin_add_new_car">
                                             <div class="col-12">
-                                                <input type="submit" class="btn btn-primary" value="Save"/>
+                                                <input type="submit" class="btn btn-primary" value="<fmt:message key="label.action_add"/>"/>
                                             </div>
                                         </form>
                                     </div>

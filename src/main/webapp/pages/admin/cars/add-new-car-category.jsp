@@ -1,7 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${locale}" scope="session"/>
+<fmt:setBundle basename="pagecontent"/>
 <html>
 <head>
-    <title>Add new car category</title>
+    <title><fmt:message key="label.add_new_category"/></title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -31,7 +34,7 @@
                     <div class="row">
                         <div class="col">
                             <div class="page-description">
-                                <h1>Add new car category</h1>
+                                <h1><fmt:message key="label.add_new_category"/></h1>
                             </div>
                         </div>
                     </div>
@@ -42,12 +45,12 @@
                                     <div class="example-content">
                                         <form class="row g-3" action="/controller" method="POST">
                                             <div class="col-md-12">
-                                                <label for="inputcarCategory" class="form-label">Title</label>
+                                                <label for="inputcarCategory" class="form-label"><fmt:message key="label.title"/></label>
                                                 <input name="carCategoryTitle" type="text" class="form-control" id="inputcarCategory">
                                             </div>
                                             <input type="hidden" name="command" value="admin_add_new_car_category">
                                             <div class="col-12">
-                                                <input type="submit" class="btn btn-primary" value="Save"/>
+                                                <input type="submit" class="btn btn-primary" value="<fmt:message key="label.action_add"/>"/>
                                             </div>
                                         </form>
                                     </div>

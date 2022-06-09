@@ -40,9 +40,9 @@ public class CarDaoImpl implements CarDao {
             ON c.car_id = info.cars_car_id 
             INNER JOIN car_category as cat
             ON c.car_category_car_category_id = cat.car_category_id
-            WHERE c.brand like ?
-                    OR c.model LIKE ?
-                    OR c.vin_code LIKE ?
+            WHERE INSTR(c.brand, ?) > 0
+                    OR INSTR(c.model, ?) > 0
+                    OR INSTR(c.vin_code, ?) > 0
     """;
     private static final CarRowMapper mapper = CarRowMapper.getInstance();
     private static CarDaoImpl instance;
@@ -350,7 +350,6 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> searchCars(String searchQuery) throws DaoException {
         List<Car> cars = new ArrayList<>();
-        searchQuery = generateSQLSearchQuery(searchQuery);
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SEARCH_CARS)) {
             statement.setString(1, searchQuery);

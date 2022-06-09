@@ -1,4 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${locale}" scope="session"/>
+<fmt:setBundle basename="pagecontent"/>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -33,8 +36,8 @@
                         <div class="col">
                             <div class="page-description">
                                 <h1>
-                                    <c:if test="${user == null}">Add new user</c:if>
-                                    <c:if test="${user != null}">Edit user</c:if>
+                                    <c:if test="${user == null}"><fmt:message key="label.add_new_user"/></c:if>
+                                    <c:if test="${user != null}"><fmt:message key="label.edit_user"/></c:if>
                                 </h1>
                             </div>
                         </div>
@@ -46,26 +49,26 @@
                                     <div class="example-content">
                                         <form class="row g-3" action="controller" method="post">
                                             <div class="col-md-4">
-                                                <label for="inputName" class="form-label">Name</label>
+                                                <label for="inputName" class="form-label"><fmt:message key="label.name"/></label>
                                                 <input name="userName" type="text" class="form-control" id="inputName" value="<c:out value="${user.name}"/>"/>
                                             </div>
                                             <div class="col-md-4">
-                                                <label for="inputSurname" class="form-label">Surname</label>
+                                                <label for="inputSurname" class="form-label"><fmt:message key="label.surname"/></label>
                                                 <input name="userSurname" type="text" class="form-control" id="inputSurname" value="<c:out value="${user.surname}"/>"/>
                                             </div>
                                             <div class="col-md-4">
-                                                <label for="inputPhone" class="form-label">Phone</label>
+                                                <label for="inputPhone" class="form-label"><fmt:message key="label.phone"/></label>
                                                 <div class="input-group">
                                                     <span class="input-group-text" id="basic-addon1">+375</span>
                                                     <input type="text" name="userPhone" class="form-control" id="inputPhone" aria-describedby="inputPhone" value="<c:out value="${user.phone}"/>">
                                                 </div>
                                             </div>
                                             <div class="col-6">
-                                                <label for="inputEmail" class="form-label">Email</label>
+                                                <label for="inputEmail" class="form-label"><fmt:message key="label.email"/></label>
                                                 <input name="userEmail" type="email" class="form-control" id="inputEmail" value="<c:out value="${user.email}"/>"/>
                                             </div>
                                             <div class="col-md-3">
-                                                <label for="inputRole" class="form-label">Role</label>
+                                                <label for="inputRole" class="form-label"><fmt:message key="label.role"/></label>
                                                 <select name="userRole" id="inputRole" class="form-select">
                                                     <option <c:if test="${user.role == 'USER'}">selected</c:if>>User</option>
                                                     <option <c:if test="${user.role == 'MANAGER'}">selected</c:if>>Manager</option>
@@ -73,7 +76,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
-                                                <label for="inputStatus" class="form-label">Status</label>
+                                                <label for="inputStatus" class="form-label"><fmt:message key="label.status"/></label>
                                                 <select name="userStatus" id="inputStatus" class="form-select">
                                                     <option <c:if test="${user.status == 'ACTIVE'}">selected</c:if>>Active</option>
                                                     <option <c:if test="${user.status == 'VERIFICATION'}">selected</c:if>>Verification</option>
@@ -85,11 +88,11 @@
                                             <div class="col-12">
                                                 <c:if test="${user == null}">
                                                     <input type="hidden" name="command" value="admin_add_new_user">
-                                                    <input type="submit" class="btn btn-primary" value="Add">
+                                                    <input type="submit" class="btn btn-primary" value="<fmt:message key="label.action_add"/>">
                                                 </c:if>
                                                 <c:if test="${user != null}">
                                                     <input type="hidden" name="command" value="admin_edit_user">
-                                                    <input type="submit" class="btn btn-primary" value="Edit">
+                                                    <input type="submit" class="btn btn-primary" value="<fmt:message key="label.action_edit"/>">
                                                 </c:if>
                                             </div>
                                         </form>

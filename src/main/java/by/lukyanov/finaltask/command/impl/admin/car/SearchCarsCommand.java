@@ -1,6 +1,7 @@
 package by.lukyanov.finaltask.command.impl.admin.car;
 
 import by.lukyanov.finaltask.command.Command;
+import by.lukyanov.finaltask.command.Message;
 import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.entity.Car;
 import by.lukyanov.finaltask.exception.CommandException;
@@ -14,8 +15,7 @@ import java.util.List;
 
 import static by.lukyanov.finaltask.command.PagePath.ADMIN_SEARCH_CARS_RESULTS;
 import static by.lukyanov.finaltask.command.PagePath.TO_ADMIN_ALL_CARS;
-import static by.lukyanov.finaltask.command.ParameterAttributeName.LIST;
-import static by.lukyanov.finaltask.command.ParameterAttributeName.SEARCH;
+import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class SearchCarsCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
