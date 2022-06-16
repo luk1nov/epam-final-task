@@ -1,4 +1,4 @@
-package by.lukyanov.finaltask.command.impl.user;
+package by.lukyanov.finaltask.command.impl.common.user;
 
 import by.lukyanov.finaltask.command.Command;
 import by.lukyanov.finaltask.command.PagePath;
@@ -18,16 +18,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 
-import static by.lukyanov.finaltask.command.ParameterAttributeName.LOGGED_USER;
-import static by.lukyanov.finaltask.command.ParameterAttributeName.USER_DRIVER_LICENSE;
+import static by.lukyanov.finaltask.command.Message.*;
+import static by.lukyanov.finaltask.command.PagePath.TO_GO_USER_ACCOUNT;
+import static by.lukyanov.finaltask.command.PagePath.TO_LOG_OUT;
+import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class UpdateDriverLicenseCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
-    private static final UserServiceImpl userService = new UserServiceImpl();
+    private static final UserServiceImpl userService = UserServiceImpl.getInstance();
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Router router = new Router(PagePath.USER_ACCOUNT);
+        Router router = new Router();
+        router.setType(Router.Type.REDIRECT);
         HttpSession session = request.getSession();
         User loggedUser = (User) session.getAttribute(LOGGED_USER);
         try (InputStream is = request.getPart(USER_DRIVER_LICENSE).getInputStream()){
@@ -38,10 +41,12 @@ public class UpdateDriverLicenseCommand implements Command {
                     if (optionalUser.isPresent()){
                         loggedUser = optionalUser.get();
                         session.setAttribute(LOGGED_USER, loggedUser);
-                        router.setType(Router.Type.REDIRECT);
+                        router.setPagePath(generateUrlWithAttr(TO_GO_USER_ACCOUNT, MESSAGE_ATTR, DRIVER_LICENSE_UPDATED));
                     } else {
-                        session.removeAttribute(LOGGED_USER);
+                        router.setPagePath(TO_LOG_OUT);
                     }
+                } else {
+                    router.setPagePath(generateUrlWithAttr(TO_GO_USER_ACCOUNT, MESSAGE_ATTR, DRIVER_LICENSE_NOT_UPDATED));
                 }
             }
         } catch (ServiceException | IOException | ServletException e) {
@@ -49,19 +54,5 @@ public class UpdateDriverLicenseCommand implements Command {
             throw new CommandException(e);
         }
         return router;
-    }
-
-
-    public byte[] readStream(InputStream inStream) {
-        ByteArrayOutputStream bops = new ByteArrayOutputStream();
-        int data = -1;
-        try {
-            while((data = inStream.read()) != -1){
-                bops.write(data);
-            }
-            return bops.toByteArray();
-        }catch(Exception e){
-            return null;
-        }
     }
 }

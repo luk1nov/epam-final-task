@@ -10,8 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static by.lukyanov.finaltask.command.ParameterAttributeName.CURRENT_PAGE;
-import static by.lukyanov.finaltask.command.ParameterAttributeName.LOCALE;
+import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class ChangeLocaleCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -23,7 +22,7 @@ public class ChangeLocaleCommand implements Command {
         HttpSession session = request.getSession();
         String currentPage = (String) session.getAttribute(CURRENT_PAGE);
         logger.debug(currentPage);
-        String language = request.getParameter(ParameterAttributeName.LANGUAGE);
+        String language = request.getParameter(LANGUAGE);
 
         if(validator.isLocaleExists(language)){
             session.setAttribute(LOCALE, language);

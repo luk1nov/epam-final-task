@@ -5,36 +5,38 @@ import by.lukyanov.finaltask.exception.CommandException;
 import by.lukyanov.finaltask.exception.ServiceException;
 import by.lukyanov.finaltask.model.service.impl.UserServiceImpl;
 import by.lukyanov.finaltask.command.*;
+import by.lukyanov.finaltask.validation.impl.ValidatorImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static by.lukyanov.finaltask.command.Message.USER_DELETED;
+import static by.lukyanov.finaltask.command.Message.USER_NOT_DELETED;
+import static by.lukyanov.finaltask.command.ParameterAttributeName.CURRENT_PAGE;
+import static by.lukyanov.finaltask.command.ParameterAttributeName.MESSAGE_ATTR;
+
 public class DeleteUserCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
-    private static final UserServiceImpl userService = new UserServiceImpl();
+    private static final UserServiceImpl userService = UserServiceImpl.getInstance();
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Router router = new Router();
-        String userId = request.getParameter(ParameterAttributeName.USER_ID).strip();
-        HttpSession session = request.getSession(false);
+        String userId = request.getParameter(ParameterAttributeName.USER_ID);
+        HttpSession session = request.getSession();
+        String currentPage = (String) session.getAttribute(CURRENT_PAGE);
         User loggedUser = (User) session.getAttribute(ParameterAttributeName.LOGGED_USER);
-        boolean result = false;
-        if(loggedUser.getId() != Long.parseLong(userId)){
-            try {
-                result = userService.deleteUser(userId);
-            } catch (ServiceException e) {
-                logger.error("Command exception trying delete user");
-                throw new CommandException(e);
+        Router router = new Router();
+        router.setType(Router.Type.REDIRECT);
+        try {
+            if(userService.deleteUser(userId, loggedUser.getId())){
+                router.setPagePath(generateUrlWithAttr(currentPage, MESSAGE_ATTR, USER_DELETED));
+            } else {
+                router.setPagePath(generateUrlWithAttr(currentPage, MESSAGE_ATTR, USER_NOT_DELETED));
             }
-        }
-        if(result){
-            router.setPagePath(PagePath.ADMIN_SUCCESS_PAGE);
-            router.setType(Router.Type.REDIRECT);
-        } else {
-            request.setAttribute(ParameterAttributeName.MESSAGE, Message.USER_NOT_DELETED);
-            router.setPagePath(PagePath.ADMIN_FAIL_PAGE);
+        } catch (ServiceException e) {
+            logger.error("Command exception trying delete user");
+            throw new CommandException(e);
         }
         return router;
     }

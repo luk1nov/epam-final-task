@@ -1,4 +1,4 @@
-package by.lukyanov.finaltask.command.impl.admin.user;
+package by.lukyanov.finaltask.command.impl.common.user;
 
 import by.lukyanov.finaltask.command.Command;
 import by.lukyanov.finaltask.command.Router;
@@ -16,67 +16,73 @@ import java.util.Map;
 import java.util.Optional;
 
 import static by.lukyanov.finaltask.command.Message.*;
-import static by.lukyanov.finaltask.command.PagePath.TO_ADMIN_ALL_USERS;
+import static by.lukyanov.finaltask.command.PagePath.*;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
-public class EditUserCommand implements Command {
+
+public class UpdateUserInfoCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
     private static final UserServiceImpl userService = UserServiceImpl.getInstance();
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
+        Router router = new Router(USER_ACCOUNT);
         HttpSession session = request.getSession();
-        String currentPage = (String) session.getAttribute(CURRENT_PAGE);
-        Router router = new Router(currentPage);
-
-        Map<String, String> userData = requestAttrToUserData(request);
-        String userId = request.getParameter(USER_ID);
-        String phone = request.getParameter(USER_PHONE);
+        User loggedUser = (User) session.getAttribute(LOGGED_USER);
         String email = request.getParameter(USER_EMAIL);
+        String phone = request.getParameter(USER_PHONE);
+        Map<String, String> userData = requestAttrToMap(request);
         try {
-            if(checkDuplicateByEmail(email, userId) || checkDuplicateByPhone(phone, userId)){
-                request.setAttribute(MESSAGE, USER_EXISTS);
-            } else if(userService.updateUser(userData)){
-                router.setType(Router.Type.REDIRECT);
-                router.setPagePath(generateUrlWithAttr(TO_ADMIN_ALL_USERS, MESSAGE_ATTR, USER_EDITED));
+            if (loggedUser != null){
+                long userId = loggedUser.getId();
+                if (checkDuplicateByPhone(phone, userId) || checkDuplicateByEmail(email, userId)){
+                    request.setAttribute(MESSAGE, USER_EXISTS);
+                } else if (userService.updateUserInfo(userId, userData)){
+                    Optional<User> optionalUser = userService.findUserById(String.valueOf(userId));
+                    if (optionalUser.isPresent()){
+                        loggedUser = optionalUser.get();
+                        session.setAttribute(LOGGED_USER, loggedUser);
+                        router.setType(Router.Type.REDIRECT);
+                        router.setPagePath(generateUrlWithAttr(TO_GO_USER_ACCOUNT, MESSAGE_ATTR, INFO_UPDATED));
+                    }
+                } else {
+                    request.setAttribute(MESSAGE, INFO_NOT_UPDATED);
+                }
             } else {
-                request.setAttribute(MESSAGE, USER_NOT_EDITED);
+                router.setPagePath(TO_LOG_OUT);
             }
         } catch (ServiceException e) {
-            logger.error("Service exception trying update user");
+            logger.error("Command exception trying update user info", e);
             throw new CommandException(e);
         }
         return router;
     }
 
-    private Map<String, String> requestAttrToUserData(HttpServletRequest request){
+    private Map<String, String> requestAttrToMap(HttpServletRequest request){
         Map<String, String> userData = new HashMap<>();
-        userData.put(USER_ID, request.getParameter(USER_ID));
         userData.put(USER_NAME, request.getParameter(USER_NAME));
         userData.put(USER_SURNAME, request.getParameter(USER_SURNAME));
         userData.put(USER_EMAIL, request.getParameter(USER_EMAIL));
         userData.put(USER_PHONE, request.getParameter(USER_PHONE));
-        userData.put(USER_STATUS, request.getParameter(USER_STATUS));
-        userData.put(USER_ROLE, request.getParameter(USER_ROLE));
         return userData;
     }
 
-    private boolean checkDuplicateByPhone(String phone, String userId) throws ServiceException {
+    private boolean checkDuplicateByPhone(String phone, Long userId) throws ServiceException {
         boolean isDuplicate = false;
         Optional<User> optionalUser = userService.findUserByPhone(phone);
         if (optionalUser.isPresent()){
             User user = optionalUser.get();
-            isDuplicate = !userId.equals(String.valueOf(user.getId()));
+            isDuplicate = userId.compareTo(user.getId()) != 0;
         }
         return isDuplicate;
     }
 
-    private boolean checkDuplicateByEmail(String email, String userId) throws ServiceException {
+    private boolean checkDuplicateByEmail(String email, Long userId) throws ServiceException {
         boolean isDuplicate = false;
         Optional<User> optionalUser = userService.findUserByEmail(email);
         if (optionalUser.isPresent()){
             User user = optionalUser.get();
-            isDuplicate = !userId.equals(String.valueOf(user.getId()));
+            isDuplicate = userId.compareTo(user.getId()) != 0;
         }
         return isDuplicate;
     }
