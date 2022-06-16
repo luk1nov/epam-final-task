@@ -16,4 +16,6 @@ public interface CarCategoryService {
     boolean updateCarCategory(String id, String title) throws ServiceException;
 
     boolean deleteCarCategory(String id) throws ServiceException;
+
+    Optional<CarCategory> findCarCategoryByTitle(String title) throws ServiceException;
 }

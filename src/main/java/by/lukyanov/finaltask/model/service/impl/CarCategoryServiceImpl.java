@@ -19,7 +19,14 @@ public class CarCategoryServiceImpl implements CarCategoryService {
     private static final CarCategoryDaoImpl carCategoryDao = CarCategoryDaoImpl.getInstance();
     private static final ValidatorImpl validator = ValidatorImpl.getInstance();
     private static final String DEFAULT_CAR_CATEGORY_ID = "1";
+    private static final CarCategoryServiceImpl instance = new CarCategoryServiceImpl();
 
+    private CarCategoryServiceImpl() {
+    }
+
+    static public CarCategoryServiceImpl getInstance(){
+        return instance;
+    }
 
     @Override
     public boolean addCarCategory(String title) throws ServiceException {
@@ -55,7 +62,7 @@ public class CarCategoryServiceImpl implements CarCategoryService {
         Optional<CarCategory> optionalCarCategory;
         if(validator.isValidId(id)){
             try {
-                optionalCarCategory = carCategoryDao.findById(id);
+                optionalCarCategory = carCategoryDao.findById(Long.parseLong(id));
             } catch (DaoException e) {
                 logger.error("Service exception trying update car category", e);
                 throw new ServiceException(e);
@@ -98,5 +105,19 @@ public class CarCategoryServiceImpl implements CarCategoryService {
             logger.info("provided invalid car category data");
         }
         return result;
+    }
+
+    @Override
+    public Optional<CarCategory> findCarCategoryByTitle(String title) throws ServiceException {
+        Optional<CarCategory> optionalCarCategory = Optional.empty();
+        if(validator.isOneWord(title)){
+            try {
+                optionalCarCategory = carCategoryDao.findCarCategoryByTitle(title.strip());
+            } catch (DaoException e) {
+                logger.error("Service exception trying find car category by title", e);
+                throw new ServiceException(e);
+            }
+        }
+        return optionalCarCategory;
     }
 }
