@@ -26,6 +26,14 @@ public class CarServiceImpl implements CarService {
     private static final CarDaoImpl carDao = CarDaoImpl.getInstance();
     private static final ValidatorImpl validator = ValidatorImpl.getInstance();
     private static final int DEFAULT_RESULT_PAGE = 1;
+    private static final CarServiceImpl instance = new CarServiceImpl();
+
+    private CarServiceImpl() {
+    }
+
+    static public CarServiceImpl getInstance(){
+        return instance;
+    }
 
     @Override
     public boolean addCar(Map<String, String> carData, InputStream carImage) throws ServiceException {
@@ -245,6 +253,20 @@ public class CarServiceImpl implements CarService {
             throw new ServiceException(e);
         }
         return cars;
+    }
+
+    @Override
+    public Optional<Car> findCarByVinCode(String vinCode) throws ServiceException {
+        Optional<Car> car = Optional.empty();
+        if (validator.isValidVinCode(vinCode)){
+            try {
+                car = carDao.findCarByVinCode(vinCode);
+            } catch (DaoException e) {
+                logger.error("Service exception trying find car by vin code", e);
+                throw new ServiceException(e);
+            }
+        }
+        return car;
     }
 
     private boolean comparePrices(String regularPrice, String salePrice){

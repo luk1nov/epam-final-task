@@ -28,21 +28,13 @@ public class UserServiceImpl implements UserService {
     private static final ValidatorImpl validator = ValidatorImpl.getInstance();
     private static final String PHONE_CODE_BY = "+375-";
     private static final int DEFAULT_RESULT_PAGE = 1;
+    private static final UserServiceImpl instance = new UserServiceImpl();
 
-    @Override
-    public Optional<User> authenticate(String email, String password) throws ServiceException {
-        Optional<User> user;
-        if(validator.isValidEmail(email) && validator.isValidPassword(password)){
-            try {
-                user = userDao.authenticate(email, password);
-            } catch (DaoException e) {
-                logger.error("Service exception trying authenticate user by email & password", e);
-                throw new ServiceException(e);
-            }
-        } else {
-            user = Optional.empty();
-        }
-        return user;
+    private UserServiceImpl() {
+    }
+
+    static public UserServiceImpl getInstance(){
+        return instance;
     }
 
     @Override
@@ -82,7 +74,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean deleteUser(String userId) throws ServiceException {
+    public boolean deleteUser(String userId, long loggedUserId) throws ServiceException {
         boolean result = false;
         try {
             if(validator.isValidId(userId)){
@@ -101,13 +93,26 @@ public class UserServiceImpl implements UserService {
     public Optional<User> findUserByEmail(String email) throws ServiceException {
         Optional<User> user;
         try {
-            if(validator.isValidEmail(email)){
-                user = userDao.findUserByEmail(email);
+            user = validator.isValidEmail(email) ? userDao.findUserByEmail(email) : Optional.empty();
+        } catch (DaoException e) {
+            logger.error("Service exception trying find user by email", e);
+            throw new ServiceException(e);
+        }
+        return user;
+    }
+
+    @Override
+    public Optional<User> findUserByPhone(String phone) throws ServiceException {
+        Optional<User> user;
+        try {
+            if(validator.isValidPhone(phone)){
+                String phoneWithCountryCode = PHONE_CODE_BY + phone;
+                user = userDao.findUserByPhone(phoneWithCountryCode);
             } else {
                 user = Optional.empty();
             }
         } catch (DaoException e) {
-            logger.error("Service exception trying find user by email", e);
+            logger.error("Service exception trying find user by phone", e);
             throw new ServiceException(e);
         }
         return user;
@@ -117,7 +122,7 @@ public class UserServiceImpl implements UserService {
     public List<User> findAllUsers(String pageNumber, int postsPerPage) throws ServiceException {
         List<User> users;
         try {
-            int requestedPage = validator.isValidNumber(pageNumber) ? Integer.parseInt(pageNumber) : DEFAULT_RESULT_PAGE;;
+            int requestedPage = validator.isValidNumber(pageNumber) ? Integer.parseInt(pageNumber) : DEFAULT_RESULT_PAGE;
             ResultCounter counter = new ResultCounter(requestedPage, postsPerPage);
             users = userDao.findAll(postsPerPage, counter.offset());
         } catch (DaoException e) {
@@ -130,15 +135,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> findUserById(String id) throws ServiceException {
         Optional<User> user;
-        if (validator.isValidId(id)){
-            try {
-                user = userDao.findUserById(Long.parseLong(id));
-            } catch (DaoException e) {
-                logger.error("Service exception trying find user by id", e);
-                throw new ServiceException(e);
-            }
-        } else {
-            user = Optional.empty();
+        try {
+            user = validator.isValidId(id) ? userDao.findUserById(Long.parseLong(id)) : Optional.empty();
+        } catch (DaoException e) {
+            logger.error("Service exception trying find user by id", e);
+            throw new ServiceException(e);
         }
         return user;
     }
@@ -184,16 +185,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean refillBalance(long id, String amount) throws ServiceException {
-        boolean updated = false;
-        if (validator.isValidPrice(amount)){
-            try {
-                updated = userDao.updateBalance(id, new BigDecimal(amount), false);
-            } catch (DaoException e) {
-               logger.error("Service exception trying refill balance", e);
-               throw new ServiceException(e);
-            }
+        try {
+            return validator.isValidPrice(amount) && userDao.updateBalance(id, new BigDecimal(amount), false);
+        } catch (DaoException e) {
+           logger.error("Service exception trying refill balance", e);
+           throw new ServiceException(e);
         }
-        return updated;
     }
 
     @Override
@@ -227,32 +224,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean updateDriverLicense(long id, InputStream image) throws ServiceException {
-        boolean result = false;
         try {
-            if (image.available() != 0){
-                result = userDao.updateDriverLicense(id, image);
-            }
+            return image.available() != 0 && userDao.updateDriverLicense(id, image);
         } catch (DaoException | IOException e) {
             logger.error("Service exception trying update driver license", e);
             throw new ServiceException(e);
         }
-        return result;
     }
 
     @Override
     public boolean changeUserPassword(long id, String password) throws ServiceException {
-        boolean result = false;
-        if (validator.isValidPassword(password)){
-            try {
-                result = userDao.updatePassword(id, PasswordEncoder.getInstance().encode(password));
-            } catch (DaoException e) {
-                logger.error("Service exception trying update driver license", e);
-                throw new ServiceException(e);
-            }
-        } else {
-            logger.warn("provided bad password");
+        PasswordEncoder passEncoder = PasswordEncoder.getInstance();
+        try {
+            return validator.isValidPassword(password) && userDao.updatePassword(id, passEncoder.encode(password));
+        } catch (DaoException e) {
+            logger.error("Service exception trying update driver license", e);
+            throw new ServiceException(e);
         }
-        return result;
     }
 
     @Override
@@ -271,16 +259,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean updateUserStatus(String id, UserStatus status) throws ServiceException {
-        boolean result = false;
-        if(validator.isValidId(id)){
-            try{
-                result = userDao.updateUserStatus(Long.parseLong(id), status);
-            } catch (DaoException e) {
-                logger.error("Service exception trying update user status", e);
-                throw new ServiceException(e);
-            }
+        try{
+            return validator.isValidId(id) && userDao.updateUserStatus(Long.parseLong(id), status);
+        } catch (DaoException e) {
+            logger.error("Service exception trying update user status", e);
+            throw new ServiceException(e);
         }
-        return result;
+
     }
 
     @Override
@@ -305,15 +290,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> searchUsers(String searchQuery) throws ServiceException {
-        List<User> users = new ArrayList<>();
         try {
-            if (validator.isValidSearchPattern(searchQuery)){
-                users = userDao.searchUsers(searchQuery.strip());
-            }
+            return validator.isValidSearchPattern(searchQuery) ? userDao.searchUsers(searchQuery.strip()) : new ArrayList<>();
         } catch (DaoException e) {
             logger.error("Service exception trying search users", e);
             throw new ServiceException(e);
         }
-        return users;
     }
 }

@@ -28,6 +28,15 @@ public class OrderServiceImpl implements OrderService {
     private static final OrderDaoImpl orderDaoImpl = OrderDaoImpl.getInstance();
     private static final ValidatorImpl validator = ValidatorImpl.getInstance();
     private static final int DEFAULT_RESULT_PAGE = 1;
+    private static final int MIN_RENT_DAYS = 1;
+    private static final OrderServiceImpl instance = new OrderServiceImpl();
+
+    private OrderServiceImpl() {
+    }
+
+    static public OrderServiceImpl getInstance(){
+        return instance;
+    }
 
     @Override
     public List<Order> findAllOrders(String pageNumber, int postsPerPage) throws ServiceException {
@@ -58,10 +67,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> findActiveOrderDatesByCarId(long carId) throws ServiceException {
-        List<Order> orderList;
+    public List<Order> findActiveOrderDatesByCarId(String carId) throws ServiceException {
+        List<Order> orderList = new ArrayList<>();
         try {
-            orderList = orderDaoImpl.findActiveOrderDatesByCarId(carId);
+            if(validator.isValidId(carId)){
+                orderList = orderDaoImpl.findActiveOrderDatesByCarId(Long.parseLong(carId));
+            }
         } catch (DaoException e) {
             logger.error("Service exception trying find all active order dates", e);
             throw new ServiceException(e);
@@ -78,13 +89,8 @@ public class OrderServiceImpl implements OrderService {
                 LocalDate beginDate = dateRange.get(BEGIN_DATE_INDEX);
                 LocalDate endDate = dateRange.size() > 1 ? dateRange.get(END_DATE_INDEX) : dateRange.get(BEGIN_DATE_INDEX);
                 int orderDays = DateRangeParser.countDays(beginDate, endDate);
-                BigDecimal orderPrice = car.getSalePrice().isPresent() ? car.getSalePrice().get() : car.getRegularPrice();
-                orderPrice = orderPrice.multiply(BigDecimal.valueOf(orderDays));
-                logger.info("orderdays " + (orderDays >= 1));
-                logger.info("compare " + (user.getBalance().compareTo(orderPrice) > -1));
-                logger.info("available " + orderDaoImpl.checkCarAvailabilityByDateRange(beginDate, endDate, car.getId()));
-                if (orderDays >= 1 && user.getBalance().compareTo(orderPrice) > -1 &&
-                        orderDaoImpl.checkCarAvailabilityByDateRange(beginDate, endDate, car.getId())){
+                BigDecimal orderPrice = calculateOrderPrice(car, orderDays);
+                if (orderDays >= MIN_RENT_DAYS && orderDaoImpl.checkCarAvailabilityByDateRange(beginDate, endDate, car.getId())){
                     Order order = new Order.OrderBuilder()
                             .beginDate(beginDate)
                             .endDate(endDate)
@@ -92,7 +98,6 @@ public class OrderServiceImpl implements OrderService {
                             .user(user)
                             .price(orderPrice)
                             .build();
-                    logger.debug("before create order");
                     result = orderDaoImpl.create(order);
                 } else {
                     logger.warn("invalid date range or car unavailable");
@@ -303,5 +308,10 @@ public class OrderServiceImpl implements OrderService {
                 .orderStatus(OrderStatus.FINISHED)
                 .report(report)
                 .build();
+    }
+
+    public BigDecimal calculateOrderPrice(Car car, int orderDays){
+        BigDecimal orderPrice = car.getSalePrice().isPresent() ? car.getSalePrice().get() : car.getRegularPrice();
+        return orderPrice.multiply(BigDecimal.valueOf(orderDays));
     }
 }
