@@ -481,7 +481,6 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public List<Order> searchOrders(String searchQuery) throws DaoException {
         List<Order> orders = new ArrayList<>();
-        searchQuery = generateSQLSearchQuery(searchQuery);
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SEARCH_ORDERS)) {
             for (int i = 1; i <= 7; i++) {

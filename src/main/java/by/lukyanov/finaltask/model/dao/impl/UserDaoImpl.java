@@ -389,7 +389,6 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> searchUsers(String searchQuery) throws DaoException {
         List<User> users = new ArrayList<>();
-        searchQuery = generateSQLSearchQuery(searchQuery);
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SEARCH_USERS)) {
             statement.setString(1, searchQuery);
