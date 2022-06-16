@@ -30,13 +30,7 @@ public class FindProcessingOrdersCommand implements Command {
         Router router = new Router(ADMIN_PROCESSING_ORDERS);
         request.setAttribute(MESSAGE, request.getParameter(MESSAGE));
         String currentResultPage = request.getParameter(ParameterAttributeName.RESULT_PAGE);
-        StringBuilder currentPage = new StringBuilder()
-                .append(TO_ADMIN_PROCESSING_ORDERS)
-                .append(RESULT_PAGE_ATTR);
-        if(currentResultPage != null){
-            currentPage.append(currentResultPage);
-        }
-        session.setAttribute(CURRENT_PAGE, currentPage.toString());
+        session.setAttribute(CURRENT_PAGE, generateUrlWithAttr(TO_ADMIN_PROCESSING_ORDERS, RESULT_PAGE_ATTR, currentResultPage));
         try {
             int totalResultPages = ResultCounter.countPages(orderService.countOrdersByStatus(OrderStatus.PROCESSING), POSTS_PER_PAGE);
             request.setAttribute(PAGES_COUNT, totalResultPages);

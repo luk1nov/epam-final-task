@@ -24,14 +24,11 @@ public class DeclineUserVerificationCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         String userId = request.getParameter(ParameterAttributeName.USER_ID);
         Router router = new Router(Router.Type.REDIRECT, TO_ADMIN_UNVERIFIED_USERS);
-        StringBuilder path = new StringBuilder()
-                .append(TO_ADMIN_UNVERIFIED_USERS)
-                .append(MESSAGE_ATTR);
         try {
             if (userService.updateUserStatus(userId, UserStatus.INACTIVE)){
-                router.setPagePath(path.append(USER_DECLINED).toString());
+                router.setPagePath(generateUrlWithAttr(TO_ADMIN_UNVERIFIED_USERS, MESSAGE_ATTR, USER_DECLINED));
             } else {
-                router.setPagePath(path.append(USER_NOT_DECLINED).toString());
+                router.setPagePath(generateUrlWithAttr(TO_ADMIN_UNVERIFIED_USERS, MESSAGE_ATTR, USER_NOT_DECLINED));
             }
         } catch (ServiceException e) {
             logger.error("Command exception trying decline user verification", e);

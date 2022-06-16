@@ -29,13 +29,7 @@ public class FindCompletedOrdersCommand implements Command {
         HttpSession session = request.getSession();
         Router router = new Router(ADMIN_COMPLETED_ORDERS);
         String currentResultPage = request.getParameter(ParameterAttributeName.RESULT_PAGE);
-        StringBuilder currentPage = new StringBuilder()
-                .append(TO_ADMIN_COMPLETED_ORDERS)
-                .append(RESULT_PAGE_ATTR);
-        if(currentResultPage != null){
-            currentPage.append(currentResultPage);
-        }
-        session.setAttribute(CURRENT_PAGE, currentPage.toString());
+        session.setAttribute(CURRENT_PAGE, generateUrlWithAttr(TO_ADMIN_COMPLETED_ORDERS, RESULT_PAGE_ATTR, currentResultPage));
         try {
             int pagesCount = ResultCounter.countPages(orderService.countOrdersByStatus(OrderStatus.FINISHED), POSTS_PER_PAGE);
             request.setAttribute(PAGES_COUNT, pagesCount);

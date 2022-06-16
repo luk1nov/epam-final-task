@@ -17,12 +17,7 @@ public class ToDeclineOrderCommand implements Command {
         String orderId = request.getParameter(ORDER_ID);
         request.setAttribute(ORDER_ID, orderId);
         HttpSession session = request.getSession();
-        String currentPage = new StringBuilder()
-                .append(TO_ADMIN_DECLINE_ORDER)
-                .append(ORDER_ID_ATTR)
-                .append(orderId)
-                .toString();
-        session.setAttribute(CURRENT_PAGE, currentPage);
+        session.setAttribute(CURRENT_PAGE, generateUrlWithAttr(TO_ADMIN_DECLINE_ORDER, ORDER_ID_ATTR, orderId));
         return router;
     }
 }
