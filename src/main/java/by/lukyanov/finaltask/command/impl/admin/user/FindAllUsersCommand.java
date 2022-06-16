@@ -11,23 +11,27 @@ import by.lukyanov.finaltask.exception.ServiceException;
 import by.lukyanov.finaltask.model.service.impl.UserServiceImpl;
 import by.lukyanov.finaltask.util.ResultCounter;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-import static by.lukyanov.finaltask.command.PagePath.ADMIN_ALL_USERS;
+import static by.lukyanov.finaltask.command.PagePath.*;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class FindAllUsersCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
-    private static final UserServiceImpl userService = new UserServiceImpl();
+    private static final UserServiceImpl userService = UserServiceImpl.getInstance();
     private static final int POSTS_PER_PAGE = 10;
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
+        HttpSession session = request.getSession();
         Router router = new Router(ADMIN_ALL_USERS);
+        request.setAttribute(MESSAGE, request.getParameter(MESSAGE));
         String currentResultPage = request.getParameter(RESULT_PAGE);
+        session.setAttribute(CURRENT_PAGE, generateUrlWithAttr(TO_ADMIN_ALL_USERS, RESULT_PAGE_ATTR, currentResultPage));
         try {
             int pagesCount = ResultCounter.countPages(userService.countAllUsers(), POSTS_PER_PAGE);
             request.setAttribute(PAGES_COUNT, pagesCount);

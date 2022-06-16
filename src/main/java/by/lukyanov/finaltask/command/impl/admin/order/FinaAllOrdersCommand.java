@@ -17,24 +17,23 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 import static by.lukyanov.finaltask.command.PagePath.ADMIN_ALL_ORDERS;
+import static by.lukyanov.finaltask.command.PagePath.TO_ADMIN_ALL_ORDERS;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class FinaAllOrdersCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
-    private static final OrderServiceImpl orderService = new OrderServiceImpl();
+    private static final OrderServiceImpl orderService = OrderServiceImpl.getInstance();
     private static final int POSTS_PER_PAGE = 10;
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
-        session.setAttribute(CURRENT_PAGE, PagePath.TO_ADMIN_ALL_ORDERS);
         Router router = new Router(ADMIN_ALL_ORDERS);
-        String currentResultPage = request.getParameter(ParameterAttributeName.RESULT_PAGE);
+        request.setAttribute(MESSAGE, request.getParameter(MESSAGE));
+        String currentResultPage = request.getParameter(RESULT_PAGE);
+        session.setAttribute(CURRENT_PAGE, generateUrlWithAttr(TO_ADMIN_ALL_ORDERS, RESULT_PAGE_ATTR, currentResultPage));
         try {
             int pagesCount = ResultCounter.countPages(orderService.countAllOrders(), POSTS_PER_PAGE);
-            if(currentResultPage == null || currentResultPage.isBlank()){
-                currentResultPage = "1";
-            }
             request.setAttribute(PAGES_COUNT, pagesCount);
             request.setAttribute(RESULT_PAGE, currentResultPage);
             List<Order> orderList = orderService.findAllOrders(currentResultPage, POSTS_PER_PAGE);
