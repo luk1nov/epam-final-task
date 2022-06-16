@@ -59,7 +59,17 @@ public class ParameterAttributeName {
     public static final String RESULT_PAGE = "page";
     public static final String PAGES_COUNT = "pagesCount";
     public static final String MESSAGE_ATTR = "&message=";
-    public static final String CAR_CATEGORY_ATTR = "&carCategory=";
+    public static final String RESULT_PAGE_ATTR = "&page=";
+    public static final String CAR_CATEGORY_ATTR = "&carCategoryId=";
+    public static final String CAR_ID_ATTR = "&carId=";
+    public static final String SEARCH_ATTR = "&search=";
+    public static final String USER_ID_ATTR = "&userId=";
+    public static final String ORDER_ID_ATTR = "&orderId=";
+    public static final String REPORT_ID_ATTR = "&reportId=";
+
+    /* context */
+
+    public static final String CONTEXT_CATEGORIES = "contextCategories";
 
 
     private ParameterAttributeName() {
