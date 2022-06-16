@@ -19,6 +19,12 @@ public class Router {
         this.pagePath = path;
     }
 
+    public Router(Type type, String path) {
+        this.type = type;
+        this.pagePath = path;
+    }
+
+
     public String getPagePath() {
         return pagePath;
     }
