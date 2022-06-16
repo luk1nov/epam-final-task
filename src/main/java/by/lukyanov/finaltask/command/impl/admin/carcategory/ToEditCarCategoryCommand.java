@@ -1,38 +1,41 @@
 package by.lukyanov.finaltask.command.impl.admin.carcategory;
 
 import by.lukyanov.finaltask.command.Command;
-import by.lukyanov.finaltask.command.PagePath;
-import by.lukyanov.finaltask.command.ParameterAttributeName;
 import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.entity.CarCategory;
 import by.lukyanov.finaltask.exception.CommandException;
 import by.lukyanov.finaltask.exception.ServiceException;
 import by.lukyanov.finaltask.model.service.impl.CarCategoryServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 
-import static by.lukyanov.finaltask.command.PagePath.ADMIN_FAIL_PAGE;
+import static by.lukyanov.finaltask.command.Message.CATEGORY_NOT_EXISTS;
+import static by.lukyanov.finaltask.command.PagePath.*;
+import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class ToEditCarCategoryCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
-    private static final CarCategoryServiceImpl carCategoryService = new CarCategoryServiceImpl();
+    private static final CarCategoryServiceImpl carCategoryService = CarCategoryServiceImpl.getInstance();
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
+        HttpSession session = request.getSession();
         Router router = new Router();
-        String carCategoryId = request.getParameter(ParameterAttributeName.CAR_CATEGORY_ID);
+        String carCategoryId = request.getParameter(CAR_CATEGORY_ID);
         try {
-            Optional<CarCategory> optionalCarCategory;
-            optionalCarCategory = carCategoryService.findCarCategoryById(carCategoryId);
+            Optional<CarCategory> optionalCarCategory = carCategoryService.findCarCategoryById(carCategoryId);
             if (optionalCarCategory.isPresent()){
-                request.setAttribute(ParameterAttributeName.CAR_CATEGORY, optionalCarCategory.get());
-                router.setPagePath(PagePath.ADMIN_EDIT_CAR_CATEGORY);
+                String currentPage = generateUrlWithAttr(TO_ADMIN_EDIT_CATEGORY, CAR_CATEGORY_ATTR, carCategoryId);
+                session.setAttribute(CURRENT_PAGE, currentPage);
+                request.setAttribute(CAR_CATEGORY, optionalCarCategory.get());
+                router.setPagePath(ADMIN_EDIT_CAR_CATEGORY);
             } else {
-                request.setAttribute(ParameterAttributeName.MESSAGE, "car category not found");
-                router.setPagePath(ADMIN_FAIL_PAGE);
+                router.setPagePath(generateUrlWithAttr(TO_ADMIN_ALL_CATEGORIES, MESSAGE_ATTR, CATEGORY_NOT_EXISTS));
+                router.setType(Router.Type.REDIRECT);
             }
         } catch (ServiceException e) {
             logger.error("Command exception trying find category by id", e);
