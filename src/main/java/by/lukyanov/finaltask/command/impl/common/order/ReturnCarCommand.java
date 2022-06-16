@@ -1,13 +1,13 @@
-package by.lukyanov.finaltask.command.impl.order;
+package by.lukyanov.finaltask.command.impl.common.order;
 
 import by.lukyanov.finaltask.command.Command;
-import by.lukyanov.finaltask.command.PagePath;
 import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.exception.CommandException;
 import by.lukyanov.finaltask.exception.ServiceException;
 import by.lukyanov.finaltask.model.service.impl.OrderServiceImpl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,24 +16,29 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import static by.lukyanov.finaltask.command.Message.CAR_NOT_ADDED;
+import static by.lukyanov.finaltask.command.Message.ORDER_FINISHED;
+import static by.lukyanov.finaltask.command.Message.ORDER_NOT_FINISHED;
+import static by.lukyanov.finaltask.command.PagePath.TO_USER_ORDERS;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class ReturnCarCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
-    private static final OrderServiceImpl orderService = new OrderServiceImpl();
+    private static final OrderServiceImpl orderService = OrderServiceImpl.getInstance();
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Router router = new Router();
+        HttpSession session = request.getSession();
+        String currentPage = (String) session.getAttribute(CURRENT_PAGE);
+        Router router = new Router(currentPage);
         Map<String, String> reportData = requestAttrToReportData(request);
         try (InputStream is = request.getPart(ORDER_REPORT_PHOTO).getInputStream()){
-            if(orderService.completeOrder(reportData, is)){
-                router.setPagePath(PagePath.TO_USER_ORDERS);
-                router.setType(Router.Type.REDIRECT);
+            if (is.available() == 0 || !orderService.completeOrder(reportData, is)){
+                request.setAttribute(MESSAGE, ORDER_NOT_FINISHED);
+                request.setAttribute(ORDER_REPORT_STATUS, request.getParameter(ORDER_REPORT_STATUS));
+                request.setAttribute(ORDER_REPORT_TEXT, request.getParameter(ORDER_REPORT_TEXT));
             } else {
-                router.setPagePath(PagePath.MAIN_PAGE);
-                //TODO add fmt message
+                router.setPagePath(generateUrlWithAttr(TO_USER_ORDERS, MESSAGE_ATTR, ORDER_FINISHED));
+                router.setType(Router.Type.REDIRECT);
             }
         } catch (IOException e) {
             logger.error("Command exception trying to get input stream from part", e);

@@ -1,4 +1,4 @@
-package by.lukyanov.finaltask.command.impl.navigation;
+package by.lukyanov.finaltask.command.impl.common.navigation;
 
 import by.lukyanov.finaltask.command.Command;
 import by.lukyanov.finaltask.command.Router;

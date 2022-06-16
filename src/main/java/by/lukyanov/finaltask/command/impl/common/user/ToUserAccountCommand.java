@@ -1,4 +1,4 @@
-package by.lukyanov.finaltask.command.impl.user;
+package by.lukyanov.finaltask.command.impl.common.user;
 
 import by.lukyanov.finaltask.command.Command;
 import by.lukyanov.finaltask.command.Router;
@@ -18,21 +18,25 @@ import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class ToUserAccountCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
-    private static final UserServiceImpl userService = new UserServiceImpl();
+    private static final UserServiceImpl userService = UserServiceImpl.getInstance();
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Router router = new Router(MAIN_PAGE);
+        Router router = new Router(SIGNUP_PAGE);
+        request.setAttribute(MESSAGE, request.getParameter(MESSAGE));
         HttpSession session = request.getSession();
         User loggedUser = (User) session.getAttribute(LOGGED_USER);
         try {
             if (loggedUser != null){
+                session.setAttribute(CURRENT_PAGE, TO_GO_USER_ACCOUNT);
                 Long userId = loggedUser.getId();
                 Optional<User> optionalUser = userService.findUserById(String.valueOf(userId));
                 if (optionalUser.isPresent()){
                     User user = optionalUser.get();
                     session.setAttribute(LOGGED_USER, user);
                     router.setPagePath(USER_ACCOUNT);
+                } else {
+                    router.setPagePath(TO_LOG_OUT);
                 }
             }
         } catch (ServiceException e) {

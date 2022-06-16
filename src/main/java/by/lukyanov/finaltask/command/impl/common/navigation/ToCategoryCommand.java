@@ -1,4 +1,4 @@
-package by.lukyanov.finaltask.command.impl.navigation;
+package by.lukyanov.finaltask.command.impl.common.navigation;
 
 import by.lukyanov.finaltask.command.Command;
 import by.lukyanov.finaltask.command.Router;
@@ -18,13 +18,13 @@ import java.util.List;
 import java.util.Optional;
 
 import static by.lukyanov.finaltask.command.PagePath.CAR_CATEGORY_PAGE;
-import static by.lukyanov.finaltask.command.PagePath.TO_CAR_CAR_CATEGORY_PAGE;
+import static by.lukyanov.finaltask.command.PagePath.TO_CAR_CATEGORY_PAGE;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
-public class ToCarCategoryCommand implements Command {
+public class ToCategoryCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
-    private static final CarServiceImpl carService = new CarServiceImpl();
-    private static final CarCategoryServiceImpl categoryService = new CarCategoryServiceImpl();
+    private static final CarServiceImpl carService = CarServiceImpl.getInstance();
+    private static final CarCategoryServiceImpl categoryService = CarCategoryServiceImpl.getInstance();
     private static final int POSTS_PER_PAGE = 4;
 
     @Override
@@ -34,7 +34,6 @@ public class ToCarCategoryCommand implements Command {
         String currentPage = (String) session.getAttribute(CURRENT_PAGE);
         Router router = new Router(currentPage);
         String currentResultPage = request.getParameter(RESULT_PAGE);
-        String categoryPage = TO_CAR_CAR_CATEGORY_PAGE + CAR_CATEGORY_ATTR + catId;
         try {
             Optional<CarCategory> optionalCarCategory = categoryService.findCarCategoryById(catId);
             if(optionalCarCategory.isPresent()){
@@ -47,7 +46,8 @@ public class ToCarCategoryCommand implements Command {
                 List<Car> cars = carService.findCarsByCategoryId(catId, currentResultPage, POSTS_PER_PAGE);
                 request.setAttribute(LIST, cars);
                 router.setPagePath(CAR_CATEGORY_PAGE);
-                session.setAttribute(CURRENT_PAGE, categoryPage);
+                String path = generateUrlWithAttr(TO_CAR_CATEGORY_PAGE, CAR_CATEGORY_ATTR, catId);
+                session.setAttribute(CURRENT_PAGE, generateUrlWithAttr(path, RESULT_PAGE_ATTR, currentResultPage));
             }
         } catch (ServiceException e) {
             logger.error("Command exception trying find all cars", e);
