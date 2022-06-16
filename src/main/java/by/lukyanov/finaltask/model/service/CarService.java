@@ -33,4 +33,6 @@ public interface CarService {
     int countAllCarsByCategoryId(long categoryId) throws ServiceException;
 
     List<Car> searchCars(String searchQuery) throws ServiceException;
+
+    Optional<Car> findCarByVinCode(String vinCode) throws ServiceException;
 }
