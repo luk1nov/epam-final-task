@@ -12,6 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
+import static by.lukyanov.finaltask.model.dao.ColumnName.*;
+
 public class CarRowMapper implements RowMapper<Car> {
     private static final Logger logger = LogManager.getLogger();
     private static CarRowMapper instance;
@@ -32,17 +34,17 @@ public class CarRowMapper implements RowMapper<Car> {
         Optional<Car> optionalCar;
         try {
             Car car = new Car.CarBuilder()
-                    .id(resultSet.getLong("car_id"))
-                    .brand(resultSet.getString("brand"))
-                    .model(resultSet.getString("model"))
-                    .vin(resultSet.getString("vin_code"))
-                    .regularPrice(resultSet.getBigDecimal("regular_price"))
-                    .salePrice(resultSet.getString("sale_price") != null ? resultSet.getBigDecimal("sale_price") : null)
-                    .active(resultSet.getBoolean("is_active"))
-                    .image(imageEncoder.decodeImage(resultSet.getBytes("image")))
-                    .carInfo(new CarInfo(resultSet.getDouble("acceleration"), resultSet.getInt("power"),
-                            CarInfo.Drivetrain.valueOf(resultSet.getString("drivetrain").toUpperCase())))
-                    .category(new CarCategory(resultSet.getString("car_category_title")))
+                    .id(resultSet.getLong(CAR_ID))
+                    .brand(resultSet.getString(CAR_BRAND))
+                    .model(resultSet.getString(CAR_MODEL))
+                    .vin(resultSet.getString(CAR_VIN_CODE))
+                    .regularPrice(resultSet.getBigDecimal(CAR_REGULAR_PRICE))
+                    .salePrice(resultSet.getString(CAR_SALE_PRICE) != null ? resultSet.getBigDecimal(CAR_SALE_PRICE) : null)
+                    .active(resultSet.getBoolean(CAR_IS_ACTIVE))
+                    .image(imageEncoder.decodeImage(resultSet.getBytes(CAR_IMG)))
+                    .carInfo(new CarInfo(resultSet.getDouble(CAR_INFO_ACCELERATION), resultSet.getInt(CAR_INFO_POWER),
+                            CarInfo.Drivetrain.valueOf(resultSet.getString(CAR_INFO_DRIVETRAIN).toUpperCase())))
+                    .category(new CarCategory(resultSet.getString(CAR_CAT_TITLE)))
                     .build();
             optionalCar = Optional.of(car);
         } catch (SQLException e){

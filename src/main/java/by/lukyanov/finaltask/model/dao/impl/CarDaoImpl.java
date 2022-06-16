@@ -16,12 +16,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static by.lukyanov.finaltask.model.dao.ColumnName.CAR_ID;
+
 public class CarDaoImpl implements CarDao {
     private static final Logger logger = LogManager.getLogger();
     private static final String SQL_FIND_ALL_CARS = "SELECT cars.car_id, cars.brand, cars.model, cars.vin_code, cars.regular_price, cars.sale_price, cars.is_active, cars.image, car_info.acceleration, car_info.power, car_info.drivetrain, car_category.car_category_title FROM cars LEFT JOIN car_info ON cars.car_id = car_info.cars_car_id INNER JOIN car_category on cars.car_category_car_category_id = car_category.car_category_id ORDER BY cars.car_id LIMIT ? OFFSET ?";
     private static final String SQL_FIND_CARS_BY_ACTIVE_STATUS = "SELECT cars.car_id, cars.brand, cars.model, cars.vin_code, cars.regular_price, cars.sale_price, cars.is_active, cars.image, car_info.acceleration, car_info.power, car_info.drivetrain, car_category.car_category_title FROM cars LEFT JOIN car_info ON cars.car_id = car_info.cars_car_id INNER JOIN car_category on cars.car_category_car_category_id = car_category.car_category_id WHERE cars.is_active = ? ORDER BY cars.car_id LIMIT ? OFFSET ?";
     private static final String SQL_FIND_CAR_BY_ID = "SELECT cars.car_id, cars.brand, cars.model, cars.vin_code, cars.regular_price, cars.sale_price, cars.is_active, cars.image, car_info.acceleration, car_info.power, car_info.drivetrain, car_category.car_category_title FROM cars LEFT JOIN car_info ON cars.car_id = car_info.cars_car_id INNER JOIN car_category on cars.car_category_car_category_id = car_category.car_category_id WHERE car_id = ?";
-    private static final String SQL_INSERT_NEW_CAR = "INSERT INTO cars (brand,model,vin_code,regular_price,sale_price,is_active, image, car_category_car_category_id) values(?,?,?,?,?,?,?)";
+    private static final String SQL_FIND_CAR_BY_VIN_CODE = "SELECT cars.car_id, cars.brand, cars.model, cars.vin_code, cars.regular_price, cars.sale_price, cars.is_active, cars.image, car_info.acceleration, car_info.power, car_info.drivetrain, car_category.car_category_title FROM cars LEFT JOIN car_info ON cars.car_id = car_info.cars_car_id INNER JOIN car_category on cars.car_category_car_category_id = car_category.car_category_id WHERE cars.vin_code = ?";
+    private static final String SQL_INSERT_NEW_CAR = "INSERT INTO cars (brand,model,vin_code,regular_price,sale_price,is_active, image, car_category_car_category_id) values(?,?,?,?,?,?,?,?)";
     private static final String SQL_INSERT_NEW_CAR_INFO = "INSERT INTO car_info (acceleration,power,drivetrain,cars_car_id) values(?,?,?,?)";
     private static final String SQL_UPDATE_CAR_BY_ID = "UPDATE cars SET brand = ?, model = ?, vin_code = ?, regular_price = ?, sale_price = ?, is_active = ?, car_category_car_category_id = ? WHERE car_id = ?";
     private static final String SQL_UPDATE_CAR_WITH_IMAGE_BY_ID = "UPDATE cars SET brand = ?, model = ?, vin_code = ?, regular_price = ?, sale_price = ?, is_active = ?, car_category_car_category_id = ?, image = ? WHERE car_id = ?";
@@ -45,17 +48,14 @@ public class CarDaoImpl implements CarDao {
                     OR INSTR(c.vin_code, ?) > 0
     """;
     private static final CarRowMapper mapper = CarRowMapper.getInstance();
-    private static CarDaoImpl instance;
     private final ConnectionPool pool = ConnectionPool.getInstance();
+    private static final CarDaoImpl instance = new CarDaoImpl();
 
 
     private CarDaoImpl() {
     }
 
     public static CarDaoImpl getInstance(){
-        if (instance == null){
-            instance = new CarDaoImpl();
-        }
         return instance;
     }
 
@@ -66,7 +66,6 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, id);
             if (statement.executeUpdate() != 0){
                 result = true;
-                logger.info("user deleted " + id);
             }
         } catch (SQLException e) {
             logger.error("Dao exception trying delete car", e);
@@ -98,7 +97,6 @@ public class CarDaoImpl implements CarDao {
     @Override
     public boolean update(Car car) throws DaoException {
         boolean updated;
-        logger.debug(car.toString());
         try (Connection connection = pool.getConnection()){
             try (PreparedStatement carStatement = connection.prepareStatement(SQL_UPDATE_CAR_BY_ID);
             PreparedStatement carInfoStatement = connection.prepareStatement(SQL_UPDATE_CAR_INFO_BY_CAR_ID)){
@@ -107,7 +105,8 @@ public class CarDaoImpl implements CarDao {
                 carStatement.setString(2, car.getModel());
                 carStatement.setString(3, car.getVinCode());
                 carStatement.setBigDecimal(4, car.getRegularPrice());
-                carStatement.setBigDecimal(5, car.getSalePrice().isPresent() ? car.getSalePrice().get() : null);
+                Optional<BigDecimal> salePrice = car.getSalePrice();
+                carStatement.setBigDecimal(5, salePrice.orElse(null));
                 carStatement.setBoolean(6, car.isActive());
                 carStatement.setLong(7, car.getCarCategory().getId());
                 carStatement.setLong(8, car.getId());
@@ -136,7 +135,6 @@ public class CarDaoImpl implements CarDao {
     @Override
     public Optional<Car> findCarById(long id) throws DaoException {
         Optional<Car> foundCar;
-        ConnectionPool pool = ConnectionPool.getInstance();
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_FIND_CAR_BY_ID)){
             statement.setLong(1, id);
@@ -165,14 +163,15 @@ public class CarDaoImpl implements CarDao {
                 addCarStatement.setString(2, car.getModel());
                 addCarStatement.setString(3, car.getVinCode());
                 addCarStatement.setBigDecimal(4, car.getRegularPrice());
-                addCarStatement.setBigDecimal(5, car.getSalePrice().isPresent() ? car.getSalePrice().get() : null);
+                Optional<BigDecimal> salePrice = car.getSalePrice();
+                addCarStatement.setBigDecimal(5, salePrice.orElse(null));
                 addCarStatement.setBoolean(6, car.isActive());
                 addCarStatement.setBlob(7, carImage.available() != 0 ? carImage : null);
                 addCarStatement.setLong(8, car.getCarCategory().getId());
                 addCarStatement.executeUpdate(); // 2
                 try (ResultSet resultSetCarId = addCarStatement.getGeneratedKeys()){
                     if (resultSetCarId.next() ) {
-                        int carId = resultSetCarId.getInt(1);
+                        long carId = resultSetCarId.getLong(1);
                         addCarInfoStatement.setDouble(1, car.getInfo().getAcceleration());
                         addCarInfoStatement.setInt(2, car.getInfo().getPower());
                         addCarInfoStatement.setString(3, car.getInfo().getDrivetrain().toString());
@@ -366,5 +365,25 @@ public class CarDaoImpl implements CarDao {
             throw new DaoException(e);
         }
         return cars;
+    }
+
+    @Override
+    public Optional<Car> findCarByVinCode(String vinCode) throws DaoException {
+        Optional<Car> foundCar;
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_FIND_CAR_BY_VIN_CODE)) {
+            statement.setString(1, vinCode);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    foundCar = mapper.mapRow(resultSet);
+                } else {
+                    foundCar = Optional.empty();
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Dao exception trying find car by vin code", e);
+            throw new DaoException(e);
+        }
+        return foundCar;
     }
 }

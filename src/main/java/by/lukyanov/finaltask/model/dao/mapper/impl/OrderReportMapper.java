@@ -11,6 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
+import static by.lukyanov.finaltask.model.dao.ColumnName.*;
+
 public class OrderReportMapper implements RowMapper<OrderReport> {
     private static final Logger logger = LogManager.getLogger();
     private static OrderReportMapper instance;
@@ -31,9 +33,9 @@ public class OrderReportMapper implements RowMapper<OrderReport> {
         Optional<OrderReport> optionalOrderReport;
         try {
             OrderReport report = new OrderReport();
-            report.setPhoto(imageEncoder.decodeImage(rs.getBytes("report_photo")));
-            report.setReportStatus(OrderReportStatus.valueOf(rs.getString("report_status")));
-            String reportText = rs.getString("report_text");
+            report.setPhoto(imageEncoder.decodeImage(rs.getBytes(REPORT_PHOTO)));
+            report.setReportStatus(OrderReportStatus.valueOf(rs.getString(REPORT_STATUS)));
+            String reportText = rs.getString(REPORT_TEXT);
             if(reportText != null){
                 report.setReportText(reportText);
             }

@@ -15,11 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static by.lukyanov.finaltask.model.dao.ColumnName.*;
+
+
 public class CarCategoryDaoImpl implements CarCategoryDao {
     private static final Logger logger = LogManager.getLogger();
     private static final String SQL_INSERT_CAR_CATEGORY = "INSERT INTO car_category (car_category_title) VALUES (?)";
     private static final String SQL_SELECT_ALL_CAR_CATEGORIES = "SELECT car_category_id, car_category_title FROM car_category LIMIT ? OFFSET ?";
     private static final String SQL_SELECT_CAR_CATEGORY_BY_ID = "SELECT car_category_id, car_category_title FROM car_category WHERE car_category_id = ?";
+    private static final String SQL_SELECT_CAR_CATEGORY_BY_TITLE = "SELECT car_category_id, car_category_title FROM car_category WHERE car_category_title = ?";
     private static final String SQL_DELETE_CAR_CATEGORY_BY_ID = "DELETE FROM car_category WHERE car_category_id = ?";
     private static final String SQL_UPDATE_CAR_CATEGORY = "UPDATE car_category SET car_category_title = ? WHERE car_category_id = ?";
     private static CarCategoryDaoImpl instance;
@@ -76,7 +80,7 @@ public class CarCategoryDaoImpl implements CarCategoryDao {
             statement.setInt(2, offset);
             try (ResultSet rs = statement.executeQuery()){
                 while (rs.next()){
-                    CarCategory category = new CarCategory(rs.getLong(1), rs.getString(2));
+                    CarCategory category = new CarCategory(rs.getLong(CAR_CAT_ID), rs.getString(CAR_CAT_TITLE));
                     carCategories.add(category);
                 }
             }
@@ -105,14 +109,35 @@ public class CarCategoryDaoImpl implements CarCategoryDao {
     }
 
     @Override
-    public Optional<CarCategory> findById(String id) throws DaoException {
+    public Optional<CarCategory> findById(long id) throws DaoException {
         Optional<CarCategory> optionalCarCategory;
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SELECT_CAR_CATEGORY_BY_ID)){
-            statement.setString(1, id);
+            statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()){
                 if (rs.next()){
-                    CarCategory category = new CarCategory(rs.getLong(1), rs.getString(2));
+                    CarCategory category = new CarCategory(rs.getLong(CAR_CAT_ID), rs.getString(CAR_CAT_TITLE));
+                    optionalCarCategory = Optional.of(category);
+                } else {
+                    optionalCarCategory = Optional.empty();
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Dao exception trying find car category by id", e);
+            throw new DaoException(e);
+        }
+        return optionalCarCategory;
+    }
+
+    @Override
+    public Optional<CarCategory> findCarCategoryByTitle(String title) throws DaoException {
+        Optional<CarCategory> optionalCarCategory;
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_SELECT_CAR_CATEGORY_BY_TITLE)){
+            statement.setString(1, title);
+            try (ResultSet rs = statement.executeQuery()){
+                if (rs.next()){
+                    CarCategory category = new CarCategory(rs.getLong(CAR_CAT_ID), rs.getString(CAR_CAT_TITLE));
                     optionalCarCategory = Optional.of(category);
                 } else {
                     optionalCarCategory = Optional.empty();

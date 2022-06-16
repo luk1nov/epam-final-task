@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static by.lukyanov.finaltask.model.dao.ColumnName.*;
+
 public class OrderDaoImpl implements OrderDao {
     private static final Logger logger = LogManager.getLogger();
     private static final String SQL_CREATE_ORDER = """
@@ -36,7 +38,7 @@ public class OrderDaoImpl implements OrderDao {
             OFFSET ?
             """;
     private static final String SQL_FIND_ALL_ORDERS = """
-            SELECT o.order_id, o.begin_date, o.end_date, o.order_status, o.message, o.users_user_id, u.name, u.surname, u.user_status, o.cars_car_id, c.brand, c.model, c.is_active, o.price, r.report_id
+            SELECT o.order_id, o.begin_date, o.end_date, o.order_status, o.message, u.user_id, u.name, u.surname, u.user_status, c.car_id, c.brand, c.model, c.is_active, o.price, r.report_id
             FROM orders as o
                     JOIN users as u
                          ON u.user_id = o.users_user_id
@@ -55,7 +57,7 @@ public class OrderDaoImpl implements OrderDao {
             AND (order_status = 'ACTIVE' OR order_status = 'PROCESSING');
             """;
     private static final String SQL_FIND_ORDER_BY_ID = """
-            SELECT o.order_id, o.begin_date, o.end_date, o.order_status, o.message, o.users_user_id, u.name, u.surname, u.user_status, o.cars_car_id, c.brand, c.model, c.is_active, o.price, r.report_id
+            SELECT o.order_id, o.begin_date, o.end_date, o.order_status, o.message, u.user_id, u.name, u.surname, u.user_status, c.car_id, c.brand, c.model, c.is_active, o.price, r.report_id
             FROM orders as o
             JOIN users as u
             ON u.user_id = o.users_user_id
@@ -66,7 +68,7 @@ public class OrderDaoImpl implements OrderDao {
             WHERE o.order_id = ?;
             """;
     private static final String SQL_FIND_ORDERS_BY_ORDER_STATUS = """
-            SELECT o.order_id, o.begin_date, o.end_date, o.order_status, o.message, o.users_user_id, u.name, u.surname, u.user_status, o.cars_car_id, c.brand, c.model, c.is_active, o.price, r.report_id
+            SELECT o.order_id, o.begin_date, o.end_date, o.order_status, o.message, u.user_id, u.name, u.surname, u.user_status, c.car_id, c.brand, c.model, c.is_active, o.price, r.report_id
             FROM orders as o
             JOIN users as u
             ON u.user_id = o.users_user_id
@@ -79,7 +81,7 @@ public class OrderDaoImpl implements OrderDao {
             OFFSET ?
             """;
     private static final String SQL_FIND_ORDERS_BETWEEN_DATES_BY_CAR_ID = """
-            SELECT * from orders WHERE ? < end_date AND begin_date < ? AND cars_car_id = ? AND order_status = ?
+            SELECT order_id from orders WHERE ? < end_date AND begin_date < ? AND cars_car_id = ? AND order_status = ?
             """;
     private static final String SQL_UPDATE_ORDER_STATUS_BY_ID = "UPDATE orders SET order_status = ? WHERE order_id = ?";
     private static final String SQL_DELETE_ORDER_BY_ID = "DELETE FROM orders WHERE order_id = ?";
@@ -90,7 +92,7 @@ public class OrderDaoImpl implements OrderDao {
     private static final String SQL_COUNT_ORDERS_BY_STATUS = "SELECT COUNT(order_id) from orders WHERE order_status = ?";
     private static final String SQL_COUNT_ORDERS_BY_USER_ID = "SELECT COUNT(order_id) from orders WHERE users_user_id = ?";
     private static final String SQL_SEARCH_ORDERS = """
-            SELECT o.order_id, o.begin_date, o.end_date, o.order_status, o.message, o.users_user_id, u.name, u.surname, u.user_status, u.email, o.cars_car_id, c.brand, c.model, c.is_active, c.vin_code, o.price, r.report_id
+            SELECT o.order_id, o.begin_date, o.end_date, o.order_status, o.message, u.user_id, u.name, u.surname, u.user_status, u.email, c.car_id, c.brand, c.model, c.is_active, c.vin_code, o.price, r.report_id
             FROM orders as o
                     JOIN users as u
                          ON u.user_id = o.users_user_id
@@ -98,15 +100,17 @@ public class OrderDaoImpl implements OrderDao {
                          ON c.car_id = o.cars_car_id
                     LEFT JOIN order_report as r
                               ON o.order_id = r.orders_order_id
-            WHERE u.email like ?
-                    OR c.vin_code LIKE ?
-                    OR o.order_id LIKE ?
+            WHERE INSTR(u.name, ?) > 0
+                    OR INSTR(u.surname, ?) > 0
+                    OR INSTR(u.email, ?) > 0
+                    OR INSTR(c.brand, ?) > 0
+                    OR INSTR(c.model, ?) > 0
+                    OR INSTR(c.vin_code, ?) > 0
+                    OR INSTR(o.order_id, ?) > 0
             """;
     private static final ConnectionPool pool = ConnectionPool.getInstance();
     private static final OrderRowMapper mapper = OrderRowMapper.getInstance();
     private static OrderDaoImpl instance;
-
-
 
     private OrderDaoImpl() {
     }
@@ -185,8 +189,8 @@ public class OrderDaoImpl implements OrderDao {
             statement.setInt(2, offset);
             try(ResultSet rs = statement.executeQuery()){
                 while (rs.next()){
-                    Order order = mapper.mapRow(rs).get();
-                    orderList.add(order);
+                    Optional<Order> order = mapper.mapRow(rs);
+                    order.ifPresent(orderList::add);
                 }
             }
         } catch (SQLException e) {
@@ -222,17 +226,17 @@ public class OrderDaoImpl implements OrderDao {
             try (ResultSet rs = statement.executeQuery()){
                 while (rs.next()){
                     Car car = new Car.CarBuilder()
-                            .id(rs.getLong(7))
-                            .brand(rs.getString(8))
-                            .model(rs.getString(9))
+                            .id(rs.getLong(CAR_ID))
+                            .brand(rs.getString(CAR_BRAND))
+                            .model(rs.getString(CAR_MODEL))
                             .build();
                     Order order = new Order.OrderBuilder()
-                            .id(rs.getLong(1))
-                            .beginDate(LocalDate.parse(rs.getString(2)))
-                            .endDate(LocalDate.parse(rs.getString(3)))
-                            .orderStatus(OrderStatus.valueOf(rs.getString(4)))
-                            .message(rs.getString(5))
-                            .price(rs.getBigDecimal(6))
+                            .id(rs.getLong(ORDER_ID))
+                            .beginDate(LocalDate.parse(rs.getString(ORDER_BEGIN_DATE)))
+                            .endDate(LocalDate.parse(rs.getString(ORDER_END_DATE)))
+                            .orderStatus(OrderStatus.valueOf(rs.getString(ORDER_STATUS)))
+                            .message(rs.getString(ORDER_MESSAGE))
+                            .price(rs.getBigDecimal(ORDER_PRICE))
                             .car(car)
                             .build();
                     orderList.add(order);
@@ -254,9 +258,9 @@ public class OrderDaoImpl implements OrderDao {
             try (ResultSet rs = statement.executeQuery()){
                 while (rs.next()){
                     Order order = new Order.OrderBuilder()
-                            .id(rs.getLong(1))
-                            .beginDate(LocalDate.parse(rs.getString(2)))
-                            .endDate(LocalDate.parse(rs.getString(3)))
+                            .id(rs.getLong(ORDER_ID))
+                            .beginDate(LocalDate.parse(rs.getString(ORDER_BEGIN_DATE)))
+                            .endDate(LocalDate.parse(rs.getString(ORDER_END_DATE)))
                             .build();
                     orderList.add(order);
                 }
@@ -297,8 +301,8 @@ public class OrderDaoImpl implements OrderDao {
             statement.setInt(3, offset);
             try (ResultSet rs = statement.executeQuery()){
                 while (rs.next()){
-                    Order order = mapper.mapRow(rs).get();
-                    orderList.add(order);
+                    Optional<Order> order = mapper.mapRow(rs);
+                    order.ifPresent(orderList::add);
                 }
             }
         } catch (SQLException e) {
@@ -313,7 +317,6 @@ public class OrderDaoImpl implements OrderDao {
         Optional<Order> optionalOrder = Optional.empty();
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_FIND_ORDER_BY_ID)){
-            logger.debug("order id - " + id);
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()){
                 if(rs.next()){
@@ -481,9 +484,9 @@ public class OrderDaoImpl implements OrderDao {
         searchQuery = generateSQLSearchQuery(searchQuery);
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_SEARCH_ORDERS)) {
-            statement.setString(1, searchQuery);
-            statement.setString(2, searchQuery);
-            statement.setString(3, searchQuery);
+            for (int i = 1; i <= 7; i++) {
+                statement.setString(i, searchQuery);
+            }
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     Optional<Order> optionalUser = mapper.mapRow(resultSet);

@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import static by.lukyanov.finaltask.model.dao.ColumnName.*;
+
 public class OrderRowMapper implements RowMapper<Order> {
     private static final Logger logger = LogManager.getLogger();
     private static OrderRowMapper instance;
@@ -29,28 +31,28 @@ public class OrderRowMapper implements RowMapper<Order> {
         Optional<Order> optionalOrder;
         try {
             User user = new User.UserBuilder()
-                    .id(rs.getLong("users_user_id"))
-                    .name(rs.getString("name"))
-                    .surname(rs.getString("surname"))
-                    .status(UserStatus.valueOf(rs.getString("user_status")))
+                    .id(rs.getLong(USER_ID))
+                    .name(rs.getString(USER_NAME))
+                    .surname(rs.getString(USER_SURNAME))
+                    .status(UserStatus.valueOf(rs.getString(USER_STATUS)))
                     .build();
             Car car = new Car.CarBuilder()
-                    .id(rs.getLong("cars_car_id"))
-                    .brand(rs.getString("brand"))
-                    .model(rs.getString("model"))
-                    .active(rs.getBoolean("is_active"))
+                    .id(rs.getLong(CAR_ID))
+                    .brand(rs.getString(CAR_BRAND))
+                    .model(rs.getString(CAR_MODEL))
+                    .active(rs.getBoolean(CAR_IS_ACTIVE))
                     .build();
             Order order = new Order.OrderBuilder()
-                    .id(rs.getLong("order_id"))
-                    .beginDate(LocalDate.parse(rs.getString("begin_date")))
-                    .endDate(LocalDate.parse(rs.getString("end_date")))
-                    .orderStatus(OrderStatus.valueOf(rs.getString("order_status")))
-                    .message(rs.getString("message"))
+                    .id(rs.getLong(ORDER_ID))
+                    .beginDate(LocalDate.parse(rs.getString(ORDER_BEGIN_DATE)))
+                    .endDate(LocalDate.parse(rs.getString(ORDER_END_DATE)))
+                    .orderStatus(OrderStatus.valueOf(rs.getString(ORDER_STATUS)))
+                    .message(rs.getString(ORDER_MESSAGE))
                     .user(user)
                     .car(car)
-                    .price(rs.getBigDecimal("price"))
+                    .price(rs.getBigDecimal(ORDER_PRICE))
                     .build();
-            String reportId = rs.getString("report_id");
+            String reportId = rs.getString(REPORT_ID);
             if (reportId != null){
                 order.setReport(new OrderReport(Long.parseLong(reportId)));
             }

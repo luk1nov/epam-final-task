@@ -18,11 +18,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static by.lukyanov.finaltask.model.dao.ColumnName.*;
+
+
 public class UserDaoImpl implements UserDao {
     private static final Logger logger = LogManager.getLogger();
     private static final String SQL_ADD_USER = "INSERT INTO users (email,password,name,surname,user_status,user_role,phone) values(?,?,?,?,?,?,?)";
     private static final String SQL_FIND_USER_BY_EMAIL = "SELECT users.user_id, users.email, users.password, users.name, users.surname, users.user_status, users.user_role, users.phone, users.balance FROM users WHERE email = ?";
-    private static final String SQL_AUTHENTICATE_USER_BY_EMAIL_AND_PASS = "SELECT users.user_id, users.email, users.name, users.surname, users.user_status, users.user_role, users.phone, users.balance FROM users WHERE email = ? AND password = ?";
+    private static final String SQL_FIND_USER_BY_PHONE = "SELECT users.user_id, users.email, users.password, users.name, users.surname, users.user_status, users.user_role, users.phone, users.balance FROM users WHERE phone = ?";
     private static final String SQL_FIND_ALL_USERS = "SELECT users.user_id, users.email, users.name, users.surname , users.user_status , users.user_role, users.phone, users.balance FROM users order by user_id LIMIT ? OFFSET ?";
     private static final String SQL_FIND_USER_BY_ID = "SELECT users.user_id, users.email, users.name, users.surname, users.user_status, users.user_role, users.phone, users.balance, users.driver_license_photo FROM users WHERE user_id = ?";
     private static final String SQL_EDIT_USER_BY_ID = "UPDATE users SET email = ?, name = ?, surname = ?, user_status = ?, user_role = ?, phone = ? WHERE user_id = ?";
@@ -39,9 +42,9 @@ public class UserDaoImpl implements UserDao {
     private static final String SQL_SEARCH_USERS = """
             SELECT u.user_id, u.email, u.name, u.surname , u.user_status , u.user_role, u.phone, u.balance
             FROM users as u
-            WHERE u.email like ?
-                    OR u.name LIKE ?
-                    OR u.surname LIKE ?
+            WHERE INSTR(u.email, ?) > 0
+                    OR INSTR(u.name, ?) > 0
+                    OR INSTR(u.surname, ?) > 0
             """;
     private static final ConnectionPool pool = ConnectionPool.getInstance();
     private static final ImageEncoder imageEncoder = ImageEncoder.getInstance();
@@ -72,7 +75,6 @@ public class UserDaoImpl implements UserDao {
             statement.setString(7, user.getPhone());
             if (statement.executeUpdate() != 0){
                 inserted = true;
-                logger.info("user added - " + user);
             }
         } catch (SQLException e) {
             logger.error("Dao exception trying insert the user", e);
@@ -106,8 +108,8 @@ public class UserDaoImpl implements UserDao {
             statement.setInt(2, offset);
             try(ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    User user = mapper.mapRow(resultSet).get();
-                    users.add(user);
+                    Optional<User> optionalUser = mapper.mapRow(resultSet);
+                    optionalUser.ifPresent(users::add);
                 }
             }
         } catch (SQLException e) {
@@ -131,34 +133,12 @@ public class UserDaoImpl implements UserDao {
             statement.setLong(7, user.getId());
             if (statement.executeUpdate() != 0){
                 result = true;
-                logger.info("updated user " + user);
             }
         } catch (SQLException e) {
             logger.error("Dao exception trying update user", e);
             throw new DaoException(e);
         }
         return result;
-    }
-
-    @Override
-    public Optional<User> authenticate(String email, String password) throws DaoException {
-        Optional<User> foundUser;
-        try (Connection connection = pool.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL_AUTHENTICATE_USER_BY_EMAIL_AND_PASS)){
-            statement.setString(1, email);
-            statement.setString(2, password);
-            try (ResultSet resultSet = statement.executeQuery()){
-                if (resultSet.next()){
-                    foundUser = mapper.mapRow(resultSet);
-                } else {
-                    foundUser = Optional.empty();
-                }
-            }
-        } catch (SQLException e) {
-            logger.error("Dao exception trying authenticate user by email & pass", e);
-            throw new DaoException(e);
-        }
-        return foundUser;
     }
 
     @Override
@@ -172,7 +152,7 @@ public class UserDaoImpl implements UserDao {
                     foundUser = mapper.mapRow(resultSet);
                     if (foundUser.isPresent()){
                         User user = foundUser.get();
-                        user.setPassword(resultSet.getString("password"));
+                        user.setPassword(resultSet.getString(USER_PASS));
                         foundUser = Optional.of(user);
                     }
                 } else {
@@ -197,7 +177,7 @@ public class UserDaoImpl implements UserDao {
                     foundUser = mapper.mapRow(resultSet);
                     if (foundUser.isPresent()){
                         User user = foundUser.get();
-                        user.setDriverLicense(imageEncoder.decodeImage(resultSet.getBytes("driver_license_photo")));
+                        user.setDriverLicense(imageEncoder.decodeImage(resultSet.getBytes(USER_DRIVER_LICENSE)));
                         foundUser = Optional.of(user);
                     }
                 } else {
@@ -206,6 +186,31 @@ public class UserDaoImpl implements UserDao {
             }
         } catch (SQLException e) {
             logger.error("Dao exception trying find the user by id", e);
+            throw new DaoException(e);
+        }
+        return foundUser;
+    }
+
+    @Override
+    public Optional<User> findUserByPhone(String phone) throws DaoException {
+        Optional<User> foundUser;
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_FIND_USER_BY_PHONE)){
+            statement.setString(1, phone);
+            try (ResultSet resultSet = statement.executeQuery()){
+                if (resultSet.next()){
+                    foundUser = mapper.mapRow(resultSet);
+                    if (foundUser.isPresent()){
+                        User user = foundUser.get();
+                        user.setPassword(resultSet.getString(USER_PASS));
+                        foundUser = Optional.of(user);
+                    }
+                } else {
+                    foundUser = Optional.empty();
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Dao exception trying find the user by phone", e);
             throw new DaoException(e);
         }
         return foundUser;
@@ -260,7 +265,6 @@ public class UserDaoImpl implements UserDao {
             statement.setLong(5, user.getId());
             if (statement.executeUpdate() != 0){
                 result = true;
-                logger.info("updated user " + user);
             }
         } catch (SQLException e) {
             logger.error("Dao exception trying update user info", e);
@@ -315,11 +319,11 @@ public class UserDaoImpl implements UserDao {
             try (ResultSet rs = statement.executeQuery()){
                 while (rs.next()){
                     User user = new User.UserBuilder()
-                            .id(rs.getLong(1))
-                            .email(rs.getString(2))
-                            .name(rs.getString(3))
-                            .surname(rs.getString(4))
-                            .driverLicense(imageEncoder.decodeImage(rs.getBytes(5)))
+                            .id(rs.getLong(USER_ID))
+                            .email(rs.getString(USER_EMAIL))
+                            .name(rs.getString(USER_NAME))
+                            .surname(rs.getString(USER_SURNAME))
+                            .driverLicense(imageEncoder.decodeImage(rs.getBytes(USER_DRIVER_LICENSE)))
                             .build();
                     userList.add(user);
                 }
