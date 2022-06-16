@@ -13,13 +13,13 @@ public interface OrderService {
 
     List<Order> findAllOrdersByUserId(long userId, String pageNumber, int postsPerPage) throws ServiceException;
 
-    List<Order> findActiveOrderDatesByCarId(long carId) throws ServiceException;
+    List<Order> findActiveOrderDatesByCarId(String carId) throws ServiceException;
 
     boolean addOrder(Car car, User user, String orderDateRange) throws ServiceException;
 
     List<Order> findOrdersByOrderStatus(OrderStatus status, String pageNumber, int postsPerPage) throws ServiceException;
 
-    Optional<Order> findOrderById(String orderId) throws ServiceException; //todo unused
+    Optional<Order> findOrderById(String orderId) throws ServiceException;
 
     boolean updateOrderStatus(OrderStatus orderStatus, String orderId) throws ServiceException;
 
