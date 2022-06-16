@@ -12,23 +12,14 @@
                 <ul class="navbar-nav custom-nav-bar">
                     <li class="nav-item hidden-on-mobile">
                         <form action="/controller" method="POST">
-                            <input type="hidden" name="carCategoryId" value="1">
-                            <input type="hidden" name="command" value="to_car_category_page">
-                            <input type="submit" value="<fmt:message key="label.category_cars"/>" class="nav-link">
+                            <input type="hidden" name="command" value="to_all_categories">
+                            <input type="submit" value="<fmt:message key="label.all_categories"/>" class="nav-link">
                         </form>
                     </li>
                     <li class="nav-item hidden-on-mobile">
                         <form action="/controller" method="POST">
-                            <input type="hidden" name="carCategoryId" value="2">
-                            <input type="hidden" name="command" value="to_car_category_page">
-                            <input type="submit" value="<fmt:message key="label.category_e_cars"/>" class="nav-link">
-                        </form>
-                    </li>
-                    <li class="nav-item hidden-on-mobile">
-                        <form action="/controller" method="POST">
-                            <input type="hidden" name="carCategoryId" value="3">
-                            <input type="hidden" name="command" value="to_car_category_page">
-                            <input type="submit" value="<fmt:message key="label.category_premium"/>" class="nav-link">
+                            <input type="hidden" name="command" value="to_all_cars">
+                            <input type="submit" value="<fmt:message key="label.all_cars"/>" class="nav-link">
                         </form>
                     </li>
                 </ul>
@@ -40,10 +31,10 @@
                     </li>
                     <c:if test="${empty sessionScope.loggedUser}" >
                         <li class="nav-item hidden-on-mobile">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/controller?command=to_signup_page"><fmt:message key="label.sign_up"/></a>
+                            <a class="nav-link" href="${pageContext.request.contextPath}/controller?command=to_sign_up_page"><fmt:message key="label.sign_up"/></a>
                         </li>
                         <li class="nav-item hidden-on-mobile">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/controller?command=to_signin_page"><fmt:message key="label.sign_in"/></a>
+                            <a class="nav-link" href="${pageContext.request.contextPath}/controller?command=to_sign_in_page"><fmt:message key="label.sign_in"/></a>
                         </li>
                     </c:if>
                     <c:if test="${not empty sessionScope.loggedUser}" >
@@ -53,13 +44,13 @@
                         <li class="nav-item hidden-on-mobile" style="align-self: center;padding: 0 10px;">
                             <form action="/controller" method="POST">
                                 <input type="hidden" name="command" value="to_refill_balance">
-                                <input type="submit" class="btn btn-outline-success" value="Refill balance">
+                                <input type="submit" class="btn btn-outline-success balance-btn" value="<c:out value="$${sessionScope.loggedUser.balance}"/>">
                             </form>
                         </li>
                         <li class="nav-item hidden-on-mobile" style="align-self: center;padding: 0 10px;">
                             <form action="/controller" method="POST">
                                 <input type="hidden" name="command" value="to_user_account">
-                                <input type="submit" class="btn btn-outline-warning" value="Profile">
+                                <input type="submit" class="btn btn-outline-warning profile-btn" value="">
                             </form>
                         </li>
                     </c:if>
@@ -67,7 +58,7 @@
                         <li class="nav-item hidden-on-mobile" style="align-self: center;padding: 0 10px;">
                             <form action="/controller" method="POST">
                                 <input type="hidden" name="command" value="admin_to_all_users">
-                                <input type="submit" class="btn btn-outline-info" value="Admin panel">
+                                <input type="submit" class="btn btn-outline-info admin-panel-btn" value="">
                             </form>
                         </li>
                     </c:if>

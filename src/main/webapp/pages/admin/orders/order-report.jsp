@@ -1,8 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${locale}" scope="session"/>
+<fmt:setBundle basename="pagecontent"/>
 <html>
 <head>
-    <title>Order report</title>
+    <title><fmt:message key="label.report"/></title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -23,16 +26,16 @@
 </head>
 <body>
 <div class="app align-content-stretch d-flex flex-wrap">
-    <%@include file="../admin-sidebar.jsp"%>
+    <c:import url="${pageContext.request.contextPath}/pages/admin/template-parts/admin-sidebar.jsp"/>
     <div class="app-container">
-        <%@include file="../admin-header.jsp"%>
+        <c:import url="${pageContext.request.contextPath}/pages/admin/template-parts/admin-header.jsp"/>
         <div class="app-content">
             <div class="content-wrapper">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col">
                             <div class="page-description">
-                                <h1>Report for order #<c:out value="${orderId}"/></h1>
+                                <h1><fmt:message key="label.report_for_order"/> #<c:out value="${orderId}"/></h1>
                             </div>
                         </div>
                     </div>
@@ -46,7 +49,7 @@
                                             <div class="alert alert-custom alert-success" role="alert">
                                                 <div class="custom-alert-icon icon-success"><i class="material-icons-outlined">done</i></div>
                                                 <div class="alert-content">
-                                                    <span class="alert-title">Without defects</span>
+                                                    <span class="alert-title"><fmt:message key="label.without_defects"/></span>
                                                     <c:if test="${report.reportText.isPresent()}">
                                                         <span class="alert-text"><c:out value="${report.reportText.get()}"/></span>
                                                     </c:if>
@@ -57,7 +60,7 @@
                                             <div class="alert alert-custom alert-danger" role="alert">
                                                 <div class="custom-alert-icon icon-danger"><i class="material-icons-outlined">warning</i></div>
                                                 <div class="alert-content">
-                                                    <span class="alert-title">Visible defect</span>
+                                                    <span class="alert-title"><fmt:message key="label.visible_defects"/></span>
                                                     <c:if test="${report.reportText.isPresent()}">
                                                         <span class="alert-text"><c:out value="${report.reportText.get()}"/></span>
                                                     </c:if>
@@ -68,7 +71,7 @@
                                             <div class="alert alert-custom alert-danger" role="alert">
                                                 <div class="custom-alert-icon icon-danger"><i class="material-icons-outlined">warning</i></div>
                                                 <div class="alert-content">
-                                                    <span class="alert-title">Technical defect</span>
+                                                    <span class="alert-title"><fmt:message key="label.technical_defects"/></span>
                                                     <c:if test="${report.reportText.isPresent()}">
                                                         <span class="alert-text"><c:out value="${report.reportText.get()}"/></span>
                                                     </c:if>

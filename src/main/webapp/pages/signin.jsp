@@ -1,5 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${locale}" scope="session"/>
+<fmt:setBundle basename="pagecontent"/>
 <html>
 <head>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -10,7 +13,7 @@
     <!-- Theme Styles -->
     <link href="${pageContext.request.contextPath}/resources/css/main.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/resources/css/custom.css" rel="stylesheet">
-    <title>Title</title>
+    <title><fmt:message key="label.sign_in"/></title>
 </head>
 <body>
 <div class="app app-auth-sign-up align-content-stretch d-flex flex-wrap justify-content-end">
@@ -18,28 +21,27 @@
 
     </div>
     <div class="app-auth-container">
-        <h1 href="index.html">Sign In</h1>
-        <p class="auth-description">Please enter your credentials to log in.<br>Not registered yet? <a href="${pageContext.request.contextPath}/controller?command=to_signup_page">Sign Up</a></p>
-        <c:if test="${not empty message}">
-            <div class="alert alert-danger alert-style-light" role="alert">
-                <c:out value="${message}"/>
-            </div>
-        </c:if>
-        <form action="/controller" method="post">
+        <h1 href="index.html"><fmt:message key="label.sign_in"/></h1>
+        <p class="auth-description"><fmt:message key="label.sign_in_tip"/>.<br><fmt:message key="label.not_register_yet"/>? <a href="${pageContext.request.contextPath}/controller?command=to_sign_up_page"><fmt:message key="label.sign_up"/></a></p>
+        <c:import url="${pageContext.request.contextPath}/pages/components/message.jsp"/>
+        <form action="/controller" method="post" class="needs-validation" novalidate>
             <div class="auth-credentials m-b-xxl">
-                <label for="signInEmail" class="form-label">Email address</label>
-                <input type="email" name="userEmail" class="form-control m-b-md" id="signInEmail" aria-describedby="signUpEmail" >
+                <label for="signInEmail" class="form-label"><fmt:message key="label.email"/></label>
+                <input type="email" name="userEmail" class="form-control m-b-md" id="signInEmail" value="<c:out value="${userEmail}"/>" required pattern="^(?=.{1,64}@)[\w\-]+(\.[\w\-]+)*@[^-][\w\-]+(\.[\p{Alpha}\d\-]+)*(\.[\p{Alpha}]{2,})$">
 
-                <label for="signUpPassword" class="form-label">Password</label>
-                <input type="password" name="userPass" class="form-control m-b-md" id="signUpPassword" aria-describedby="signUpPassword">
+                <label for="signUpPassword" class="form-label"><fmt:message key="label.password"/></label>
+                <input type="password" name="userPass" class="form-control m-b-md" id="signUpPassword" required>
             </div>
-            <input type="hidden" name="command" value="signin">
+            <input type="hidden" name="command" value="sign_in">
             <div class="auth-submit">
-                <input type="submit" class="btn btn-primary" value="Sign In">
+                <input type="submit" class="btn btn-primary" value="<fmt:message key="label.sign_in"/>">
             </div>
         </form>
-
         <div class="divider"></div>
+        <form action="/controller" method="POST">
+            <input type="hidden" name="command" value="default">
+            <input type="submit" class="btn btn-danger" value="<fmt:message key="label.back_to_site"/>">
+        </form>
     </div>
 </div>
 <script src="${pageContext.request.contextPath}/resources/plugins/jquery/jquery-3.5.1.min.js"></script>

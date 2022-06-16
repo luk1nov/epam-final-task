@@ -1,8 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${locale}" scope="session"/>
+<fmt:setBundle basename="pagecontent"/>
 <html>
 <head>
-    <title>Decline order</title>
+    <title><fmt:message key="label.decline_order"/></title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -17,9 +20,9 @@
 </head>
 <body>
 <div class="app align-content-stretch d-flex flex-wrap">
-    <c:import url="../admin-sidebar.jsp"/>
+    <c:import url="${pageContext.request.contextPath}/pages/admin/template-parts/admin-sidebar.jsp"/>
     <div class="app-container">
-        <c:import url="../admin-header.jsp"/>
+        <c:import url="${pageContext.request.contextPath}/pages/admin/template-parts/admin-header.jsp"/>
         <div class="app-content">
             <div class="content-wrapper">
                 <div class="container-fluid">
@@ -27,25 +30,26 @@
                         <div class="col">
                             <div class="page-description">
                                 <h1>
-                                    Decline order
+                                    <fmt:message key="label.decline_order"/> #<c:out value="${orderId}"/>
                                 </h1>
                             </div>
                         </div>
                     </div>
                     <div class="row">
+                        <c:import url="${pageContext.request.contextPath}/pages/components/message.jsp"/>
                         <div class="col-md-6 mx-auto">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="example-content">
-                                        <form class="row g-3" action="controller" method="post">
+                                        <form class="row g-3 needs-validation" action="controller" method="post" novalidate oninput='orderMessage.setCustomValidity(/^[\s\wА-яЁё.,!?]{0,200}$/.test(orderMessage.value) ? "invalid message" : "")'>
                                             <div class="col-12">
-                                                <label for="inputOrderMessage" class="form-label">Decline message</label>
-                                                <textarea name="orderMessage" class="form-control" rows="3" maxlength="200" id="inputOrderMessage"></textarea>
+                                                <label for="inputOrderMessage" class="form-label"><fmt:message key="label.reason"/></label>
+                                                <textarea name="orderMessage" class="form-control" rows="3" maxlength="200" id="inputOrderMessage"><c:out value="${orderMessage}"/></textarea>
                                             </div>
                                             <input type="hidden" name="orderId" value="<c:out value="${orderId}"/>">
                                             <div class="col-12">
                                                 <input type="hidden" name="command" value="admin_decline_order">
-                                                <input type="submit" class="btn btn-danger" value="Decline">
+                                                <input type="submit" class="btn btn-danger" value="<fmt:message key="label.decline"/>">
                                             </div>
                                         </form>
                                     </div>

@@ -13,7 +13,7 @@
     <meta name="keywords" content="admin,dashboard">
     <meta name="author" content="stacks">
 
-    <title>Completed orders</title>
+    <title><fmt:message key="label.completed_orders"/></title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -33,29 +33,29 @@
 
 <body>
 <div class="app align-content-stretch d-flex flex-wrap">
-    <%@include file="../admin-sidebar.jsp"%>
+    <c:import url="${pageContext.request.contextPath}/pages/admin/template-parts/admin-sidebar.jsp"/>
     <div class="app-container">
-        <%@include file="../admin-header.jsp"%>
+        <c:import url="${pageContext.request.contextPath}/pages/admin/template-parts/admin-header.jsp"/>
         <div class="app-content">
             <div class="content-wrapper">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col">
                             <div class="page-description">
-                                <h1>Completed orders</h1>
+                                <h1><fmt:message key="label.completed_orders"/></h1>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <c:if test="${empty list}">
-                                        <div class="alert alert-primary alert-style-light" role="alert">
-                                            <fmt:message key="label.rental_requests_empty"/>
-                                        </div>
-                                    </c:if>
-                                    <c:if test="${not empty list}">
+                        <c:if test="${empty list}">
+                            <div class="alert alert-primary alert-style-light" role="alert">
+                                <fmt:message key="label.orders_empty"/>
+                            </div>
+                        </c:if>
+                        <c:if test="${not empty list}">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-body">
                                         <table class="table">
                                             <thead>
                                             <tr>
@@ -176,11 +176,11 @@
                                             </c:forEach>
                                             </tbody>
                                         </table>
-                                    </c:if>
+                                    </div>
                                 </div>
+                                <util:Pagination command="admin_find_completed_orders"/>
                             </div>
-                            <util:Pagination command="admin_find_completed_orders"/>
-                        </div>
+                        </c:if>
                     </div>
                 </div>
             </div>

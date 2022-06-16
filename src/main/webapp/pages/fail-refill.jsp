@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Failed refill balance</title>
+    <title><fmt:message key="label.fail"/></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
@@ -32,8 +32,8 @@
                         <div class="col-lg-6 mx-auto">
                             <div class="alert alert-custom alert-indicator-bottom indicator-danger" role="alert">
                                 <div class="alert-content">
-                                    <span class="alert-title">Error!</span>
-                                    <span class="alert-text"><c:out value="${message}"/></span>
+                                    <span class="alert-title"><fmt:message key="label.fail"/>!</span>
+                                    <span class="alert-text"><fmt:message key="label.refill_fail"/></span>
                                 </div>
                             </div>
                         </div>

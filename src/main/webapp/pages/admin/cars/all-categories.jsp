@@ -23,9 +23,9 @@
 </head>
 <body>
 <div class="app align-content-stretch d-flex flex-wrap">
-    <%@include file="../admin-sidebar.jsp"%>
+    <c:import url="${pageContext.request.contextPath}/pages/admin/template-parts/admin-sidebar.jsp"/>
     <div class="app-container">
-        <%@include file="../admin-header.jsp"%>
+        <c:import url="${pageContext.request.contextPath}/pages/admin/template-parts/admin-header.jsp"/>
         <div class="app-content">
             <div class="content-wrapper">
                 <div class="container-fluid">
@@ -37,51 +37,59 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6 mx-auto">
-                            <div class="card">
-                                <div class="card-body">
-                                    <form action="/controller" method="POST">
-                                        <div class="col-12">
-                                            <input type="hidden" name="command" value="admin_to_add_new_car_category">
-                                            <input type="submit" class="btn btn-primary" value="<fmt:message key="label.add_new_category"/>">
-                                        </div>
-                                    </form>
-                                    <table class="table">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col"><fmt:message key="label.title"/></th>
-                                            <th scope="col"><fmt:message key="label.actions"/></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <c:forEach var="category" items="${list}">
+                        <c:import url="${pageContext.request.contextPath}/pages/components/message.jsp"/>
+                        <c:if test="${empty applicationScope.contextCategories}">
+                            <div class="alert alert-primary alert-style-light" role="alert">
+                                <fmt:message key="label.categories_empty"/>
+                            </div>
+                        </c:if>
+                        <c:if test="${not empty applicationScope.contextCategories}">
+                            <div class="col-md-6 mx-auto">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <form action="/controller" method="POST">
+                                            <div class="col-12">
+                                                <input type="hidden" name="command" value="admin_to_add_new_car_category">
+                                                <input type="submit" class="btn btn-primary" value="<fmt:message key="label.add_new_category"/>">
+                                            </div>
+                                        </form>
+                                        <table class="table">
+                                            <thead>
                                             <tr>
-                                                <td><c:out value="${category.id}"/></td>
-                                                <td><c:out value="${category.title}"/></td>
-                                                <td>
-                                                    <div class="btn-group" role="group" aria-label="Basic example">
-                                                        <form action="/controller" method="POST">
-                                                            <input type="hidden" name="carCategoryId" value="<c:out value="${category.id}"/>">
-                                                            <input type="hidden" name="command" value="admin_to_edit_car_category">
-                                                            <input type="submit" class="btn btn-info" value="<fmt:message key="label.action_edit"/>">
-                                                        </form>
-                                                        <c:if test="${category.id != 1}">
+                                                <th scope="col">ID</th>
+                                                <th scope="col"><fmt:message key="label.title"/></th>
+                                                <th scope="col"><fmt:message key="label.actions"/></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <c:forEach var="category" items="${applicationScope.contextCategories}">
+                                                <tr>
+                                                    <td><c:out value="${category.id}"/></td>
+                                                    <td><c:out value="${category.title}"/></td>
+                                                    <td>
+                                                        <div class="btn-group" role="group" aria-label="Basic example">
                                                             <form action="/controller" method="POST">
                                                                 <input type="hidden" name="carCategoryId" value="<c:out value="${category.id}"/>">
-                                                                <input type="hidden" name="command" value="admin_delete_car_category">
-                                                                <input type="submit" class="btn btn-danger" value="<fmt:message key="label.action_delete"/>">
+                                                                <input type="hidden" name="command" value="admin_to_edit_car_category">
+                                                                <input type="submit" class="btn btn-info" value="<fmt:message key="label.action_edit"/>">
                                                             </form>
-                                                        </c:if>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
-                                        </tbody>
-                                    </table>
+                                                            <c:if test="${category.id != 1}">
+                                                                <form action="/controller" method="POST">
+                                                                    <input type="hidden" name="carCategoryId" value="<c:out value="${category.id}"/>">
+                                                                    <input type="hidden" name="command" value="admin_delete_car_category">
+                                                                    <input type="submit" class="btn btn-danger" value="<fmt:message key="label.action_delete"/>">
+                                                                </form>
+                                                            </c:if>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </c:if>
                     </div>
                 </div>
             </div>

@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Refill balance</title>
+    <title><fmt:message key="label.orders"/></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
@@ -36,22 +36,25 @@
                                 <div class="avatar avatar-xxl avatar-rounded m-r-lg">
                                     <c:choose>
                                         <c:when test="${sessionScope.loggedUser.status == 'INACTIVE'}">
-                                            <span class="badge rounded-pill badge-warning">Inactive</span>
+                                            <span class="badge rounded-pill badge-warning"><fmt:message key="label.inactive"/></span>
                                         </c:when>
                                         <c:when test="${sessionScope.loggedUser.status == 'ACTIVE'}">
-                                            <span class="badge rounded-pill badge-success">Active</span>
+                                            <span class="badge rounded-pill badge-success"><fmt:message key="label.active"/></span>
                                         </c:when>
                                         <c:when test="${sessionScope.loggedUser.status == 'BLOCKED'}">
-                                            <span class="badge rounded-pill badge-danger">Blocked</span>
+                                            <span class="badge rounded-pill badge-danger"><fmt:message key="label.blocked"/></span>
+                                        </c:when>
+                                        <c:when test="${sessionScope.loggedUser.status == 'VERIFICATION'}">
+                                            <span class="badge rounded-pill badge-primary"><fmt:message key="label.verification"/></span>
                                         </c:when>
                                         <c:otherwise>
-                                            <span class="badge rounded-pill badge-primary"><c:out value="${sessionScope.loggedUser.status}"/></span>
+                                            <span class="badge rounded-pill badge-light"><c:out value="${sessionScope.loggedUser.status}"/></span>
                                         </c:otherwise>
                                     </c:choose>
                                     <div class="avatar-title"><c:out value="${sessionScope.loggedUser.name.charAt(0)}"/><c:out value="${sessionScope.loggedUser.surname.charAt(0)}"/></div>
                                 </div>
                                 <h1 class="w-auto"><c:out value="${sessionScope.loggedUser.name}"/> <c:out value="${sessionScope.loggedUser.surname}"/></h1>
-                                <h2 class="w-auto ms-auto">Balance: $<c:out value="${sessionScope.loggedUser.balance}"/></h2>
+                                <h2 class="w-auto ms-auto"><fmt:message key="label.balance"/>: $<c:out value="${sessionScope.loggedUser.balance}"/></h2>
                             </div>
                         </div>
                     </div>
@@ -61,24 +64,20 @@
                                 <li class="nav-item">
                                     <form action="controller" method="POST">
                                         <input type="hidden" name="command" value="to_user_account">
-                                        <input type="submit" class="nav-link" value="Profile">
+                                        <input type="submit" class="nav-link" value="<fmt:message key="label.profile"/>">
                                     </form>
                                 </li>
                                 <li class="nav-item">
                                     <form action="controller" method="POST">
                                         <input type="hidden" name="command" value="find_all_user_orders">
-                                        <input type="submit" class="nav-link active disabled" value="Orders">
+                                        <input type="submit" class="nav-link active disabled" value="<fmt:message key="label.orders"/>">
                                     </form>
                                 </li>
                             </ul>
-                            <c:if test="${message ne null}">
-                                <div class="alert alert-danger alert-style-light" role="alert">
-                                    Error. <fmt:message key="${fn:escapeXml(message)}"/>.
-                                </div>
-                            </c:if>
+                            <c:import url="${pageContext.request.contextPath}/pages/components/message.jsp"/>
                             <div class="card">
                                 <div class="card-header">
-                                    <h5 class="card-title">Orders</h5>
+                                    <h5 class="card-title"><fmt:message key="label.orders"/></h5>
                                 </div>
                                 <div class="card-body">
                                     <div class="example-content">
@@ -87,12 +86,12 @@
                                                 <thead>
                                                 <tr>
                                                     <th scope="col">ID</th>
-                                                    <th scope="col">Car</th>
-                                                    <th scope="col">Begin date</th>
-                                                    <th scope="col">End date</th>
-                                                    <th scope="col">Price</th>
-                                                    <th scope="col">Status</th>
-                                                    <th scope="col">Action</th>
+                                                    <th scope="col"><fmt:message key="label.car"/></th>
+                                                    <th scope="col"><fmt:message key="label.start_date"/></th>
+                                                    <th scope="col"><fmt:message key="label.finish_date"/></th>
+                                                    <th scope="col"><fmt:message key="label.price"/></th>
+                                                    <th scope="col"><fmt:message key="label.status"/></th>
+                                                    <th scope="col"><fmt:message key="label.actions"/></th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -118,22 +117,23 @@
                                                             <td>
                                                                 <c:choose>
                                                                     <c:when test="${order.orderStatus eq 'PROCESSING'}">
-                                                                        <span class="badge badge-style-light rounded-pill badge-warning">
+                                                                        <span class="badge badge-style-light rounded-pill badge-warning"><fmt:message key="label.processing"/>
                                                                     </c:when>
                                                                     <c:when test="${order.orderStatus eq 'ACTIVE'}">
-                                                                        <span class="badge badge-style-light rounded-pill badge-success">
+                                                                        <span class="badge badge-style-light rounded-pill badge-success"><fmt:message key="label.active"/>
                                                                     </c:when>
                                                                     <c:when test="${order.orderStatus eq 'CANCELED'}">
-                                                                        <span class="badge badge-style-light rounded-pill badge-danger" <c:if test="${order.message.isPresent()}">data-bs-toggle="tooltip" data-bs-placement="top" title="<c:out value="${order.message.get()}"/>"</c:if>>
+                                                                        <span class="badge badge-style-light rounded-pill badge-danger" <c:if test="${order.message.isPresent()}">data-bs-toggle="tooltip" data-bs-placement="bottom" title="<c:out value="${order.message.get()}"/>"</c:if>>
+                                                                                <fmt:message key="label.canceled"/>
                                                                     </c:when>
                                                                     <c:when test="${order.orderStatus eq 'FINISHED'}">
-                                                                        <span class="badge badge-style-light rounded-pill badge-primary">
+                                                                        <span class="badge badge-style-light rounded-pill badge-primary"><fmt:message key="label.finished"/>
                                                                     </c:when>
                                                                     <c:otherwise>
-                                                                        <span class="badge badge-style-light rounded-pill badge-light">
+                                                                        <span class="badge badge-style-light rounded-pill badge-light"><c:out value="${order.orderStatus}"/>
                                                                     </c:otherwise>
                                                                 </c:choose>
-                                                                <c:out value="${order.orderStatus}"/></span>
+                                                                </span>
                                                             </td>
                                                             <td>
                                                                 <c:choose>
@@ -141,21 +141,21 @@
                                                                         <form action="/controller" method="POST">
                                                                             <input type="hidden" name="orderId" value="<c:out value="${order.id}"/>">
                                                                             <input type="hidden" name="command" value="cancel_user_order">
-                                                                            <input class="btn btn-danger btn-sm" type="submit" value="Cancel">
+                                                                            <input class="btn btn-danger btn-sm" type="submit" value="<fmt:message key="label.action_cancel"/>">
                                                                         </form>
                                                                     </c:when>
                                                                     <c:when test="${order.orderStatus eq 'ACTIVE'}">
                                                                         <form action="/controller" method="POST">
                                                                             <input type="hidden" name="orderId" value="<c:out value="${order.id}"/>">
                                                                             <input type="hidden" name="command" value="to_return_car">
-                                                                            <input class="btn btn-success btn-sm" type="submit" value="Finish">
+                                                                            <input class="btn btn-success btn-sm" type="submit" value="<fmt:message key="label.action_finish"/>">
                                                                         </form>
                                                                     </c:when>
-                                                                    <c:when test="${order.orderStatus eq 'FINISHED'}">
+                                                                    <c:when test="${order.orderStatus eq 'FINISHED' or order.orderStatus eq 'CANCELED'}">
                                                                         <form action="/controller" method="POST">
                                                                             <input type="hidden" name="carId" value="<c:out value="${order.car.id}"/>">
                                                                             <input type="hidden" name="command" value="to_car_page">
-                                                                            <input class="btn btn-primary btn-sm" type="submit" value="Rent again">
+                                                                            <input class="btn btn-primary btn-sm" type="submit" value="<fmt:message key="label.rent_again"/>">
                                                                         </form>
                                                                     </c:when>
                                                                 </c:choose>
@@ -167,7 +167,7 @@
                                         </c:if>
                                         <c:if test="${empty list}">
                                             <div class="alert alert-primary alert-style-light" role="alert">
-                                                Have no orders yet.
+                                                <fmt:message key="label.have_no_orders_yet"/>
                                             </div>
                                         </c:if>
                                     </div>

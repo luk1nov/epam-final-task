@@ -31,9 +31,7 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col">
-                            <div class="page-description">
-
-                            </div>
+                            <div class="page-description"></div>
                         </div>
                     </div>
                     <div class="row">
@@ -49,25 +47,29 @@
                                                 <img src="../resources/images/car-coming-soon.png" class="full-width rounded"/>
                                             </c:if>
                                         </div>
+                                        <c:set var="default_final_price"><fmt:message key="label.final_price"/>: <fmt:message key="label.choose_rent_date"/></c:set>
                                         <div class="col-4">
                                             <h1 class="mb-3"><c:out value="${car.brand}"/> <c:out value="${car.model}"/></h1>
                                             <p><fmt:message key="label.car_acceleration"/> 0-100: <c:out value="${car.info.acceleration}"/>s</p>
-                                            <p><fmt:message key="label.car_power"/>: <c:out value="${car.info.power}"/>hp</p>
+                                            <p><fmt:message key="label.car_power"/>: <c:out value="${car.info.power}"/><fmt:message key="label.horse_power"/></p>
                                             <p><fmt:message key="label.car_drivetrain"/>: <c:out value="${car.info.drivetrain}"/></p>
-                                            <c:if test="${car.salePrice.isEmpty()}">
-                                                <p class="bold">Price per day: $<c:out value="${car.regularPrice}"/></p>
-                                            </c:if>
-                                            <c:if test="${car.salePrice.isPresent()}">
-                                                <p class="bold">Price per day: $<c:out value="${car.salePrice.get()}"/></p>
-                                            </c:if>
-                                            <form class="mb-3" action="/controller" method="POST">
-                                                <input name="orderDateRange" class="form-control flatpickr1 mb-4" type="text" placeholder="<fmt:message key='label.date_label'/>">
-                                                <h4 id="final_price" class="mb-4">Final price: choose rent date</h4>
-                                                <input type="hidden" id="hidden_price" name="hiddenPrice">
+                                            <p class="bold"><fmt:message key="label.price"/>:
+                                                <c:if test="${car.salePrice.isEmpty()}">
+                                                    $<c:out value="${car.regularPrice}"/>
+                                                </c:if>
+                                                <c:if test="${car.salePrice.isPresent()}">
+                                                    <del>$<c:out value="${car.regularPrice}"/></del>
+                                                    $<c:out value="${car.salePrice.get()}"/>
+                                                </c:if>
+                                            </p>
+                                            <form id="rentForm" class="mb-3 needs-validation" action="/controller" method="POST" novalidate>
+                                                <input id="rentDatePicker" name="orderDateRange" class="form-control flatpickr1 mb-4" type="text" placeholder="<fmt:message key='label.date_label'/>" required>
+                                                <h4 id="final_price" class="mb-4"><c:out value="${default_final_price}"/></h4>
                                                 <input type="hidden" name="command" value="create_order">
                                                 <input type="hidden" name="carId" value="<c:out value='${car.id}'/>">
-                                                <input type="submit" class="btn btn-primary" value="Rent"/>
+                                                <input type="submit" class="btn btn-primary" value="<fmt:message key="label.rent"/>"/>
                                             </form>
+                                            <c:import url="${pageContext.request.contextPath}/pages/components/message.jsp"/>
                                         </div>
                                     </div>
                                 </div>
@@ -84,18 +86,18 @@
 <script src="${pageContext.request.contextPath}/resources/plugins/jquery/jquery-3.5.1.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/main.min.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/custom.js"></script>
 <script src="${pageContext.request.contextPath}/resources/plugins/flatpickr/flatpickr.js"></script>
 <script src="https://npmcdn.com/flatpickr/dist/l10n/ru.js"></script>
 <script>
     const final_price_block = $("#final_price");
-    const default_price_text = "Final price: choose rent date";
+    const default_price_text = "<c:out value="${default_final_price}"/>";
     const hidden_price = $("#hidden_price");
     $(".flatpickr1").flatpickr({
         locale: "<fmt:message key='option.flatpickr_locale'/>",
         mode:"range",
         altInput: true,
         minDate: "today",
+        dateFormat: "Y-m-d",
         altFormat: "j F Y",
         disable: [
             <c:forEach var="order" items="${list}">
@@ -106,9 +108,10 @@
             </c:forEach>
         ],
         onChange: function(selectedDates, dateStr, instance) {
+            instance.element.value = dateStr.replace('to', '—');
             var price_text = default_price_text;
             console.log(dateStr);
-            if (selectedDates.length == 2){
+            if (selectedDates.length === 2){
                 var time_difference = selectedDates[1] - selectedDates[0];
                 var days = (time_difference / (1000 * 60 * 60 * 24)) + 1;
                 <c:if test="${car.salePrice.isEmpty()}">
@@ -117,13 +120,13 @@
                 <c:if test="${car.salePrice.isPresent()}">
                 var price = days * <c:out value="${car.salePrice.get()}"/>;
                 </c:if>
-                price_text = "Final price: $" + price;
+                price_text = "<fmt:message key='label.final_price'/>: $" + price;
                 hidden_price.val(price).change();
             }
             final_price_block.text(price_text);
         },
     });
 </script>
-<script></script>
+<script src="${pageContext.request.contextPath}/resources/js/custom.js"></script>
 </body>
 </html>

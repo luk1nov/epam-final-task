@@ -33,9 +33,9 @@
 
 <body>
 <div class="app align-content-stretch d-flex flex-wrap">
-    <%@include file="../admin-sidebar.jsp"%>
+    <c:import url="${pageContext.request.contextPath}/pages/admin/template-parts/admin-sidebar.jsp"/>
     <div class="app-container">
-        <%@include file="../admin-header.jsp"%>
+        <c:import url="${pageContext.request.contextPath}/pages/admin/template-parts/admin-header.jsp"/>
         <div class="app-content">
             <div class="content-wrapper">
                 <div class="container-fluid">
@@ -47,26 +47,27 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
-                            <form action="/controller" method="GET">
-                                <div class="col-md-3 mb-3 ms-auto">
-                                    <div class="input-group">
-                                        <input type="text" name="search" class="form-control" placeholder="<fmt:message key="label.search_order_placeholder"/>" id="inputSearchQuery" value="<c:out value="${search}"/>">
-                                        <input type="hidden" name="command" value="admin_search_order">
-                                        <span class="input-group-text p-0" id="basic-addon1">
+                        <c:import url="${pageContext.request.contextPath}/pages/components/message.jsp"/>
+                        <c:if test="${empty list}">
+                            <div class="alert alert-primary alert-style-light" role="alert">
+                                <fmt:message key="label.orders_empty"/>
+                            </div>
+                        </c:if>
+                        <c:if test="${not empty list}">
+                            <div class="col-md-12">
+                                <form action="/controller" method="GET">
+                                    <div class="col-md-3 mb-3 ms-auto">
+                                        <div class="input-group">
+                                            <input type="text" name="search" class="form-control" placeholder="<fmt:message key="label.search_order_placeholder"/>" id="inputSearchQuery" value="<c:out value="${search}"/>">
+                                            <input type="hidden" name="command" value="admin_search_order">
+                                            <span class="input-group-text p-0" id="basic-addon1">
                                             <input type="submit" class="custom-search" value="<fmt:message key="label.search"/>">
                                         </span>
-                                    </div>
-                                </div>
-                            </form>
-                            <div class="card">
-                                <div class="card-body">
-                                    <c:if test="${empty list}">
-                                        <div class="alert alert-primary alert-style-light" role="alert">
-                                            <fmt:message key="label.rental_requests_empty"/>
                                         </div>
-                                    </c:if>
-                                    <c:if test="${not empty list}">
+                                    </div>
+                                </form>
+                                <div class="card">
+                                    <div class="card-body">
                                         <table class="table">
                                             <thead>
                                             <tr>
@@ -82,6 +83,7 @@
                                             </tr>
                                             </thead>
                                             <tbody>
+                                            <c:set var="default_cancel_reason"><fmt:message key="label.canceled_by_user"/></c:set>
                                             <c:forEach var="order" items="${list}">
                                                 <tr>
                                                     <td><c:out value="${order.id}"/></td>
@@ -103,7 +105,7 @@
                                                     </td>
                                                     <td>
                                                         <c:if test="${order.car.active}">
-                                                            <span class="badge badge-style-light rounded-pill badge-success"><fmt:message key="label.active"/>
+                                                        <span class="badge badge-style-light rounded-pill badge-success"><fmt:message key="label.active"/>
                                                         </c:if>
                                                         <c:if test="${not order.car.active}">
                                                             <span class="badge badge-style-light rounded-pill badge-danger"><fmt:message key="label.repair"/>
@@ -113,7 +115,7 @@
                                                     <td>
                                                         <c:choose>
                                                             <c:when test="${order.user.status == 'INACTIVE'}">
-                                                            <span class="badge badge-style-light rounded-pill badge-warning"><fmt:message key="label.inactive"/></span>
+                                                                <span class="badge badge-style-light rounded-pill badge-warning"><fmt:message key="label.inactive"/></span>
                                                             </c:when>
                                                             <c:when test="${order.user.status == 'ACTIVE'}">
                                                                 <span class="badge badge-style-light rounded-pill badge-success"><fmt:message key="label.active"/></span>
@@ -138,7 +140,7 @@
                                                                 <span class="badge badge-style-light rounded-pill badge-success"><fmt:message key="label.active"/></span>
                                                             </c:when>
                                                             <c:when test="${order.orderStatus eq 'CANCELED'}">
-                                                                <span class="badge badge-style-light rounded-pill badge-danger" data-bs-toggle="tooltip" data-bs-placement="top" title='<c:out value="${order.message.orElse(null)}" default="Canceled by user"/>'>
+                                                                <span class="badge badge-style-light rounded-pill badge-danger" data-bs-toggle="tooltip" data-bs-placement="top" title='<c:out value="${order.message.orElse(null)}" default="${default_cancel_reason}"/>'>
                                                                     <fmt:message key="label.canceled"/>
                                                                 </span>
                                                             </c:when>
@@ -152,46 +154,46 @@
                                                     </td>
                                                     <td>
                                                         <div class="btn-group" role="group" aria-label="Basic example">
-                                                        <c:choose>
-                                                            <c:when test="${order.orderStatus eq 'PROCESSING'}">
-                                                                <form action="/controller" method="POST" class="m-0 me-2">
-                                                                    <input type="hidden" name="orderId" value="<c:out value="${order.id}"/>">
-                                                                    <input type="hidden" name="command" value="admin_to_decline_order">
-                                                                    <input class="btn btn-danger" type="submit" value="<fmt:message key="label.decline"/>">
-                                                                </form>
-                                                                <form action="/controller" method="POST" class="m-0">
-                                                                    <input type="hidden" name="orderId" value="<c:out value="${order.id}"/>">
-                                                                    <input type="hidden" name="command" value="admin_accept_order">
-                                                                    <input class="btn btn-success" type="submit" value="<fmt:message key="label.accept"/>">
-                                                                </form>
-                                                            </c:when>
-                                                            <c:when test="${order.orderStatus eq 'CANCELED' or order.orderStatus eq 'FINISHED'}">
-                                                                <form action="/controller" method="POST" class="m-0 me-2" onsubmit="return confirm('Are you sure?')">
-                                                                    <input type="hidden" name="orderId" value="<c:out value="${order.id}"/>">
-                                                                    <input type="hidden" name="command" value="admin_delete_order">
-                                                                    <input class="btn btn-danger" type="submit" value="<fmt:message key="label.action_delete"/>">
-                                                                </form>
-                                                                <c:if test="${order.report.isPresent()}">
-                                                                    <form action="/controller" method="POST" class="m-0">
-                                                                        <input type="hidden" name="reportId" value="<c:out value="${order.report.get().id}"/>">
+                                                            <c:choose>
+                                                                <c:when test="${order.orderStatus eq 'PROCESSING'}">
+                                                                    <form action="/controller" method="POST" class="m-0 me-2">
                                                                         <input type="hidden" name="orderId" value="<c:out value="${order.id}"/>">
-                                                                        <input type="hidden" name="command" value="admin_show_order_report">
-                                                                        <input class="btn btn-primary" type="submit" value="<fmt:message key="label.report"/>">
+                                                                        <input type="hidden" name="command" value="admin_to_decline_order">
+                                                                        <input class="btn btn-danger" type="submit" value="<fmt:message key="label.decline"/>">
                                                                     </form>
-                                                                </c:if>
-                                                            </c:when>
-                                                        </c:choose>
+                                                                    <form action="/controller" method="POST" class="m-0">
+                                                                        <input type="hidden" name="orderId" value="<c:out value="${order.id}"/>">
+                                                                        <input type="hidden" name="command" value="admin_accept_order">
+                                                                        <input class="btn btn-success" type="submit" value="<fmt:message key="label.accept"/>">
+                                                                    </form>
+                                                                </c:when>
+                                                                <c:when test="${order.orderStatus eq 'CANCELED' or order.orderStatus eq 'FINISHED'}">
+                                                                    <form action="/controller" method="POST" class="m-0 me-2" onsubmit="return confirm('Are you sure?')">
+                                                                        <input type="hidden" name="orderId" value="<c:out value="${order.id}"/>">
+                                                                        <input type="hidden" name="command" value="admin_delete_order">
+                                                                        <input class="btn btn-danger" type="submit" value="<fmt:message key="label.action_delete"/>">
+                                                                    </form>
+                                                                    <c:if test="${order.report.isPresent()}">
+                                                                        <form action="/controller" method="POST" class="m-0">
+                                                                            <input type="hidden" name="reportId" value="<c:out value="${order.report.get().id}"/>">
+                                                                            <input type="hidden" name="orderId" value="<c:out value="${order.id}"/>">
+                                                                            <input type="hidden" name="command" value="admin_show_order_report">
+                                                                            <input class="btn btn-primary" type="submit" value="<fmt:message key="label.report"/>">
+                                                                        </form>
+                                                                    </c:if>
+                                                                </c:when>
+                                                            </c:choose>
                                                         </div>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
                                             </tbody>
                                         </table>
-                                    </c:if>
+                                    </div>
                                 </div>
+                                <util:Pagination command="admin_find_all_orders"/>
                             </div>
-                            <util:Pagination command="admin_find_all_orders"/>
-                        </div>
+                        </c:if>
                     </div>
                 </div>
             </div>

@@ -20,9 +20,9 @@
 </head>
 <body>
 <div class="app align-content-stretch d-flex flex-wrap">
-    <c:import url="../admin-sidebar.jsp"/>
+    <c:import url="../template-parts/admin-sidebar.jsp"/>
     <div class="app-container">
-        <c:import url="../admin-header.jsp"/>
+        <c:import url="../template-parts/admin-header.jsp"/>
         <div class="app-content">
             <div class="content-wrapper">
                 <div class="container-fluid">

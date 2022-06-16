@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="pagecontent"/>
 <html>
@@ -25,9 +26,9 @@
 </head>
 <body>
 <div class="app align-content-stretch d-flex flex-wrap">
-    <%@include file="../admin-sidebar.jsp"%>
+    <c:import url="${pageContext.request.contextPath}/pages/admin/template-parts/admin-sidebar.jsp"/>
     <div class="app-container">
-        <%@include file="../admin-header.jsp"%>
+        <c:import url="${pageContext.request.contextPath}/pages/admin/template-parts/admin-header.jsp"/>
         <div class="app-content">
             <div class="content-wrapper">
                 <div class="container-fluid">
@@ -39,14 +40,15 @@
                         </div>
                     </div>
                     <div class="row">
+                        <c:import url="${pageContext.request.contextPath}/pages/components/message.jsp"/>
                         <div class="col-md-6 mx-auto">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="example-content">
-                                        <form class="row g-3" action="/controller" method="POST">
+                                        <form class="row g-3 needs-validation" action="/controller" method="POST" novalidate>
                                             <div class="col-md-12">
-                                                <label for="inputcarCategory" class="form-label"><fmt:message key="label.title"/></label>
-                                                <input name="carCategoryTitle" type="text" class="form-control" id="inputcarCategory">
+                                                <label for="inputCarCategory" class="form-label"><fmt:message key="label.title"/></label>
+                                                <input name="carCategoryTitle" type="text" class="form-control" id="inputCarCategory" value="<c:out value="${carCategoryTitle}"/>" required pattern="^[\p{Alpha}А-яЁё]{2,40}$">
                                             </div>
                                             <input type="hidden" name="command" value="admin_add_new_car_category">
                                             <div class="col-12">

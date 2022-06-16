@@ -30,23 +30,23 @@
                         <div class="col">
                             <div class="page-description">
                                 <h1>
-                                    <c:choose>
-                                        <c:when test="${fn:toLowerCase(carCategoryTitle) eq 'cars'}">
-                                            <fmt:message key="label.category_cars"/>
-                                        </c:when>
-                                        <c:when test="${fn:toLowerCase(carCategoryTitle) eq 'e-cars'}">
-                                            <fmt:message key="label.category_e_cars"/>
-                                        </c:when>
-                                        <c:when test="${fn:toLowerCase(carCategoryTitle) eq 'premium'}">
-                                            <fmt:message key="label.category_premium"/>
-                                        </c:when>
-                                        <c:otherwise>Car category</c:otherwise>
-                                    </c:choose>
+                                    <c:if test="${not empty carCategoryTitle}">
+                                        <c:out value="${carCategoryTitle}"/>
+                                    </c:if>
+                                    <c:if test="${empty carCategoryTitle}">
+                                        All cars
+                                    </c:if>
                                 </h1>
                             </div>
                         </div>
                     </div>
                     <div class="row">
+                        <c:import url="${pageContext.request.contextPath}/pages/components/message.jsp"/>
+                        <c:if test="${empty list}">
+                            <div class="alert alert-primary alert-style-light" role="alert">
+                                <fmt:message key="label.cars_empty"/>
+                            </div>
+                        </c:if>
                         <c:forEach var="car" items="${list}">
                             <div class="col-md-3">
                                 <div class="card">
@@ -68,17 +68,17 @@
                                         <div class="row car-card-row">
                                             <p class="card-text bold">
                                                 <c:if test="${car.salePrice.isPresent()}">
-                                                    <del>$<c:out value="${car.regularPrice}"/></del>
+                                                    <del>$<c:out value="${car.regularPrice}"/></del><br/>
                                                 $<c:out value="${car.salePrice.get()}"/>
                                                 </c:if>
                                                 <c:if test="${car.salePrice.isEmpty()}">
                                                     $<c:out value="${car.regularPrice}"/>
-                                                </c:if>/ day
+                                                </c:if>/ <fmt:message key="label.day"/>
                                             </p>
                                             <form action="/controller" method="POST">
                                                 <input type="hidden" name="carId" value="<c:out value="${car.id}"/>">
                                                 <input type="hidden" name="command" value="to_car_page">
-                                                <input class="btn btn-primary" type="submit" value="Rent">
+                                                <input class="btn btn-primary" type="submit" value="<fmt:message key="label.rent"/>">
                                             </form>
                                         </div>
                                     </div>
@@ -86,7 +86,12 @@
                             </div>
                         </c:forEach>
                     </div>
-                    <util:Pagination command="to_car_category_page"/>
+                    <c:if test="${not empty carCategoryTitle}">
+                        <util:Pagination command="to_car_category_page"/>
+                    </c:if>
+                    <c:if test="${empty carCategoryTitle}">
+                        <util:Pagination command="to_all_cars"/>
+                    </c:if>
                 </div>
             </div>
         </div>

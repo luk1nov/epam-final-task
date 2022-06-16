@@ -24,26 +24,21 @@
     <link href="${pageContext.request.contextPath}/resources/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/resources/plugins/perfectscroll/perfect-scrollbar.css" rel="stylesheet">
 
-    <!-- Theme Styles -->
     <link href="${pageContext.request.contextPath}/resources/css/main.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/resources/css/custom.css" rel="stylesheet">
 
     <link rel="icon" type="image/png" sizes="32x32" href="${pageContext.request.contextPath}/resources/images/neptune.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="${pageContext.request.contextPath}/resources/images/neptune.png" />
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
 </head>
 
 <body>
 <div class="app align-content-stretch d-flex flex-wrap">
-    <%@include file="../admin-sidebar.jsp"%>
+    <c:import url="${pageContext.request.contextPath}/pages/admin/template-parts/admin-sidebar.jsp"/>
     <div class="app-container">
-        <%@include file="../admin-header.jsp"%>
+        <c:import url="${pageContext.request.contextPath}/pages/admin/template-parts/admin-header.jsp"/>
         <div class="app-content">
             <div class="content-wrapper">
                 <div class="container-fluid">
@@ -55,99 +50,100 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <c:if test="${empty list}">
-                                        <div class="alert alert-primary alert-style-light" role="alert">
-                                            <fmt:message key="label.rental_requests_empty"/>
-                                        </div>
-                                    </c:if>
-                                    <c:if test="${not empty list}">
+                        <c:import url="${pageContext.request.contextPath}/pages/components/message.jsp"/>
+                        <c:if test="${empty list}">
+                            <div class="alert alert-primary alert-style-light" role="alert">
+                                <fmt:message key="label.orders_empty"/>
+                            </div>
+                        </c:if>
+                        <c:if test="${not empty list}">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-body">
                                         <table class="table">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col"><fmt:message key="label.user"/></th>
-                                            <th scope="col"><fmt:message key="label.car"/></th>
-                                            <th scope="col"><fmt:message key="label.start_date"/></th>
-                                            <th scope="col"><fmt:message key="label.finish_date"/></th>
-                                            <th scope="col"><fmt:message key="label.car_status"/></th>
-                                            <th scope="col"><fmt:message key="label.user_status"/></th>
-                                            <th scope="col"><fmt:message key="label.actions"/></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <c:forEach var="order" items="${list}">
+                                            <thead>
                                             <tr>
-                                                <td><c:out value="${order.id}"/></td>
-                                                <td><c:out value="${order.user.name}"/> <c:out value="${order.user.surname}"/></td>
-                                                <td>
-                                                    <form action="/controller" method="POST" class="m-0">
-                                                        <input type="hidden" name="command" value="to_car_page">
-                                                        <input type="hidden" name="carId" value="<c:out value="${order.car.id}"/>">
-                                                        <input class="order-car-link" type="submit" value="<c:out value="${order.car.brand}"/> <c:out value="${order.car.model}"/>">
-                                                    </form>
-                                                </td>
-                                                <td>
-                                                    <fmt:parseDate value="${order.beginDate}" pattern="yyyy-MM-dd" var="parsedDate" type="date" />
-                                                    <fmt:formatDate value="${parsedDate}" type="date" pattern="dd MMMM yyyy" />
-                                                </td>
-                                                <td>
-                                                    <fmt:parseDate value="${order.endDate}" pattern="yyyy-MM-dd" var="parsedDate" type="date" />
-                                                    <fmt:formatDate value="${parsedDate}" type="date" pattern="dd MMMM yyyy" />
-                                                </td>
-                                                <td>
-                                                    <c:if test="${order.car.active}">
-                                                    <span class="badge badge-style-light rounded-pill badge-success"><fmt:message key="label.active"/>
+                                                <th scope="col">ID</th>
+                                                <th scope="col"><fmt:message key="label.user"/></th>
+                                                <th scope="col"><fmt:message key="label.car"/></th>
+                                                <th scope="col"><fmt:message key="label.start_date"/></th>
+                                                <th scope="col"><fmt:message key="label.finish_date"/></th>
+                                                <th scope="col"><fmt:message key="label.car_status"/></th>
+                                                <th scope="col"><fmt:message key="label.user_status"/></th>
+                                                <th scope="col"><fmt:message key="label.actions"/></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <c:forEach var="order" items="${list}">
+                                                <tr>
+                                                    <td><c:out value="${order.id}"/></td>
+                                                    <td><c:out value="${order.user.name}"/> <c:out value="${order.user.surname}"/></td>
+                                                    <td>
+                                                        <form action="/controller" method="POST" class="m-0">
+                                                            <input type="hidden" name="command" value="to_car_page">
+                                                            <input type="hidden" name="carId" value="<c:out value="${order.car.id}"/>">
+                                                            <input class="order-car-link" type="submit" value="<c:out value="${order.car.brand}"/> <c:out value="${order.car.model}"/>">
+                                                        </form>
+                                                    </td>
+                                                    <td>
+                                                        <fmt:parseDate value="${order.beginDate}" pattern="yyyy-MM-dd" var="parsedDate" type="date" />
+                                                        <fmt:formatDate value="${parsedDate}" type="date" pattern="dd MMMM yyyy" />
+                                                    </td>
+                                                    <td>
+                                                        <fmt:parseDate value="${order.endDate}" pattern="yyyy-MM-dd" var="parsedDate" type="date" />
+                                                        <fmt:formatDate value="${parsedDate}" type="date" pattern="dd MMMM yyyy" />
+                                                    </td>
+                                                    <td>
+                                                        <c:if test="${order.car.active}">
+                                                        <span class="badge badge-style-light rounded-pill badge-success"><fmt:message key="label.active"/>
                                                         </c:if>
                                                         <c:if test="${not order.car.active}">
                                                             <span class="badge badge-style-light rounded-pill badge-danger"><fmt:message key="label.repair"/>
                                                         </c:if>
                                                         </span>
-                                                </td>
-                                                <td>
-                                                    <c:choose>
-                                                        <c:when test="${order.user.status == 'INACTIVE'}">
-                                                            <span class="badge badge-style-light rounded-pill badge-warning"><fmt:message key="label.inactive"/></span>
-                                                        </c:when>
-                                                        <c:when test="${order.user.status == 'ACTIVE'}">
-                                                            <span class="badge badge-style-light rounded-pill badge-success"><fmt:message key="label.active"/></span>
-                                                        </c:when>
-                                                        <c:when test="${order.user.status == 'BLOCKED'}">
-                                                            <span class="badge badge-style-light rounded-pill badge-danger"><fmt:message key="label.blocked"/></span>
-                                                        </c:when>
-                                                        <c:when test="${order.user.status == 'VERIFICATION'}">
-                                                            <span class="badge badge-style-light rounded-pill badge-primary"><fmt:message key="label.verification"/></span>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <span class="badge badge-style-light rounded-pill badge-light"><c:out value="${order.user.status}"/></span>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </td>
-                                                <td>
-                                                    <div class="btn-group" role="group" aria-label="Basic example">
-                                                        <form action="/controller" method="POST" class="m-0">
-                                                            <input type="hidden" name="orderId" value="<c:out value="${order.id}"/>">
-                                                            <input type="hidden" name="command" value="admin_to_decline_order">
-                                                            <input class="btn btn-danger" type="submit" value="<fmt:message key="label.decline"/>">
-                                                        </form>
-                                                        <form action="/controller" method="POST" class="m-0">
-                                                            <input type="hidden" name="orderId" value="<c:out value="${order.id}"/>">
-                                                            <input type="hidden" name="command" value="admin_accept_order">
-                                                            <input class="btn btn-success" type="submit" value="<fmt:message key="label.accept"/>">
-                                                        </form>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
-                                        </tbody>
-                                    </table>
-                                    </c:if>
+                                                    </td>
+                                                    <td>
+                                                        <c:choose>
+                                                            <c:when test="${order.user.status == 'INACTIVE'}">
+                                                                <span class="badge badge-style-light rounded-pill badge-warning"><fmt:message key="label.inactive"/></span>
+                                                            </c:when>
+                                                            <c:when test="${order.user.status == 'ACTIVE'}">
+                                                                <span class="badge badge-style-light rounded-pill badge-success"><fmt:message key="label.active"/></span>
+                                                            </c:when>
+                                                            <c:when test="${order.user.status == 'BLOCKED'}">
+                                                                <span class="badge badge-style-light rounded-pill badge-danger"><fmt:message key="label.blocked"/></span>
+                                                            </c:when>
+                                                            <c:when test="${order.user.status == 'VERIFICATION'}">
+                                                                <span class="badge badge-style-light rounded-pill badge-primary"><fmt:message key="label.verification"/></span>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <span class="badge badge-style-light rounded-pill badge-light"><c:out value="${order.user.status}"/></span>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                                            <form action="/controller" method="POST" class="m-0">
+                                                                <input type="hidden" name="orderId" value="<c:out value="${order.id}"/>">
+                                                                <input type="hidden" name="command" value="admin_to_decline_order">
+                                                                <input class="btn btn-danger" type="submit" value="<fmt:message key="label.decline"/>">
+                                                            </form>
+                                                            <form action="/controller" method="POST" class="m-0">
+                                                                <input type="hidden" name="orderId" value="<c:out value="${order.id}"/>">
+                                                                <input type="hidden" name="command" value="admin_accept_order">
+                                                                <input class="btn btn-success" type="submit" value="<fmt:message key="label.accept"/>">
+                                                            </form>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
+                                <util:Pagination command="admin_find_processing_orders"/>
                             </div>
-                            <util:Pagination command="admin_find_processing_orders"/>
-                        </div>
+                        </c:if>
                     </div>
                 </div>
             </div>

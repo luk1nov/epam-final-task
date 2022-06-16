@@ -1,9 +1,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${locale}" scope="session"/>
+<fmt:setBundle basename="pagecontent"/>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Successful order</title>
+    <title><fmt:message key="label.successful_order"/></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
@@ -29,9 +32,8 @@
                         <div class="col-lg-6 mx-auto">
                             <div class="alert alert-custom alert-indicator-bottom indicator-success" role="alert">
                                 <div class="alert-content">
-                                    <span class="alert-title">Success!</span>
-                                    <span class="alert-text">Order placed!</span>
-<%--                                    do fmt message--%>
+                                    <span class="alert-title"><fmt:message key="label.success"/>!</span>
+                                    <span class="alert-text"><fmt:message key="label.successful_order"/></span>
                                 </div>
                             </div>
                         </div>

@@ -1,24 +1,22 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="util" uri="customtags" %>
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="pagecontent"/>
 <!DOCTYPE html>
 <html>
 <head>
-    <title><fmt:message key="label.refill_balance"/></title>
+    <title>Cars</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/resources/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
     <link href="${pageContext.request.contextPath}/resources/css/main.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/resources/css/custom.css" rel="stylesheet">
-
-    <link rel="icon" type="image/png" sizes="32x32" href="${pageContext.request.contextPath}/resources/images/neptune.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="${pageContext.request.contextPath}/resources/images/neptune.png" />
 </head>
 <body>
 
@@ -31,29 +29,44 @@
                     <div class="row">
                         <div class="col">
                             <div class="page-description">
-                                <h1><fmt:message key="label.refill_balance"/></h1>
+                                <h1>
+                                    <c:choose>
+                                        <c:when test="${fn:toLowerCase(carCategoryTitle) eq 'cars'}">
+                                            <fmt:message key="label.category_cars"/>
+                                        </c:when>
+                                        <c:when test="${fn:toLowerCase(carCategoryTitle) eq 'e-cars'}">
+                                            <fmt:message key="label.category_e_cars"/>
+                                        </c:when>
+                                        <c:when test="${fn:toLowerCase(carCategoryTitle) eq 'premium'}">
+                                            <fmt:message key="label.category_premium"/>
+                                        </c:when>
+                                        <c:otherwise>Car category</c:otherwise>
+                                    </c:choose>
+                                </h1>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <c:import url="${pageContext.request.contextPath}/pages/components/message.jsp"/>
-                        <div class="col-md-4 mx-auto">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="example-content">
-                                        <form class="row g-3" action="/controller" method="POST">
-                                            <div class="col-12">
-                                                <label for="inputDeposit" class="form-label"><fmt:message key="label.enter_amount"/></label>
-                                                <input name="refillAmount" type="number" class="form-control" id="inputDeposit">
-                                            </div>
-                                            <input type="hidden" name="command" value="refill_balance">
-                                            <div class="col-12">
-                                                <input type="submit" class="btn btn-primary" value="<fmt:message key="label.action_refill"/>"/>
-                                            </div>
-                                        </form>
+                        <c:forEach var="category" items="${applicationScope.contextCategories}">
+                            <div class="col-md-2">
+                                <a href="/controller?command=to_car_category_page&carCategoryId=<c:out value="${category.id}"/>">
+                                    <div class="card text-center m-1">
+                                        <div class="card-body pt-5 pb-5">
+                                            <h5 class="card-title"><c:out value="${category.title}"/></h5>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </c:forEach>
+                        <div class="col-md-2">
+                            <a href="/controller?command=to_all_cars">
+                                <div class="card text-center m-1">
+                                    <div class="card-body pt-5 pb-5">
+                                        <h5 class="card-title"><fmt:message key="label.all_cars"/></h5>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     </div>
                 </div>
