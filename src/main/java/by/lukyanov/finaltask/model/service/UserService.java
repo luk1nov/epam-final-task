@@ -10,13 +10,13 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface UserService {
-    Optional<User> authenticate(String login, String password) throws ServiceException;
-
     boolean addUser(Map<String, String> userData) throws ServiceException;
 
-    boolean deleteUser(String userId) throws ServiceException;
+    boolean deleteUser(String userId, long loggedUserId) throws ServiceException;
 
     Optional<User> findUserByEmail(String email) throws ServiceException;
+
+    Optional<User> findUserByPhone(String phone) throws ServiceException;
 
     List<User> findAllUsers(String pageNumber, int postsPerPage) throws ServiceException;
 

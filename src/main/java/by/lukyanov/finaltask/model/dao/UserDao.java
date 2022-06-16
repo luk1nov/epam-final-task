@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserDao extends BaseDao<User>{
-    Optional<User> authenticate(String email, String password) throws DaoException;
-
     Optional<User> findUserByEmail(String email) throws DaoException;
 
     Optional<User> findUserById(long id) throws DaoException;
+
+    Optional<User> findUserByPhone(String phone) throws DaoException;
 
     boolean updateBalance(long id, BigDecimal amount, boolean subtract) throws DaoException;
 
