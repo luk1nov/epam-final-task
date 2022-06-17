@@ -87,13 +87,11 @@
                                             <c:forEach var="order" items="${list}">
                                                 <tr>
                                                     <td><c:out value="${order.id}"/></td>
-                                                    <td><c:out value="${order.user.name}"/> <c:out value="${order.user.surname}"/></td>
                                                     <td>
-                                                        <form action="/controller" method="POST" class="m-0">
-                                                            <input type="hidden" name="command" value="to_car_page">
-                                                            <input type="hidden" name="carId" value="<c:out value="${order.car.id}"/>">
-                                                            <input class="order-car-link" type="submit" value="<c:out value="${order.car.brand}"/> <c:out value="${order.car.model}"/>">
-                                                        </form>
+                                                        <a href="${pageContext.request.contextPath}/controller?command=admin_to_user_info&userId=<c:out value="${order.user.id}"/>" target="_blank"><c:out value="${order.user.name}"/> <c:out value="${order.user.surname}"/></a>
+                                                    </td>
+                                                    <td>
+                                                        <a href="${pageContext.request.contextPath}/controller?command=to_car_page&carId=<c:out value="${order.car.id}"/>" target="_blank"><c:out value="${order.car.brand}"/> <c:out value="${order.car.model}"/></a>
                                                     </td>
                                                     <td>
                                                         <fmt:parseDate value="${order.beginDate}" pattern="yyyy-MM-dd" var="parsedDate" type="date" />
