@@ -13,10 +13,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 
-import static by.lukyanov.finaltask.command.Message.INCORRECT_EMAIL_OR_PASS;
-import static by.lukyanov.finaltask.command.Message.USER_NOT_EXISTS;
-import static by.lukyanov.finaltask.command.PagePath.MAIN_PAGE;
-import static by.lukyanov.finaltask.command.PagePath.SIGNIN_PAGE;
+import static by.lukyanov.finaltask.command.Message.*;
+import static by.lukyanov.finaltask.command.PagePath.*;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class SignInCommand implements Command {
@@ -26,7 +24,7 @@ public class SignInCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Router router = new Router(SIGNIN_PAGE);
+        Router router = new Router(SIGN_IN_PAGE);
         String email = request.getParameter(USER_EMAIL);
         String password = request.getParameter(USER_PASS);
         Optional<User> optionalUser;

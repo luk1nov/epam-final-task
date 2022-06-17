@@ -17,7 +17,7 @@ public class LogOutCommand implements Command {
         HttpSession session = request.getSession();
         request.setAttribute(MESSAGE, request.getParameter(MESSAGE));
         session.removeAttribute(ParameterAttributeName.LOGGED_USER);
-        router.setPagePath(PagePath.SIGNIN_PAGE);
+        router.setPagePath(PagePath.SIGN_IN_PAGE);
         return router;
     }
 }

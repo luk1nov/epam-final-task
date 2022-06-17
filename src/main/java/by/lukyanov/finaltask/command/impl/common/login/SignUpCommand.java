@@ -21,7 +21,7 @@ public class SignUpCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Router router = new Router(SIGNUP_PAGE);
+        Router router = new Router(SIGN_UP_PAGE);
         String email = request.getParameter(USER_EMAIL);
         String phone = request.getParameter(USER_PHONE);
         String password = request.getParameter(USER_PASS);
@@ -46,7 +46,7 @@ public class SignUpCommand implements Command {
                 throw new CommandException(e);
             }
         } else{
-            router.setPagePath(SIGNUP_PAGE);
+            router.setPagePath(SIGN_UP_PAGE);
             request.setAttribute(ParameterAttributeName.MESSAGE, Message.PASSWORD_MISMATCH);
         }
         return router;

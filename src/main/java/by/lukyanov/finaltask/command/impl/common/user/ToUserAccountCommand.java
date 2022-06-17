@@ -22,7 +22,7 @@ public class ToUserAccountCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Router router = new Router(SIGNUP_PAGE);
+        Router router = new Router(SIGN_UP_PAGE);
         request.setAttribute(MESSAGE, request.getParameter(MESSAGE));
         HttpSession session = request.getSession();
         User loggedUser = (User) session.getAttribute(LOGGED_USER);

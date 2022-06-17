@@ -1,8 +1,6 @@
 package by.lukyanov.finaltask.command.impl.common.order;
 
 import by.lukyanov.finaltask.command.Command;
-import by.lukyanov.finaltask.command.PagePath;
-import by.lukyanov.finaltask.command.ParameterAttributeName;
 import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.entity.Order;
 import by.lukyanov.finaltask.entity.User;
@@ -28,7 +26,7 @@ public class FindAllUserOrdersCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Router router = new Router(SIGNUP_PAGE);
+        Router router = new Router(SIGN_UP_PAGE);
         HttpSession session = request.getSession();
         User loggedUser = (User) session.getAttribute(LOGGED_USER);
         request.setAttribute(MESSAGE, request.getParameter(MESSAGE));
