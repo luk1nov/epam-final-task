@@ -44,6 +44,7 @@ public enum CommandType {
     FINISH_RENT(new ReturnCarCommand()), 
 
     //ADMIN
+    ADMIN_TO_USER_INFO(new ToUserInfoCommand()),
     ADMIN_TO_ALL_USERS(new FindAllUsersCommand()),
     ADMIN_SEARCH_USER(new SearchUsersCommand()), 
     ADMIN_TO_EDIT_USER(new ToEditUserCommand()), 
