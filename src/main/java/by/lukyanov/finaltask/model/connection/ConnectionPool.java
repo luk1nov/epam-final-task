@@ -40,10 +40,10 @@ public class ConnectionPool {
             DB_DRIVER = properties.getProperty("db.driver");
             Class.forName(DB_DRIVER);
         } catch (IOException e) {
-            logger.fatal(Message.READ_PROPERTIES_ERROR, e);
+            logger.fatal("Error reading properties for db", e);
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
-            logger.fatal(Message.DRIVER_NOT_REGISTER, e);
+            logger.fatal("Driver register error", e);
             throw new RuntimeException(e);
         }
     }
@@ -59,14 +59,14 @@ public class ConnectionPool {
             logger.error("connection didn't created");
         }
         if(freeConnections.size() != POOL_SIZE){
-            logger.warn(Message.POOL_NOT_FULL);
+            logger.warn("Connection pool not full filled. Trying again.");
             try {
                 for (int i = freeConnections.size(); i < POOL_SIZE; i++) {
                     createConnection();
                 }
             } catch (InterruptedException | SQLException e) {
-                logger.error("connection didn't created again");
-                throw new RuntimeException(Message.POOL_FILL_ERROR);
+                logger.error("connection didn't created again", e);
+                throw new RuntimeException(e);
             }
         }
         logger.info("Connection pool init " + freeConnections.size());
@@ -99,7 +99,7 @@ public class ConnectionPool {
             connection = freeConnections.take();
             usedConnections.put(connection);
         } catch (InterruptedException e) {
-            logger.error(Message.GET_CON_EXCEPT);
+            logger.error("Interrupted exception in get connection method", e);
             Thread.currentThread().interrupt();
         }
         return connection;
@@ -113,7 +113,7 @@ public class ConnectionPool {
                 freeConnections.put(proxyConnection);
                 isReleased = true;
             } catch (InterruptedException e) {
-                logger.error(Message.RELEASE_CON_EXCEPT);
+                logger.error("Interrupted exception in release connection method", e);
                 Thread.currentThread().interrupt();
             }
         }
@@ -121,19 +121,18 @@ public class ConnectionPool {
     }
 
     public void destroyPool(){
-        logger.info("free " + freeConnections.size() + "/ used " + usedConnections.size());
         for (int i = 0; i < POOL_SIZE; i++) {
             try{
                 freeConnections.take().reallyClose();
             } catch (InterruptedException e) {
-                logger.error(Message.DESTROY_POOL_INTERRUPTED);
+                logger.error("Interrupted exception in destroy pool method", e);
                 Thread.currentThread().interrupt();
             } catch (SQLException e) {
-                logger.error(Message.DESTROY_POOL_SQL);
+                logger.error("SQL exception in get destroy pool method", e);
             }
         }
         deregisterDrivers();
-        logger.info("Pool destroyed successfully");
+        logger.info("Pool destroyed");
     }
 
     private void deregisterDrivers() {
@@ -141,9 +140,8 @@ public class ConnectionPool {
             try {
                 DriverManager.deregisterDriver(driver);
             } catch (SQLException e) {
-                logger.error(Message.DEREGISTER_DRIVER_SQL);
+                logger.error("SQL exception in deregister driver method", e);
             }
         });
     }
-
 }
