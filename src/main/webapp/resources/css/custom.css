@@ -120,9 +120,9 @@ li.admin-home-link form input[type="submit"], .accordion-menu li form input[type
 }
 
 .car-card-img{
-    display: block;
-    width: inherit;
-    object-fit: fill;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
 }
 
 .car-card-img-container{
@@ -203,3 +203,14 @@ li.admin-home-link form input[type="submit"], .accordion-menu li form input[type
     width: 90px;
     text-align: right;
 }
+
+.user-info-description h1{
+    display: inline;
+}
+
+.user-info-description h5{
+    display: inline;
+    vertical-align: super;
+}
+
+
