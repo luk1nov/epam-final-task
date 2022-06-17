@@ -29,7 +29,7 @@ public class OrderDaoImpl implements OrderDao {
     private static final String SQL_FIND_USER_BALANCE_BY_ID = "SELECT users.balance FROM users WHERE user_id = ?";
     private static final String SQL_UPDATE_USER_BALANCE_BY_ID = "UPDATE users SET balance = ? WHERE user_id = ?";
     private static final String SQL_FIND_ALL_ORDERS_BY_USER_ID = """
-            SELECT o.order_id, o.begin_date, o.end_date, o.order_status, o.message, o.price, o.cars_car_id, c.brand, c.model
+            SELECT o.order_id, o.begin_date, o.end_date, o.order_status, o.message, o.price, c.car_id, c.brand, c.model
             FROM orders AS o
             JOIN cars AS c
             ON o.cars_car_id = c.car_id
