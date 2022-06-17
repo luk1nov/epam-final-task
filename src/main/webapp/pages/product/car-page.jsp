@@ -25,7 +25,7 @@
 
 <div class="app full-width-header align-content-stretch d-flex flex-wrap">
     <div class="app-container" style="width: 100vw; margin-right: 280px;">
-        <c:import url="components/header.jsp"/>
+        <c:import url="../components/header.jsp"/>
         <div class="app-content">
             <div class="content-wrapper">
                 <div class="container-fluid">
@@ -44,7 +44,7 @@
                                                 <img src="data:image/jpg;base64,<c:out value="${car.image}"/>" class="full-width rounded"/>
                                             </c:if>
                                             <c:if test="${car.image eq null}">
-                                                <img src="../resources/images/car-coming-soon.png" class="full-width rounded"/>
+                                                <img src="../../resources/images/car-coming-soon.png" class="full-width rounded"/>
                                             </c:if>
                                         </div>
                                         <c:set var="default_final_price"><fmt:message key="label.final_price"/>: <fmt:message key="label.choose_rent_date"/></c:set>

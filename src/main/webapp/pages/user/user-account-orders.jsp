@@ -26,7 +26,7 @@
 
 <div class="app full-width-header align-content-stretch d-flex flex-wrap">
     <div class="app-container" style="width: 100vw; margin-right: 280px;">
-        <c:import url="components/header.jsp"/>
+        <c:import url="../components/header.jsp"/>
         <div class="app-content">
             <div class="content-wrapper">
                 <div class="container-fluid">
