@@ -1,17 +1,6 @@
 package by.lukyanov.finaltask.command;
 
 public final class Message {
-    public static final String POOL_FILL_ERROR = "Connection pool not filled";
-    public static final String POOL_NOT_FULL = "Connection pool not full filled. Trying again...";
-    public static final String DRIVER_NOT_REGISTER = "Driver register error";
-    public static final String RELEASE_CON_EXCEPT = "Interrupted exception in release connection method";
-    public static final String GET_CON_EXCEPT = "Interrupted exception in get connection method";
-    public static final String DESTROY_POOL_SQL = "SQL exception in get destroy pool method";
-    public static final String DESTROY_POOL_INTERRUPTED = "Interrupted exception in destroy pool method";
-    public static final String DEREGISTER_DRIVER_SQL = "SQL exception in deregister driver method";
-    public static final String CAN_NOT_EDIT_USER = "Can not edit this user";
-    public static final String READ_PROPERTIES_ERROR = "Error reading properties for db";
-    public static final String CAR_NOT_FOUND = "error.car_not_found";
     public static final String USER_NOT_VERIFIED = "label.user_not_verified";
     public static final String USER_VERIFIED = "success.user_verified";
     public static final String USER_NOT_DECLINED = "fail.user_not_declined";
@@ -69,13 +58,6 @@ public final class Message {
     public static final String BALANCE_REFILLED = "success.balance_refilled";
     public static final String INCORRECT_CURRENT_PASS = "fail.incorrect_current_pass";
     public static final String PASSWORD_MISMATCH = "fail.password_mismatch";
-
-
-
-
-
-
-
 
     private Message() {
     }
