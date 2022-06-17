@@ -1,10 +1,8 @@
 package by.lukyanov.finaltask.command.impl.common.order;
 
 import by.lukyanov.finaltask.command.Command;
-import by.lukyanov.finaltask.command.Message;
 import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.entity.Car;
-import by.lukyanov.finaltask.entity.Order;
 import by.lukyanov.finaltask.entity.User;
 import by.lukyanov.finaltask.entity.UserStatus;
 import by.lukyanov.finaltask.exception.CommandException;
@@ -27,8 +25,7 @@ import java.util.Optional;
 import static by.lukyanov.finaltask.command.Message.*;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 import static by.lukyanov.finaltask.command.PagePath.*;
-import static by.lukyanov.finaltask.util.DateRangeParser.BEGIN_DATE_INDEX;
-import static by.lukyanov.finaltask.util.DateRangeParser.END_DATE_INDEX;
+import static by.lukyanov.finaltask.util.DateRangeParser.*;
 
 public class CreateOrderCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -61,9 +58,11 @@ public class CreateOrderCommand implements Command {
                     request.setAttribute(MESSAGE, NOT_ENOUGH_MONEY);
                 } else {
                     router = addOrder(optionalCar.get(), optionalUser.get(), orderDateRange);
+                    optionalUser = userService.findUserById(String.valueOf(loggedUser.getId()));
+                    session.setAttribute(LOGGED_USER, optionalUser.get());
                 }
             } else {
-                router.setPagePath(SIGNIN_PAGE);
+                router.setPagePath(SIGN_IN_PAGE);
             }
         } catch (ServiceException e) {
             logger.error("Command exception trying create order", e);
