@@ -18,18 +18,15 @@ public class ChangeLocaleCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         ValidatorImpl validator = ValidatorImpl.getInstance();
-        Router router = new Router();
         HttpSession session = request.getSession();
         String currentPage = (String) session.getAttribute(CURRENT_PAGE);
-        logger.debug(currentPage);
-        String language = request.getParameter(LANGUAGE);
-
-        if(validator.isLocaleExists(language)){
-            session.setAttribute(LOCALE, language);
+        Router router = new Router(currentPage);
+        String locale = request.getParameter(LOCALE);
+        if(validator.isLocaleExists(locale)){
+            session.setAttribute(LOCALE, locale);
         } else {
-            logger.warn("incorrect locale parameter: " + language);
+            logger.warn("incorrect locale parameter");
         }
-        router.setPagePath(currentPage);
         return router;
     }
 }

@@ -14,7 +14,7 @@ public class ValidatorImpl implements Validator {
     private static final String PRICE_PATTERN = "^\\d{1,5}\\.\\d{1,2}$|^\\d{1,5}$";
     private static final String CAR_POWER_PATTERN = "^\\d{3}$";
     private static final String CAR_ACCELERATION_PATTERN = "^([1-5]\\d|[1-9])(\\.\\d)?$";
-    private static final String LOCALE_PATTERN = "^en_US$|^ru_RU$";
+    private static final String LOCALE_PATTERN = "^en$|^ru$";
     private static final String DATE_RANGE_PATTERN = "^\\d{4}-\\d{2}-\\d{2}\\s—\\s\\d{4}-\\d{2}-\\d{2}$|^\\d{4}-\\d{2}-\\d{2}$";
     private static final String MESSAGE_PATTERN = "^[\\s\\wА-яЁё.,!?]{0,200}$";
     private static final String NUMBER_PATTERN = "^\\d+$";
