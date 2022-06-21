@@ -58,6 +58,13 @@ public final class Message {
     public static final String BALANCE_REFILLED = "success.balance_refilled";
     public static final String INCORRECT_CURRENT_PASS = "fail.incorrect_current_pass";
     public static final String PASSWORD_MISMATCH = "fail.password_mismatch";
+    public static final String MAIL_SIGN_UP_TEXT = "mail.sign_up_text";
+    public static final String MAIL_SIGN_UP_SUBJECT = "mail.sign_up_subject";
+    public static final String MAIL_DECLINE_ACC_TEXT = "mail.decline_acc_text";
+    public static final String MAIL_DECLINE_ACC_SUBJECT = "mail.decline_acc_subject";
+    public static final String MAIL_ACCEPT_ACC_TEXT = "mail.accept_acc_text";
+    public static final String MAIL_ACCEPT_ACC_SUBJECT = "mail.accept_acc_subject";
+
 
     private Message() {
     }
