@@ -16,7 +16,6 @@
 <body>
 <div class="app app-auth-sign-up align-content-stretch d-flex flex-wrap justify-content-end">
     <div class="app-auth-background">
-
     </div>
     <div class="app-auth-container">
         <h1 href="index.html"><fmt:message key="label.sign_up"/></h1>

@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
+
 public class UserServiceImpl implements UserService {
     private static final Logger logger = LogManager.getLogger();
     private static final UserDaoImpl userDao = UserDaoImpl.getInstance();
@@ -33,18 +35,18 @@ public class UserServiceImpl implements UserService {
     private UserServiceImpl() {
     }
 
-    static public UserServiceImpl getInstance(){
+    public static UserServiceImpl getInstance(){
         return instance;
     }
 
     @Override
     public boolean addUser(Map<String, String> userData) throws ServiceException {
         PasswordEncoder encoder = PasswordEncoder.getInstance();
-        String name = userData.get(ParameterAttributeName.USER_NAME);
-        String surname = userData.get(ParameterAttributeName.USER_SURNAME);
-        String email = userData.get(ParameterAttributeName.USER_EMAIL);
-        String phone = userData.get(ParameterAttributeName.USER_PHONE);
-        String pass = userData.get(ParameterAttributeName.USER_PASS);
+        String name = userData.get(USER_NAME);
+        String surname = userData.get(USER_SURNAME);
+        String email = userData.get(USER_EMAIL);
+        String phone = userData.get(USER_PHONE);
+        String pass = userData.get(USER_PASS);
         boolean addUserResult;
 
         if(validator.isOneWord(name) && validator.isValidSurname(surname) && validator.isValidEmail(email) &&
@@ -91,14 +93,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findUserByEmail(String email) throws ServiceException {
-        Optional<User> user;
         try {
-            user = validator.isValidEmail(email) ? userDao.findUserByEmail(email) : Optional.empty();
+            return validator.isValidEmail(email) ? userDao.findUserByEmail(email) : Optional.empty();
         } catch (DaoException e) {
             logger.error("Service exception trying find user by email", e);
             throw new ServiceException(e);
         }
-        return user;
     }
 
     @Override
@@ -150,11 +150,10 @@ public class UserServiceImpl implements UserService {
         String userId = userData.get(ParameterAttributeName.USER_ID);
         String name = userData.get(ParameterAttributeName.USER_NAME);
         String surname = userData.get(ParameterAttributeName.USER_SURNAME);
-        String email = userData.get(ParameterAttributeName.USER_EMAIL);
-        String phone = userData.get(ParameterAttributeName.USER_PHONE);
+        String email = userData.get(USER_EMAIL);
+        String phone = userData.get(USER_PHONE);
         String role = userData.get(ParameterAttributeName.USER_ROLE).toUpperCase();
         String status = userData.get(ParameterAttributeName.USER_STATUS).toUpperCase();
-        logger.info(userData.toString());
         if(validator.isValidId(userId) && validator.isOneWord(name) && validator.isValidSurname(surname) &&
                 validator.isValidEmail(email) && validator.isValidPhone(phone)){
             try{
@@ -198,8 +197,8 @@ public class UserServiceImpl implements UserService {
         boolean updated = false;
         String name = userData.get(ParameterAttributeName.USER_NAME);
         String surname = userData.get(ParameterAttributeName.USER_SURNAME);
-        String email = userData.get(ParameterAttributeName.USER_EMAIL);
-        String phone = userData.get(ParameterAttributeName.USER_PHONE);
+        String email = userData.get(USER_EMAIL);
+        String phone = userData.get(USER_PHONE);
         if(validator.isOneWord(name) && validator.isValidSurname(surname) &&
                 validator.isValidEmail(email) && validator.isValidPhone(phone)){
             try{
