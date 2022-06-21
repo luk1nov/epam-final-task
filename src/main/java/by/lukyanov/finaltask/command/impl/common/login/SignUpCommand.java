@@ -4,12 +4,18 @@ import by.lukyanov.finaltask.command.*;
 import by.lukyanov.finaltask.exception.CommandException;
 import by.lukyanov.finaltask.exception.ServiceException;
 import by.lukyanov.finaltask.model.service.impl.UserServiceImpl;
+import by.lukyanov.finaltask.util.mail.CustomMail;
+import by.lukyanov.finaltask.util.ResourceBundleExtractor;
+import by.lukyanov.finaltask.util.mail.MailSender;
+import by.lukyanov.finaltask.util.mail.MailType;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 import static by.lukyanov.finaltask.command.Message.*;
 import static by.lukyanov.finaltask.command.PagePath.*;
@@ -21,6 +27,7 @@ public class SignUpCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
+        HttpSession session = request.getSession();
         Router router = new Router(SIGN_UP_PAGE);
         String email = request.getParameter(USER_EMAIL);
         String phone = request.getParameter(USER_PHONE);
@@ -32,7 +39,10 @@ public class SignUpCommand implements Command {
                 if(userService.findUserByEmail(email).isEmpty() && userService.findUserByPhone(phone).isEmpty()) {
                     if (userService.addUser(userData)) {
                         router.setType(Router.Type.REDIRECT);
+                        var currentLocale = (String) session.getAttribute(LOCALE);
                         router.setPagePath(generateUrlWithAttr(TO_SIGN_IN, MESSAGE_ATTR, USER_ADDED));
+                        var sender = MailSender.getInstance();
+                        sender.send(MailType.SIGN_UP, email, currentLocale);
                     } else {
                         forwardUserData(request);
                         request.setAttribute(MESSAGE, USER_NOT_ADDED);
