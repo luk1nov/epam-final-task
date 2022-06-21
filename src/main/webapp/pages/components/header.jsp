@@ -62,13 +62,13 @@
                             </form>
                         </li>
                     </c:if>
-                    <c:if test="${sessionScope.locale == 'en_US'}">
+                    <c:if test="${sessionScope.locale == 'en'}">
                         <li class="nav-item hidden-on-mobile">
                             <a class="nav-link language-dropdown-toggle" href="#" data-bs-toggle="dropdown"><img src="${pageContext.request.contextPath}/resources/images/flags/us.png" alt=""></a>
                             <ul class="dropdown-menu dropdown-menu-end language-dropdown" aria-labelledby="languageDropDown">
                                 <li>
                                     <form action="/controller" class="lang-button ru-button" method="POST">
-                                        <input type="hidden" name="language" value="ru_RU">
+                                        <input type="hidden" name="locale" value="ru">
                                         <input type="hidden" name="command" value="change_locale">
                                         <input class="dropdown-item" type="submit" value="Русский" class="nav-link">
                                     </form>
@@ -76,13 +76,13 @@
                             </ul>
                         </li>
                     </c:if>
-                    <c:if test="${sessionScope.locale == 'ru_RU'}">
+                    <c:if test="${sessionScope.locale == 'ru'}">
                         <li class="nav-item hidden-on-mobile">
                             <a class="nav-link language-dropdown-toggle" href="#" data-bs-toggle="dropdown"><img src="${pageContext.request.contextPath}/resources/images/flags/russia.png" alt=""></a>
                             <ul class="dropdown-menu dropdown-menu-end language-dropdown" aria-labelledby="languageDropDown">
                                 <li>
                                     <form action="/controller" class="lang-button eng-button" method="POST">
-                                        <input type="hidden" name="language" value="en_US">
+                                        <input type="hidden" name="locale" value="en">
                                         <input type="hidden" name="command" value="change_locale">
                                         <input class="dropdown-item" type="submit" value="English" class="nav-link">
                                     </form>
