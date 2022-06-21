@@ -123,7 +123,7 @@
                                         </c:if>
                                         <c:if test="${sessionScope.loggedUser.driverLicense == null}">
                                             <div class="alert alert-danger alert-style-light" role="alert">
-                                                Your account is not active. Upload your driver license photo to verify your account.
+                                                <fmt:message key="label.not_active_acc"/>
                                             </div>
                                         </c:if>
                                         <form class="row g-3" action="/controller" method="POST" enctype="multipart/form-data">
