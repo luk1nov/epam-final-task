@@ -62,23 +62,23 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="inputModel" class="form-label"><fmt:message key="label.model"/></label>
-                                                <input name="carModel" type="text" class="form-control" id="inputModel" value="<c:out value="${carModel}"/>" required pattern="^([\p{Alpha}А-яЁё\-\d]\s?){2,20}$">
+                                                <input name="carModel" type="text" class="form-control" id="inputModel" value="<c:out value="${car.carModel}"/>" required pattern="^([\p{Alpha}А-яЁё\-\d]\s?){2,20}$">
                                             </div>
                                             <div class="col-md-12">
                                                 <label for="inputVin" class="form-label"><fmt:message key="label.vin_code"/></label>
-                                                <input name="carVinCode" type="text" class="form-control" id="inputVin" maxlength="17" minlength="17" value="<c:out value="${carVinCode}"/>" required pattern="^[A-HJ-NPR-Z0-9]{17}$">
+                                                <input name="carVinCode" type="text" class="form-control" id="inputVin" maxlength="17" minlength="17" value="<c:out value="${car.carVinCode}"/>" required pattern="^[A-HJ-NPR-Z0-9]{17}$">
                                             </div>
                                             <div class="col-6">
                                                 <label for="inputPower" class="form-label"><fmt:message key="label.car_power"/></label>
-                                                <input name="carInfoPower" type="number" class="form-control" id="inputPower" value="<c:out value="${carInfoPower}"/>" min="100" max="999" required pattern="^\d{3}$">
+                                                <input name="carInfoPower" type="number" class="form-control" id="inputPower" value="<c:out value="${car.carInfoPower}"/>" min="100" max="999" required pattern="^\d{3}$">
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="inputAcceleration" class="form-label"><fmt:message key="label.car_acceleration"/> 0-100</label>
-                                                <input name="carInfoAcceleration" type="number" class="form-control" id="inputAcceleration" step="0.1" min="1" max="59.9" value="<c:out value="${carInfoAcceleration}"/>" required pattern="^([1-5]\d|[1-9])(\.\d)?$">
+                                                <input name="carInfoAcceleration" type="number" class="form-control" id="inputAcceleration" step="0.1" min="1" max="59.9" value="<c:out value="${car.carInfoAcceleration}"/>" required pattern="^([1-5]\d|[1-9])(\.\d)?$">
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="inputDrivetrain" class="form-label"><fmt:message key="label.car_drivetrain"/></label>
-                                                <select name="carInfoDrivetrain" id="inputDrivetrain" class="form-select" value="<c:out value="${carInfoDrivetrain}"/>" required>
+                                                <select name="carInfoDrivetrain" id="inputDrivetrain" class="form-select" value="<c:out value="${car.carInfoDrivetrain}"/>" required>
                                                     <option selected value="AWD">AWD</option>
                                                     <option value="RWD">RWD</option>
                                                     <option value="FWD">FWD</option>
@@ -94,11 +94,11 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="inputPrice" class="form-label"><fmt:message key="label.price"/></label>
-                                                <input name="carRegularPrice" type="text" class="form-control" id="inputPrice" value="<c:out value="${carRegularPrice}"/>" required pattern="^\d{1,5}\.\d{1,2}$|^\d{1,5}$">
+                                                <input name="carRegularPrice" type="text" class="form-control" id="inputPrice" value="<c:out value="${car.carRegularPrice}"/>" required pattern="^\d{1,5}\.\d{1,2}$|^\d{1,5}$">
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="inputSalePrice" class="form-label"><fmt:message key="label.sale_price"/></label>
-                                                <input name="carSalePrice" type="text" class="form-control" id="inputSalePrice" value="<c:out value="${carSalePrice}"/>" pattern="^(\d{1,5}\.\d{1,2}$|^\d{1,5})?$">
+                                                <input name="carSalePrice" type="text" class="form-control" id="inputSalePrice" value="<c:out value="${car.carSalePrice}"/>" pattern="^(\d{1,5}\.\d{1,2}$|^\d{1,5})?$">
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="inputActive" class="form-label"><fmt:message key="label.active"/></label>
@@ -137,18 +137,18 @@
 <script src="${pageContext.request.contextPath}/resources/js/main.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/custom.js"></script>
 <script>
-    <c:if test="${carBrand ne null}">
-        document.querySelector('#inputBrand option[value="<c:out value="${carBrand}"/>"]').setAttribute('selected', 'selected');
+    <c:if test="${car.carBrand ne null}">
+        document.querySelector('#inputBrand option[value="<c:out value="${car.carBrand}"/>"]').setAttribute('selected', 'selected');
     </c:if>
     $('#inputBrand').select2();
-    <c:if test="${carCategoryId ne null}">
-        document.querySelector('#inputCarCategory option[value="<c:out value="${carCategoryId}"/>"]').setAttribute('selected', 'selected');
+    <c:if test="${car.carCategoryId ne null}">
+        document.querySelector('#inputCarCategory option[value="<c:out value="${car.carCategoryId}"/>"]').setAttribute('selected', 'selected');
     </c:if>
-    <c:if test="${carActive ne null}">
-        document.querySelector('#inputActive option[value="<c:out value="${carActive}"/>"]').setAttribute('selected', 'selected');
+    <c:if test="${car.carActive ne null}">
+        document.querySelector('#inputActive option[value="<c:out value="${car.carActive}"/>"]').setAttribute('selected', 'selected');
     </c:if>
-    <c:if test="${carInfoDrivetrain ne null}">
-        document.querySelector('#inputDrivetrain option[value="<c:out value="${carInfoDrivetrain}"/>"]').setAttribute('selected', 'selected');
+    <c:if test="${car.carInfoDrivetrain ne null}">
+        document.querySelector('#inputDrivetrain option[value="<c:out value="${car.carInfoDrivetrain}"/>"]').setAttribute('selected', 'selected');
     </c:if>
 </script>
 </body>

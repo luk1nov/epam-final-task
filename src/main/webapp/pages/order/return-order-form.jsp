@@ -41,7 +41,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="example-content">
-                                        <form class="row g-3 needs-validation" action="/controller" method="POST" enctype="multipart/form-data" novalidate oninput='reportText.setCustomValidity(/^[\s\wА-яЁё.,!?]{0,200}$/.test(reportText.value) ? "invalid message" : "")'>
+                                        <form class="row g-3 needs-validation" action="/controller" method="POST" enctype="multipart/form-data" novalidate oninput='reportText.setCustomValidity(!/^[\s\wА-яЁё.,!?]{0,200}$/.test(reportText.value) ? "invalid message" : "")'>
                                             <div class="col-12">
                                                 <label for="inputReportStatus" class="form-label"><fmt:message key="label.defects"/></label>
                                                 <select name="reportStatus" class="form-control" id="inputReportStatus" required>
@@ -52,14 +52,21 @@
                                             </div>
                                             <div class="col-12">
                                                 <label for="inputText" class="form-label"><fmt:message key="label.rent_desc"/></label>
-                                                <textarea maxlength="200" name="reportText" class="form-control" id="inputText"><c:out value='${reportText}'/></textarea>
+                                                <textarea required maxlength="200" rows="4" name="reportText" class="form-control" id="inputText"><c:out value='${report.reportText}'/></textarea>
                                             </div>
                                             <div class="col-12">
                                                 <label for="inputReportPhoto" class="form-label"><fmt:message key="label.photo"/></label>
                                                 <input name="reportPhoto" type="file" class="form-control" id="inputReportPhoto" required>
                                             </div>
                                             <input type="hidden" name="command" value="finish_rent">
-                                            <input type="hidden" name="orderId" value="<c:out value='${orderId}'/>">
+                                            <c:choose>
+                                                <c:when test="${orderReport != null}">
+                                                    <input type="hidden" name="orderId" value="<c:out value='${report.orderId}'/>">
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <input type="hidden" name="orderId" value="<c:out value='${orderId}'/>">
+                                                </c:otherwise>
+                                            </c:choose>
                                             <div class="col-12">
                                                 <input type="submit" class="btn btn-primary" value="<fmt:message key="label.action_save"/>"/>
                                             </div>
@@ -81,8 +88,8 @@
 <script src="${pageContext.request.contextPath}/resources/js/main.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/custom.js"></script>
 <script>
-    <c:if test="${carInfoDrivetrain ne null}">
-        document.querySelector('#inputReportStatus option[value="<c:out value="${reportStatus}"/>"]').setAttribute('selected', 'selected');
+    <c:if test="${report.reportStatus ne null}">
+        document.querySelector('#inputReportStatus option[value="<c:out value="${report.reportStatus}"/>"]').setAttribute('selected', 'selected');
     </c:if>
 </script>
 </body>

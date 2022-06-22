@@ -1,5 +1,6 @@
 package by.lukyanov.finaltask.tag;
 
+import by.lukyanov.finaltask.entity.CarCategory;
 import jakarta.servlet.jsp.JspException;
 import jakarta.servlet.jsp.JspWriter;
 import jakarta.servlet.jsp.tagext.SimpleTagSupport;
@@ -39,26 +40,22 @@ public class PaginationTag extends SimpleTagSupport{
     }
 
     private String buildPaginationElement(int page, int currentPage){
-        String catId = (String) getJspContext().findAttribute(CAR_CATEGORY_ID);
+        CarCategory category = (CarCategory) getJspContext().findAttribute(CAR_CATEGORY);
         StringBuilder sb = new StringBuilder();
         sb.append(page == currentPage ? "<li class='page-item disabled active'>" : "<li class='page-item'>")
-            .append("<form action='/controller' method='POST' class='m-0'>")
-            .append("<input type='hidden' name='page' value='")
+            .append("<form action='/controller' method='POST' class='m-0'><input type='hidden' name='page' value='")
             .append(page)
-            .append("'>")
-            .append("<input type='hidden' name='command' value='")
+            .append("'><input type='hidden' name='command' value='")
             .append(command)
             .append("'>");
-        if(catId != null){
+        if(category != null){
             sb.append("<input type='hidden' name='carCategoryId' value='")
-                .append(catId)
+                .append(category.getId())
                 .append("'>");
         }
         sb.append("<input class='page-link' type='submit' value='")
             .append(page)
-            .append("'>")
-            .append("</form>")
-            .append("</li>");
+            .append("'></form></li>");
         return sb.toString();
     }
 }

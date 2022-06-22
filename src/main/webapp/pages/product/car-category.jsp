@@ -30,12 +30,8 @@
                         <div class="col">
                             <div class="page-description">
                                 <h1>
-                                    <c:if test="${not empty carCategoryTitle}">
-                                        <c:out value="${carCategoryTitle}"/>
-                                    </c:if>
-                                    <c:if test="${empty carCategoryTitle}">
-                                        All cars
-                                    </c:if>
+                                    <fmt:message key="label.all_cars" var="allCars" />
+                                    <c:out value="${carCategory.title}" default="${allCars}"/>
                                 </h1>
                             </div>
                         </div>
@@ -86,10 +82,10 @@
                             </div>
                         </c:forEach>
                     </div>
-                    <c:if test="${not empty carCategoryTitle}">
+                    <c:if test="${not empty carCategory}">
                         <util:Pagination command="to_car_category_page"/>
                     </c:if>
-                    <c:if test="${empty carCategoryTitle}">
+                    <c:if test="${empty carCategory}">
                         <util:Pagination command="to_all_cars"/>
                     </c:if>
                 </div>

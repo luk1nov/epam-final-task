@@ -25,22 +25,22 @@
             <div class="auth-credentials m-b-xxl row">
                 <div class="col-md-6">
                     <label for="signUpName" class="form-label"><fmt:message key="label.name"/></label>
-                    <input type="text" name="userName" class="form-control m-b-md" id="signUpName" aria-describedby="signUpName" value="<c:out value="${userName}"/>" required pattern="^[\p{Alpha}А-яЁё]{2,40}$">
+                    <input type="text" name="userName" class="form-control m-b-md" id="signUpName" aria-describedby="signUpName" value="<c:out value="${user.userName}"/>" required pattern="^[\p{Alpha}А-яЁё]{2,40}$">
                 </div>
                 <div class="col-md-6">
                     <label for="signUpSurname" class="form-label"><fmt:message key="label.surname"/></label>
-                    <input type="text" name="userSurname" class="form-control m-b-md" id="signUpSurname" aria-describedby="signUpSurname" value="<c:out value="${userSurname}"/>" required pattern="^[\p{Alpha}А-яЁё]{2,20}-[\p{Alpha}А-яЁё]{2,20}$|^[\p{Alpha}А-яЁё]{2,45}$">
+                    <input type="text" name="userSurname" class="form-control m-b-md" id="signUpSurname" aria-describedby="signUpSurname" value="<c:out value="${user.userSurname}"/>" required pattern="^[\p{Alpha}А-яЁё]{2,20}-[\p{Alpha}А-яЁё]{2,20}$|^[\p{Alpha}А-яЁё]{2,45}$">
                 </div>
                 <div class="col-md-12">
                     <label for="signUpPhone" class="form-label"><fmt:message key="label.phone"/></label>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">+375</span>
-                        <input type="text" name="userPhone" class="form-control" id="signUpPhone" value="<c:out value="${userPhone}"/>" required pattern="^\d{2}-\d{3}-\d{2}-\d{2}$">
+                        <input type="text" name="userPhone" class="form-control" id="signUpPhone" value="<c:out value="${user.userPhone}"/>" required pattern="^\d{2}-\d{3}-\d{2}-\d{2}$">
                     </div>
                 </div>
                 <div class="col-md-12">
                     <label for="signUpEmail" class="form-label"><fmt:message key="label.email"/></label>
-                    <input type="email" name="userEmail" class="form-control m-b-md" id="signUpEmail" value="<c:out value="${userEmail}"/>" required pattern="^(?=.{1,64}@)[\w\-]+(\.[\w\-]+)*@[^-][\w\-]+(\.[\p{Alpha}\d\-]+)*(\.[\p{Alpha}]{2,})$">
+                    <input type="email" name="userEmail" class="form-control m-b-md" id="signUpEmail" value="<c:out value="${user.userEmail}"/>" required pattern="^(?=.{1,64}@)[\w\-]+(\.[\w\-]+)*@[^-][\w\-]+(\.[\p{Alpha}\d\-]+)*(\.[\p{Alpha}]{2,})$">
                 </div>
                 <div class="col-md-6">
                     <label for="signUpPassword" class="form-label"><fmt:message key="label.password"/></label>
