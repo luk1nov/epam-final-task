@@ -1,6 +1,8 @@
 package by.lukyanov.finaltask.command.impl.admin.user;
 
-import by.lukyanov.finaltask.command.*;
+import by.lukyanov.finaltask.command.Command;
+import by.lukyanov.finaltask.command.ParameterAttributeName;
+import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.entity.User;
 import by.lukyanov.finaltask.entity.UserStatus;
 import by.lukyanov.finaltask.exception.CommandException;

@@ -1,11 +1,12 @@
 package by.lukyanov.finaltask.command.impl.admin.user;
 
+import by.lukyanov.finaltask.command.Command;
+import by.lukyanov.finaltask.command.ParameterAttributeName;
+import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.entity.User;
 import by.lukyanov.finaltask.exception.CommandException;
 import by.lukyanov.finaltask.exception.ServiceException;
 import by.lukyanov.finaltask.model.service.impl.UserServiceImpl;
-import by.lukyanov.finaltask.command.*;
-import by.lukyanov.finaltask.validation.impl.ValidatorImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
@@ -22,12 +23,12 @@ public class DeleteUserCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        String userId = request.getParameter(ParameterAttributeName.USER_ID);
         HttpSession session = request.getSession();
         String currentPage = (String) session.getAttribute(CURRENT_PAGE);
         User loggedUser = (User) session.getAttribute(ParameterAttributeName.LOGGED_USER);
         Router router = new Router();
         router.setType(Router.Type.REDIRECT);
+        String userId = request.getParameter(ParameterAttributeName.USER_ID);
         try {
             if(userService.deleteUser(userId, loggedUser.getId())){
                 router.setPagePath(generateUrlWithAttr(currentPage, MESSAGE_ATTR, USER_DELETED));

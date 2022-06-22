@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import static by.lukyanov.finaltask.command.Message.CAR_STATUS_CHANGED;
 import static by.lukyanov.finaltask.command.Message.CAR_STATUS_NOT_CHANGED;
-import static by.lukyanov.finaltask.command.PagePath.*;
+import static by.lukyanov.finaltask.command.PagePath.TO_ADMIN_ALL_CARS;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class ChangeCarActiveCommand implements Command {

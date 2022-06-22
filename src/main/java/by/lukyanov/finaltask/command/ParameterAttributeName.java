@@ -49,12 +49,13 @@ public class ParameterAttributeName {
     public static final String CURRENT_PAGE = "currentPage";
     public static final String LOCALE = "locale";
 
-
-    /* util */
+    /* common */
     public static final String LIST = "list";
     public static final String SEARCH = "search";
     public static final String RESULT_PAGE = "page";
     public static final String PAGES_COUNT = "pagesCount";
+
+    /* attributes */
     public static final String MESSAGE_ATTR = "&message=";
     public static final String RESULT_PAGE_ATTR = "&page=";
     public static final String CAR_CATEGORY_ATTR = "&carCategoryId=";
@@ -65,7 +66,6 @@ public class ParameterAttributeName {
     public static final String REPORT_ID_ATTR = "&reportId=";
 
     /* context */
-
     public static final String CONTEXT_CATEGORIES = "contextCategories";
 
 

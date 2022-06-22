@@ -24,15 +24,13 @@ public class ToEditCarCategoryCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
-        Router router = new Router();
+        Router router = new Router(ADMIN_EDIT_CAR_CATEGORY);
         String carCategoryId = request.getParameter(CAR_CATEGORY_ID);
         try {
             Optional<CarCategory> optionalCarCategory = carCategoryService.findCarCategoryById(carCategoryId);
             if (optionalCarCategory.isPresent()){
-                String currentPage = generateUrlWithAttr(TO_ADMIN_EDIT_CATEGORY, CAR_CATEGORY_ATTR, carCategoryId);
-                session.setAttribute(CURRENT_PAGE, currentPage);
+                session.setAttribute(CURRENT_PAGE, generateUrlWithAttr(TO_ADMIN_EDIT_CATEGORY, CAR_CATEGORY_ATTR, carCategoryId));
                 request.setAttribute(CAR_CATEGORY, optionalCarCategory.get());
-                router.setPagePath(ADMIN_EDIT_CAR_CATEGORY);
             } else {
                 router.setPagePath(generateUrlWithAttr(TO_ADMIN_ALL_CATEGORIES, MESSAGE_ATTR, CATEGORY_NOT_EXISTS));
                 router.setType(Router.Type.REDIRECT);

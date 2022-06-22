@@ -13,11 +13,10 @@ import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 public class ToDeclineOrderCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Router router = new Router(ADMIN_DECLINE_ORDER);
         String orderId = request.getParameter(ORDER_ID);
         request.setAttribute(ORDER_ID, orderId);
         HttpSession session = request.getSession();
         session.setAttribute(CURRENT_PAGE, generateUrlWithAttr(TO_ADMIN_DECLINE_ORDER, ORDER_ID_ATTR, orderId));
-        return router;
+        return new Router(ADMIN_DECLINE_ORDER);
     }
 }

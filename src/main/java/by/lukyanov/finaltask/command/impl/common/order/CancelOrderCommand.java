@@ -1,8 +1,6 @@
 package by.lukyanov.finaltask.command.impl.common.order;
 
 import by.lukyanov.finaltask.command.Command;
-import by.lukyanov.finaltask.command.PagePath;
-import by.lukyanov.finaltask.command.ParameterAttributeName;
 import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.entity.User;
 import by.lukyanov.finaltask.exception.CommandException;
@@ -31,9 +29,8 @@ public class CancelOrderCommand implements Command {
         HttpSession session = request.getSession();
         String currentPage = (String) session.getAttribute(CURRENT_PAGE);
         User loggedUser = (User) session.getAttribute(LOGGED_USER);
-        Router router = new Router();
-        router.setType(Router.Type.REDIRECT);
-        String orderId = request.getParameter(ParameterAttributeName.ORDER_ID);
+        Router router = new Router(Router.Type.REDIRECT,TO_LOG_OUT);
+        String orderId = request.getParameter(ORDER_ID);
         try {
             if (orderService.cancelOrder(orderId)){
                 String userId = String.valueOf(loggedUser.getId());
@@ -41,8 +38,6 @@ public class CancelOrderCommand implements Command {
                 if (optionalUser.isPresent()){
                     session.setAttribute(LOGGED_USER, optionalUser.get());
                     router.setPagePath(generateUrlWithAttr(currentPage, MESSAGE_ATTR, ORDER_CANCELED));
-                } else {
-                    router.setPagePath(TO_LOG_OUT);
                 }
             } else {
                 router.setPagePath(generateUrlWithAttr(currentPage, MESSAGE_ATTR, ORDER_NOT_CANCELED));

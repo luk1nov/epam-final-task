@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.Optional;
 
 import static by.lukyanov.finaltask.command.Message.*;
-import static by.lukyanov.finaltask.command.PagePath.*;
+import static by.lukyanov.finaltask.command.PagePath.TO_ADMIN_ALL_CATEGORIES;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class AddNewCarCategoryCommand implements Command {
@@ -24,7 +24,6 @@ public class AddNewCarCategoryCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        ContextCategoryUploader uploader = ContextCategoryUploader.getInstance();
         HttpSession session = request.getSession();
         String currentPage = (String) session.getAttribute(CURRENT_PAGE);
         Router router = new Router(currentPage);
@@ -34,16 +33,18 @@ public class AddNewCarCategoryCommand implements Command {
             if(optionalCarCategory.isPresent()){
                 request.setAttribute(MESSAGE, CATEGORY_EXISTS);
                 request.setAttribute(CAR_CATEGORY_TITLE, title);
-            } else if(carCategoryService.addCarCategory(title)){
-                router.setType(Router.Type.REDIRECT);
-                router.setPagePath(generateUrlWithAttr(TO_ADMIN_ALL_CATEGORIES, MESSAGE_ATTR, CATEGORY_ADDED));
-                uploader.uploadCategories(request, true);
-            } else{
+            } else if(!carCategoryService.addCarCategory(title)){
                 request.setAttribute(MESSAGE, CATEGORY_NOT_ADDED);
                 request.setAttribute(CAR_CATEGORY_TITLE, title);
+            } else{
+                router.setType(Router.Type.REDIRECT);
+                router.setPagePath(generateUrlWithAttr(TO_ADMIN_ALL_CATEGORIES, MESSAGE_ATTR, CATEGORY_ADDED));
+                var uploader = ContextCategoryUploader.getInstance();
+                uploader.uploadCategories(request, true);
             }
         } catch (ServiceException e) {
-            logger.error("Command exception trying add car category");
+            logger.error("Command exception trying add car category", e);
+            throw new CommandException(e);
         }
         return router;
     }

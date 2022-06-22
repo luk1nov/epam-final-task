@@ -1,11 +1,12 @@
 package by.lukyanov.finaltask.command.impl.common.login;
 
-import by.lukyanov.finaltask.command.*;
+import by.lukyanov.finaltask.command.Command;
+import by.lukyanov.finaltask.command.Message;
+import by.lukyanov.finaltask.command.ParameterAttributeName;
+import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.exception.CommandException;
 import by.lukyanov.finaltask.exception.ServiceException;
 import by.lukyanov.finaltask.model.service.impl.UserServiceImpl;
-import by.lukyanov.finaltask.util.mail.CustomMail;
-import by.lukyanov.finaltask.util.ResourceBundleExtractor;
 import by.lukyanov.finaltask.util.mail.MailSender;
 import by.lukyanov.finaltask.util.mail.MailType;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,10 +16,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executors;
 
 import static by.lukyanov.finaltask.command.Message.*;
-import static by.lukyanov.finaltask.command.PagePath.*;
+import static by.lukyanov.finaltask.command.PagePath.SIGN_UP_PAGE;
+import static by.lukyanov.finaltask.command.PagePath.TO_SIGN_IN;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class SignUpCommand implements Command {
@@ -44,11 +45,11 @@ public class SignUpCommand implements Command {
                         var sender = MailSender.getInstance();
                         sender.send(MailType.SIGN_UP, email, currentLocale);
                     } else {
-                        forwardUserData(request);
+                        request.setAttribute(USER, userData);
                         request.setAttribute(MESSAGE, USER_NOT_ADDED);
                     }
                 } else {
-                    forwardUserData(request);
+                    request.setAttribute(USER, userData);
                     request.setAttribute(MESSAGE, USER_EXISTS);
                 }
             } catch (ServiceException e) {
@@ -70,12 +71,5 @@ public class SignUpCommand implements Command {
         userData.put(USER_PHONE, request.getParameter(USER_PHONE));
         userData.put(USER_PASS, request.getParameter(USER_PASS));
         return userData;
-    }
-
-    private void forwardUserData(HttpServletRequest request){
-        request.setAttribute(USER_NAME, request.getParameter(USER_NAME));
-        request.setAttribute(USER_SURNAME, request.getParameter(USER_SURNAME));
-        request.setAttribute(USER_EMAIL, request.getParameter(USER_EMAIL));
-        request.setAttribute(USER_PHONE, request.getParameter(USER_PHONE));
     }
 }

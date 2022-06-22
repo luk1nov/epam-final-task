@@ -28,7 +28,6 @@ public class EditUserCommand implements Command {
         HttpSession session = request.getSession();
         String currentPage = (String) session.getAttribute(CURRENT_PAGE);
         Router router = new Router(currentPage);
-
         Map<String, String> userData = requestAttrToUserData(request);
         String userId = request.getParameter(USER_ID);
         String phone = request.getParameter(USER_PHONE);
@@ -36,11 +35,11 @@ public class EditUserCommand implements Command {
         try {
             if(checkDuplicateByEmail(email, userId) || checkDuplicateByPhone(phone, userId)){
                 request.setAttribute(MESSAGE, USER_EXISTS);
-            } else if(userService.updateUser(userData)){
+            } else if(!userService.updateUser(userData)){
+                request.setAttribute(MESSAGE, USER_NOT_EDITED);
+            } else {
                 router.setType(Router.Type.REDIRECT);
                 router.setPagePath(generateUrlWithAttr(TO_ADMIN_ALL_USERS, MESSAGE_ATTR, USER_EDITED));
-            } else {
-                request.setAttribute(MESSAGE, USER_NOT_EDITED);
             }
         } catch (ServiceException e) {
             logger.error("Service exception trying update user");

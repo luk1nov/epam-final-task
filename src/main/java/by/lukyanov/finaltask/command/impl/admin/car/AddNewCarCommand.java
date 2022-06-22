@@ -36,14 +36,14 @@ public class AddNewCarCommand implements Command {
         try (InputStream is = request.getPart(CAR_IMAGE).getInputStream()){
             Optional<Car> optionalCar = carService.findCarByVinCode(vinCode);
             if(optionalCar.isPresent()){
-                forwardRequest(request);
+                request.setAttribute(CAR, carData);
                 request.setAttribute(MESSAGE, CAR_EXISTS);
-            } else if (carService.addCar(carData, is)){
+            } else if (!carService.addCar(carData, is)){
+                request.setAttribute(CAR, carData);
+                request.setAttribute(MESSAGE, CAR_NOT_ADDED);
+            } else {
                 router.setType(Router.Type.REDIRECT);
                 router.setPagePath(generateUrlWithAttr(TO_ADMIN_ALL_CARS, MESSAGE_ATTR, CAR_ADDED));
-            } else {
-                forwardRequest(request);
-                request.setAttribute(MESSAGE, CAR_NOT_ADDED);
             }
         } catch (IOException e) {
             logger.error("Command exception trying to get input stream from part", e);
@@ -75,18 +75,4 @@ public class AddNewCarCommand implements Command {
         }
         return carData;
     }
-
-    private void forwardRequest(HttpServletRequest request){
-        request.setAttribute(CAR_BRAND, request.getParameter(CAR_BRAND));
-        request.setAttribute(CAR_MODEL, request.getParameter(CAR_MODEL));
-        request.setAttribute(CAR_VIN_CODE, request.getParameter(CAR_VIN_CODE));
-        request.setAttribute(CAR_REGULAR_PRICE, request.getParameter(CAR_REGULAR_PRICE));
-        request.setAttribute(CAR_SALE_PRICE, request.getParameter(CAR_SALE_PRICE));
-        request.setAttribute(CAR_ACTIVE, request.getParameter(CAR_ACTIVE));
-        request.setAttribute(CAR_CATEGORY_ID, request.getParameter(CAR_CATEGORY_ID));
-        request.setAttribute(CAR_INFO_ACCELERATION, request.getParameter(CAR_INFO_ACCELERATION));
-        request.setAttribute(CAR_INFO_POWER, request.getParameter(CAR_INFO_POWER));
-        request.setAttribute(CAR_INFO_DRIVETRAIN, request.getParameter(CAR_INFO_DRIVETRAIN));
-    }
-
 }

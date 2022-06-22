@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.Optional;
 
 import static by.lukyanov.finaltask.command.Message.*;
-import static by.lukyanov.finaltask.command.PagePath.*;
+import static by.lukyanov.finaltask.command.PagePath.TO_ADMIN_ALL_CATEGORIES;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class EditCarCategoryCommand implements Command {
@@ -24,7 +24,6 @@ public class EditCarCategoryCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        ContextCategoryUploader uploader = ContextCategoryUploader.getInstance();
         HttpSession session = request.getSession();
         String currentPage = (String) session.getAttribute(CURRENT_PAGE);
         Router router = new Router(currentPage);
@@ -33,15 +32,16 @@ public class EditCarCategoryCommand implements Command {
         try {
             if (checkDuplicateByTitle(title, id)){
                 request.setAttribute(MESSAGE, CATEGORY_EXISTS);
-            } else if(carCategoryService.updateCarCategory(id, title)){
+            } else if(!carCategoryService.updateCarCategory(id, title)){
+                request.setAttribute(MESSAGE, CATEGORY_NOT_EDITED);
+            } else {
                 router.setPagePath(generateUrlWithAttr(TO_ADMIN_ALL_CATEGORIES, MESSAGE_ATTR, CATEGORY_EDITED));
                 router.setType(Router.Type.REDIRECT);
+                var uploader = ContextCategoryUploader.getInstance();
                 uploader.uploadCategories(request, true);
-            } else {
-                request.setAttribute(MESSAGE, CATEGORY_NOT_EDITED);
             }
         } catch (ServiceException e) {
-            logger.error("Command exception trying edit car category");
+            logger.error("Command exception trying edit car category", e);
             throw new CommandException(e);
         }
         return router;

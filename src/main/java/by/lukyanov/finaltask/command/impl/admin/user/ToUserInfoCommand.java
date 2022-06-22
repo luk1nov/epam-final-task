@@ -26,13 +26,12 @@ public class ToUserInfoCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
         String currentPage = (String) session.getAttribute(CURRENT_PAGE);
-        Router router = new Router();
+        Router router = new Router(ADMIN_USER_INFO);
         String userId = request.getParameter(USER_ID);
         try {
             Optional<User> optionalUser = userService.findUserById(userId);
             if(optionalUser.isPresent()){
                 session.setAttribute(CURRENT_PAGE, generateUrlWithAttr(TO_ADMIN_TO_USER_INFO, USER_ID_ATTR, userId));
-                router.setPagePath(ADMIN_USER_INFO);
                 request.setAttribute(USER, optionalUser.get());
             } else {
                 router.setType(Router.Type.REDIRECT);

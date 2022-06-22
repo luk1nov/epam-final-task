@@ -14,7 +14,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-import static by.lukyanov.finaltask.command.PagePath.*;
+import static by.lukyanov.finaltask.command.PagePath.ADMIN_REPAIRING_CARS;
+import static by.lukyanov.finaltask.command.PagePath.TO_ADMIN_REPAIRING_CARS;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class FindCarsOnRepairCommand implements Command {
@@ -25,7 +26,6 @@ public class FindCarsOnRepairCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
-        Router router = new Router(ADMIN_REPAIRING_CARS);
         String currentResultPage = request.getParameter(RESULT_PAGE);
         request.setAttribute(MESSAGE, request.getParameter(MESSAGE));
         session.setAttribute(CURRENT_PAGE, generateUrlWithAttr(TO_ADMIN_REPAIRING_CARS, RESULT_PAGE_ATTR, currentResultPage));
@@ -39,6 +39,6 @@ public class FindCarsOnRepairCommand implements Command {
             logger.error("Command exception trying find cars on repair", e);
             throw new CommandException(e);
         }
-        return router;
+        return new Router(ADMIN_REPAIRING_CARS);
     }
 }

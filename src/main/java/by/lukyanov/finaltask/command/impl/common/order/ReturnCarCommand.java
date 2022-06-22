@@ -34,8 +34,7 @@ public class ReturnCarCommand implements Command {
         try (InputStream is = request.getPart(ORDER_REPORT_PHOTO).getInputStream()){
             if (is.available() == 0 || !orderService.completeOrder(reportData, is)){
                 request.setAttribute(MESSAGE, ORDER_NOT_FINISHED);
-                request.setAttribute(ORDER_REPORT_STATUS, request.getParameter(ORDER_REPORT_STATUS));
-                request.setAttribute(ORDER_REPORT_TEXT, request.getParameter(ORDER_REPORT_TEXT));
+                request.setAttribute(ORDER_REPORT, reportData);
             } else {
                 router.setPagePath(generateUrlWithAttr(TO_USER_ORDERS, MESSAGE_ATTR, ORDER_FINISHED));
                 router.setType(Router.Type.REDIRECT);

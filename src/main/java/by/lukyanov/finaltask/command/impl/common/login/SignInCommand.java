@@ -1,6 +1,7 @@
 package by.lukyanov.finaltask.command.impl.common.login;
 
-import by.lukyanov.finaltask.command.*;
+import by.lukyanov.finaltask.command.Command;
+import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.entity.User;
 import by.lukyanov.finaltask.exception.CommandException;
 import by.lukyanov.finaltask.exception.ServiceException;
@@ -13,8 +14,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 
-import static by.lukyanov.finaltask.command.Message.*;
-import static by.lukyanov.finaltask.command.PagePath.*;
+import static by.lukyanov.finaltask.command.Message.INCORRECT_EMAIL_OR_PASS;
+import static by.lukyanov.finaltask.command.Message.USER_NOT_EXISTS;
+import static by.lukyanov.finaltask.command.PagePath.MAIN_PAGE;
+import static by.lukyanov.finaltask.command.PagePath.SIGN_IN_PAGE;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class SignInCommand implements Command {
@@ -27,10 +30,9 @@ public class SignInCommand implements Command {
         Router router = new Router(SIGN_IN_PAGE);
         String email = request.getParameter(USER_EMAIL);
         String password = request.getParameter(USER_PASS);
-        Optional<User> optionalUser;
         HttpSession session = request.getSession();
         try {
-            optionalUser = userService.findUserByEmail(email);
+            Optional<User> optionalUser = userService.findUserByEmail(email);
             if (optionalUser.isPresent()){
                 User user = optionalUser.get();
                 if(passwordEncoder.verify(user.getPassword(), password)){

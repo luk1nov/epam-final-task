@@ -1,10 +1,7 @@
 package by.lukyanov.finaltask.command.impl.admin.user;
 
 import by.lukyanov.finaltask.command.Command;
-import by.lukyanov.finaltask.command.PagePath;
-import by.lukyanov.finaltask.command.ParameterAttributeName;
 import by.lukyanov.finaltask.command.Router;
-import by.lukyanov.finaltask.entity.OrderStatus;
 import by.lukyanov.finaltask.entity.User;
 import by.lukyanov.finaltask.exception.CommandException;
 import by.lukyanov.finaltask.exception.ServiceException;
@@ -17,7 +14,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-import static by.lukyanov.finaltask.command.PagePath.*;
+import static by.lukyanov.finaltask.command.PagePath.ADMIN_ALL_USERS;
+import static by.lukyanov.finaltask.command.PagePath.TO_ADMIN_ALL_USERS;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class FindAllUsersCommand implements Command {
@@ -28,7 +26,6 @@ public class FindAllUsersCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
-        Router router = new Router(ADMIN_ALL_USERS);
         request.setAttribute(MESSAGE, request.getParameter(MESSAGE));
         String currentResultPage = request.getParameter(RESULT_PAGE);
         session.setAttribute(CURRENT_PAGE, generateUrlWithAttr(TO_ADMIN_ALL_USERS, RESULT_PAGE_ATTR, currentResultPage));
@@ -42,6 +39,6 @@ public class FindAllUsersCommand implements Command {
             logger.error("Command exception trying find all users", e);
             throw new CommandException(e);
         }
-        return router;
+        return new Router(ADMIN_ALL_USERS);
     }
 }

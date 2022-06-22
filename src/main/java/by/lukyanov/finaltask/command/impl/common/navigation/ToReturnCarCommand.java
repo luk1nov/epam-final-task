@@ -1,7 +1,6 @@
 package by.lukyanov.finaltask.command.impl.common.navigation;
 
 import by.lukyanov.finaltask.command.Command;
-import by.lukyanov.finaltask.command.PagePath;
 import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.entity.Order;
 import by.lukyanov.finaltask.exception.CommandException;
@@ -15,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.Optional;
 
 import static by.lukyanov.finaltask.command.Message.ORDER_NOT_FOUND;
+import static by.lukyanov.finaltask.command.PagePath.ORDER_REPORT;
 import static by.lukyanov.finaltask.command.PagePath.TO_GO_RETURN_CAR;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
@@ -26,7 +26,7 @@ public class ToReturnCarCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
         String currentPage = (String) session.getAttribute(CURRENT_PAGE);
-        Router router = new Router(PagePath.ORDER_REPORT);
+        Router router = new Router(ORDER_REPORT);
         String orderId = request.getParameter(ORDER_ID);
         try {
             Optional<Order> optionalOrder = orderServiceImpl.findOrderById(orderId);

@@ -1,7 +1,6 @@
 package by.lukyanov.finaltask.command.impl.admin.order;
 
 import by.lukyanov.finaltask.command.Command;
-import by.lukyanov.finaltask.command.ParameterAttributeName;
 import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.entity.OrderReport;
 import by.lukyanov.finaltask.exception.CommandException;
@@ -11,9 +10,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import java.util.Optional;
 
-import static by.lukyanov.finaltask.command.Message.ORDER_NOT_ACCEPTED;
 import static by.lukyanov.finaltask.command.Message.REPORT_NOT_FOUND;
 import static by.lukyanov.finaltask.command.PagePath.ADMIN_ORDER_REPORT;
 import static by.lukyanov.finaltask.command.PagePath.TO_ADMIN_SHOW_ORDER_REPORT;

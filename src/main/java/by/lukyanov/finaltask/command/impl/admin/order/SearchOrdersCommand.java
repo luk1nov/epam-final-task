@@ -15,7 +15,6 @@ import java.util.List;
 
 import static by.lukyanov.finaltask.command.PagePath.*;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
-import static by.lukyanov.finaltask.command.ParameterAttributeName.CURRENT_PAGE;
 
 public class SearchOrdersCommand implements Command {
     private static final Logger logger = LogManager.getLogger();

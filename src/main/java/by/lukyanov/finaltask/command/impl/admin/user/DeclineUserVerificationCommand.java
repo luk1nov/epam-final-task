@@ -32,7 +32,7 @@ public class DeclineUserVerificationCommand implements Command {
         HttpSession session = request.getSession();
         String currentLocale = (String) session.getAttribute(LOCALE);
         String userId = request.getParameter(ParameterAttributeName.USER_ID);
-        Router router = new Router(Router.Type.REDIRECT, TO_ADMIN_UNVERIFIED_USERS);
+        Router router = new Router();
         try {
             Optional<User> user = userService.findUserById(userId);
             if (user.isPresent() && userService.updateUserStatus(userId, UserStatus.INACTIVE)){

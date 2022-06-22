@@ -13,7 +13,8 @@ import org.apache.logging.log4j.Logger;
 
 import static by.lukyanov.finaltask.command.Message.BALANCE_NOT_REFILLED;
 import static by.lukyanov.finaltask.command.Message.BALANCE_REFILLED;
-import static by.lukyanov.finaltask.command.PagePath.*;
+import static by.lukyanov.finaltask.command.PagePath.REFILL_BALANCE;
+import static by.lukyanov.finaltask.command.PagePath.TO_GO_USER_ACCOUNT;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class RefillBalanceCommand implements Command {
@@ -27,15 +28,11 @@ public class RefillBalanceCommand implements Command {
         User loggedUser = (User) session.getAttribute(LOGGED_USER);
         String amount = request.getParameter(REFILL_AMOUNT);
         try {
-            if (loggedUser != null){
-                if(userService.refillBalance(loggedUser.getId(), amount)){
-                    router.setPagePath(generateUrlWithAttr(TO_GO_USER_ACCOUNT, MESSAGE_ATTR, BALANCE_REFILLED));
-                    router.setType(Router.Type.REDIRECT);
-                } else {
-                    request.setAttribute(MESSAGE, BALANCE_NOT_REFILLED);
-                }
+            if(userService.refillBalance(loggedUser.getId(), amount)){
+                router.setPagePath(generateUrlWithAttr(TO_GO_USER_ACCOUNT, MESSAGE_ATTR, BALANCE_REFILLED));
+                router.setType(Router.Type.REDIRECT);
             } else {
-                router.setPagePath(TO_LOG_OUT);
+                request.setAttribute(MESSAGE, BALANCE_NOT_REFILLED);
             }
         } catch (ServiceException e) {
             logger.error("Service exception trying refill balance", e);

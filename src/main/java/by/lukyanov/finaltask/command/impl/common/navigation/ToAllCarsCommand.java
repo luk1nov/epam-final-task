@@ -14,9 +14,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-import static by.lukyanov.finaltask.command.PagePath.*;
+import static by.lukyanov.finaltask.command.PagePath.CAR_CATEGORY_PAGE;
+import static by.lukyanov.finaltask.command.PagePath.TO_ALL_CARS_CATEGORY_PAGE;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
-import static by.lukyanov.finaltask.command.ParameterAttributeName.CAR_CATEGORY_ATTR;
 
 public class ToAllCarsCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -26,8 +26,6 @@ public class ToAllCarsCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
-        String currentPage = (String) session.getAttribute(CURRENT_PAGE);
-        Router router = new Router(currentPage);
         String currentResultPage = request.getParameter(RESULT_PAGE);
         try {
             int pagesCount = ResultCounter.countPages(carService.countAllCars(), POSTS_PER_PAGE);
@@ -35,12 +33,11 @@ public class ToAllCarsCommand implements Command {
             request.setAttribute(RESULT_PAGE, currentResultPage);
             List<Car> cars = carService.findAllCars(currentResultPage, POSTS_PER_PAGE);
             request.setAttribute(LIST, cars);
-            router.setPagePath(CAR_CATEGORY_PAGE);
             session.setAttribute(CURRENT_PAGE, generateUrlWithAttr(TO_ALL_CARS_CATEGORY_PAGE, RESULT_PAGE_ATTR, currentResultPage));
         } catch (ServiceException e) {
             logger.error("Command exception trying find all cars", e);
             throw new CommandException(e);
         }
-        return router;
+        return new Router(CAR_CATEGORY_PAGE);
     }
 }

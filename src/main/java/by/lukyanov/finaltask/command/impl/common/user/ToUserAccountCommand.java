@@ -22,22 +22,18 @@ public class ToUserAccountCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Router router = new Router(SIGN_UP_PAGE);
+        Router router = new Router(TO_LOG_OUT);
         request.setAttribute(MESSAGE, request.getParameter(MESSAGE));
         HttpSession session = request.getSession();
         User loggedUser = (User) session.getAttribute(LOGGED_USER);
         try {
-            if (loggedUser != null){
+            Long userId = loggedUser.getId();
+            Optional<User> optionalUser = userService.findUserById(String.valueOf(userId));
+            if (optionalUser.isPresent()){
+                User user = optionalUser.get();
                 session.setAttribute(CURRENT_PAGE, TO_GO_USER_ACCOUNT);
-                Long userId = loggedUser.getId();
-                Optional<User> optionalUser = userService.findUserById(String.valueOf(userId));
-                if (optionalUser.isPresent()){
-                    User user = optionalUser.get();
-                    session.setAttribute(LOGGED_USER, user);
-                    router.setPagePath(USER_ACCOUNT);
-                } else {
-                    router.setPagePath(TO_LOG_OUT);
-                }
+                session.setAttribute(LOGGED_USER, user);
+                router.setPagePath(USER_ACCOUNT);
             }
         } catch (ServiceException e) {
             logger.error("Command exception trying navigate to user account", e);

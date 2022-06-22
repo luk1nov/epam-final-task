@@ -6,7 +6,6 @@ import by.lukyanov.finaltask.command.impl.util.ContextCategoryUploader;
 import by.lukyanov.finaltask.entity.Car;
 import by.lukyanov.finaltask.exception.CommandException;
 import by.lukyanov.finaltask.exception.ServiceException;
-import by.lukyanov.finaltask.model.service.impl.CarCategoryServiceImpl;
 import by.lukyanov.finaltask.model.service.impl.CarServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -29,14 +28,13 @@ public class ToEditCarCommand implements Command {
         ContextCategoryUploader uploader = ContextCategoryUploader.getInstance();
         HttpSession session = request.getSession();
         String currentPage = (String) session.getAttribute(CURRENT_PAGE);
-        Router router = new Router(currentPage);
+        Router router = new Router(ADMIN_EDIT_CAR);
         String carId = request.getParameter(CAR_ID);
         try {
             Optional<Car> optionalCar = carService.findCarById(carId);
             if (optionalCar.isPresent()){
                 session.setAttribute(CURRENT_PAGE, generateUrlWithAttr(TO_ADMIN_EDIT_CAR, CAR_ID_ATTR, carId));
                 uploader.uploadCategories(request, false);
-                router.setPagePath(ADMIN_EDIT_CAR);
                 request.setAttribute(CAR, optionalCar.get());
             } else{
                 router.setPagePath(generateUrlWithAttr(currentPage, MESSAGE_ATTR, CAR_NOT_EXISTS));

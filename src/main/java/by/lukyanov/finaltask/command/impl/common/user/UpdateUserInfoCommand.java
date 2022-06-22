@@ -16,7 +16,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static by.lukyanov.finaltask.command.Message.*;
-import static by.lukyanov.finaltask.command.PagePath.*;
+import static by.lukyanov.finaltask.command.PagePath.TO_GO_USER_ACCOUNT;
+import static by.lukyanov.finaltask.command.PagePath.USER_ACCOUNT;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 
@@ -33,23 +34,16 @@ public class UpdateUserInfoCommand implements Command {
         String phone = request.getParameter(USER_PHONE);
         Map<String, String> userData = requestAttrToMap(request);
         try {
-            if (loggedUser != null){
-                long userId = loggedUser.getId();
-                if (checkDuplicateByPhone(phone, userId) || checkDuplicateByEmail(email, userId)){
-                    request.setAttribute(MESSAGE, USER_EXISTS);
-                } else if (userService.updateUserInfo(userId, userData)){
-                    Optional<User> optionalUser = userService.findUserById(String.valueOf(userId));
-                    if (optionalUser.isPresent()){
-                        loggedUser = optionalUser.get();
-                        session.setAttribute(LOGGED_USER, loggedUser);
-                        router.setType(Router.Type.REDIRECT);
-                        router.setPagePath(generateUrlWithAttr(TO_GO_USER_ACCOUNT, MESSAGE_ATTR, INFO_UPDATED));
-                    }
-                } else {
-                    request.setAttribute(MESSAGE, INFO_NOT_UPDATED);
-                }
+            long userId = loggedUser.getId();
+            if (checkDuplicateByPhone(phone, userId) || checkDuplicateByEmail(email, userId)){
+                request.setAttribute(MESSAGE, USER_EXISTS);
+            } else if (userService.updateUserInfo(userId, userData)){
+                Optional<User> optionalUser = userService.findUserById(String.valueOf(userId));
+                optionalUser.ifPresent(user -> session.setAttribute(LOGGED_USER, user));
+                router.setType(Router.Type.REDIRECT);
+                router.setPagePath(generateUrlWithAttr(TO_GO_USER_ACCOUNT, MESSAGE_ATTR, INFO_UPDATED));
             } else {
-                router.setPagePath(TO_LOG_OUT);
+                request.setAttribute(MESSAGE, INFO_NOT_UPDATED);
             }
         } catch (ServiceException e) {
             logger.error("Command exception trying update user info", e);

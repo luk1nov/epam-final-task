@@ -1,8 +1,6 @@
 package by.lukyanov.finaltask.command.impl.admin.car;
 
 import by.lukyanov.finaltask.command.Command;
-import by.lukyanov.finaltask.command.PagePath;
-import by.lukyanov.finaltask.command.ParameterAttributeName;
 import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.entity.Order;
 import by.lukyanov.finaltask.exception.CommandException;
@@ -13,10 +11,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import java.util.List;
 
 import static by.lukyanov.finaltask.command.Message.*;
-import static by.lukyanov.finaltask.command.PagePath.*;
+import static by.lukyanov.finaltask.command.PagePath.TO_ADMIN_ALL_CARS;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 
@@ -37,10 +36,10 @@ public class DeleteCarCommand implements Command {
             List<Order> activeOrders = orderService.findActiveOrderDatesByCarId(carId);
             if (!activeOrders.isEmpty()){
                 router.setPagePath(generateUrlWithAttr(currentPage, MESSAGE_ATTR, ACTIVE_ORDERS_WITH_THIS_CAR));
-            } else if (carService.deleteCarById(carId)){
-                router.setPagePath(generateUrlWithAttr(currentPage, MESSAGE_ATTR, CAR_DELETED));
-            } else {
+            } else if (!carService.deleteCarById(carId)){
                 router.setPagePath(generateUrlWithAttr(currentPage, MESSAGE_ATTR, CAR_NOT_DELETED));
+            } else {
+                router.setPagePath(generateUrlWithAttr(currentPage, MESSAGE_ATTR, CAR_DELETED));
             }
         } catch (ServiceException e) {
             logger.error("Command exception trying delete car", e);

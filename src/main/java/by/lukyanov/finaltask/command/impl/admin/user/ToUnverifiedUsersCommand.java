@@ -15,7 +15,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-import static by.lukyanov.finaltask.command.PagePath.*;
+import static by.lukyanov.finaltask.command.PagePath.TO_ADMIN_UNVERIFIED_USERS;
+import static by.lukyanov.finaltask.command.PagePath.UNVERIFIED_USERS;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class ToUnverifiedUsersCommand implements Command {
@@ -26,7 +27,6 @@ public class ToUnverifiedUsersCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
-        Router router = new Router(UNVERIFIED_USERS);
         String currentResultPage = request.getParameter(RESULT_PAGE);
         request.setAttribute(MESSAGE, request.getParameter(MESSAGE));
         session.setAttribute(CURRENT_PAGE, generateUrlWithAttr(TO_ADMIN_UNVERIFIED_USERS, RESULT_PAGE_ATTR, currentResultPage));
@@ -40,6 +40,6 @@ public class ToUnverifiedUsersCommand implements Command {
             logger.error("Command exception trying find unverified users", e);
             throw new CommandException(e);
         }
-        return router;
+        return new Router(UNVERIFIED_USERS);
     }
 }

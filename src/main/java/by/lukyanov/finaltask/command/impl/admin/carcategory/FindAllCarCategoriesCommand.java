@@ -12,7 +12,8 @@ import org.apache.logging.log4j.Logger;
 
 import static by.lukyanov.finaltask.command.PagePath.ADMIN_ALL_CAR_CATEGORIES;
 import static by.lukyanov.finaltask.command.PagePath.TO_ADMIN_ALL_CATEGORIES;
-import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
+import static by.lukyanov.finaltask.command.ParameterAttributeName.CURRENT_PAGE;
+import static by.lukyanov.finaltask.command.ParameterAttributeName.MESSAGE;
 
 public class FindAllCarCategoriesCommand implements Command {
     private static final Logger logger = LogManager.getLogger();

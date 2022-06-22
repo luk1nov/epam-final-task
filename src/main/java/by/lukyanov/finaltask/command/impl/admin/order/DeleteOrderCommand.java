@@ -22,8 +22,7 @@ public class DeleteOrderCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
         String currentPage = (String) session.getAttribute(CURRENT_PAGE);
-        Router router = new Router(currentPage);
-        router.setType(Router.Type.REDIRECT);
+        Router router = new Router(Router.Type.REDIRECT, currentPage);
         String orderId = request.getParameter(ORDER_ID);
         try {
             if(orderService.deleteOrder(orderId)){

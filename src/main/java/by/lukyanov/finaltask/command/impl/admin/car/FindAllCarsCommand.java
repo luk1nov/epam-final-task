@@ -1,7 +1,6 @@
 package by.lukyanov.finaltask.command.impl.admin.car;
 
 import by.lukyanov.finaltask.command.Command;
-import by.lukyanov.finaltask.command.PagePath;
 import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.entity.Car;
 import by.lukyanov.finaltask.exception.CommandException;
@@ -15,7 +14,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-import static by.lukyanov.finaltask.command.PagePath.*;
+import static by.lukyanov.finaltask.command.PagePath.ADMIN_ALL_CARS;
+import static by.lukyanov.finaltask.command.PagePath.TO_ADMIN_ALL_CARS;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class FindAllCarsCommand implements Command {
@@ -25,7 +25,6 @@ public class FindAllCarsCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Router router = new Router(ADMIN_ALL_CARS);
         HttpSession session = request.getSession();
         request.setAttribute(MESSAGE, request.getParameter(MESSAGE));
         String currentResultPage = request.getParameter(RESULT_PAGE);
@@ -40,6 +39,6 @@ public class FindAllCarsCommand implements Command {
             logger.error("Command exception trying find all cars", e);
             throw new CommandException(e);
         }
-        return router;
+        return new Router(ADMIN_ALL_CARS);
     }
 }

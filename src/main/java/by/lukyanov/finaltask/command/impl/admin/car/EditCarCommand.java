@@ -1,7 +1,6 @@
 package by.lukyanov.finaltask.command.impl.admin.car;
 
 import by.lukyanov.finaltask.command.Command;
-import by.lukyanov.finaltask.command.PagePath;
 import by.lukyanov.finaltask.command.ParameterAttributeName;
 import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.entity.Car;
@@ -30,22 +29,20 @@ public class EditCarCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Router router = new Router();
         HttpSession session = request.getSession();
         String currentPage = (String) session.getAttribute(CURRENT_PAGE);
         String vinCode = request.getParameter(CAR_VIN_CODE);
         String carId = request.getParameter(CAR_ID);
+        Router router = new Router(currentPage);
         Map<String, String> carData = requestAttrToCarData(request);
         try (InputStream is = request.getPart(CAR_IMAGE).getInputStream()){
             if (checkDuplicateByVinCode(vinCode, carId)){
                 request.setAttribute(MESSAGE, CAR_EXISTS);
-                router.setPagePath(currentPage);
-            } else if (carService.updateCar(carData, is)) {
+            } else if (!carService.updateCar(carData, is)) {
+                request.setAttribute(MESSAGE, CAR_NOT_EDITED);
+            } else {
                 router.setType(Router.Type.REDIRECT);
                 router.setPagePath(generateUrlWithAttr(TO_ADMIN_ALL_CARS, MESSAGE_ATTR, CAR_EDITED));
-            } else {
-                request.setAttribute(MESSAGE, CAR_NOT_EDITED);
-                router.setPagePath(currentPage);
             }
         } catch (ServiceException | ServletException | IOException e) {
             logger.error("Command exception trying edit car", e);

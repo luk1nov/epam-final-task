@@ -41,8 +41,7 @@ public class ToCategoryCommand implements Command {
                 int pagesCount = ResultCounter.countPages(carService.countAllCarsByCategoryId(category.getId()), POSTS_PER_PAGE);
                 request.setAttribute(PAGES_COUNT, pagesCount);
                 request.setAttribute(RESULT_PAGE, currentResultPage);
-                request.setAttribute(CAR_CATEGORY_TITLE, category.getTitle());
-                request.setAttribute(CAR_CATEGORY_ID, catId);
+                request.setAttribute(CAR_CATEGORY, category);
                 List<Car> cars = carService.findCarsByCategoryId(catId, currentResultPage, POSTS_PER_PAGE);
                 request.setAttribute(LIST, cars);
                 router.setPagePath(CAR_CATEGORY_PAGE);
