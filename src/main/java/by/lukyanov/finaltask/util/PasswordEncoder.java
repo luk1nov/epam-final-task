@@ -2,13 +2,6 @@ package by.lukyanov.finaltask.util;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 public final class PasswordEncoder {
     private static final int DEFAULT_SALT_LENGTH = 16;
@@ -16,8 +9,8 @@ public final class PasswordEncoder {
     private static final int ITERATIONS = 2;
     private static final int MEMORY = 64 * 1024;
     private static final int PARALLELISM = 1;
-    private static Argon2 argon2;
     private static PasswordEncoder instance;
+    private Argon2 argon2;
 
     private PasswordEncoder() {
         argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2i, DEFAULT_SALT_LENGTH, DEFAULT_HASH_LENGTH);
