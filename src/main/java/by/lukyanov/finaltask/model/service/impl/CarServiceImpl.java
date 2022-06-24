@@ -31,7 +31,7 @@ public class CarServiceImpl implements CarService {
     private CarServiceImpl() {
     }
 
-    static public CarServiceImpl getInstance(){
+    public static CarServiceImpl getInstance(){
         return instance;
     }
 
@@ -132,7 +132,7 @@ public class CarServiceImpl implements CarService {
                         .model(model)
                         .vin(vinCode)
                         .regularPrice(new BigDecimal(regularPrice))
-                        .salePrice(salePrice.isPresent() ? new BigDecimal(salePrice.get()) : null)
+                        .salePrice(salePrice.map(BigDecimal::new).orElse(null))
                         .active(Boolean.parseBoolean(isActive))
                         .category(new CarCategory(Long.parseLong(categoryId)))
                         .carInfo(carInfo)
@@ -272,7 +272,7 @@ public class CarServiceImpl implements CarService {
     private boolean comparePrices(String regularPrice, String salePrice){
         BigDecimal decimalSalePrice = new BigDecimal(salePrice);
         BigDecimal decimalRegularPrice = new BigDecimal(regularPrice);
-        if(decimalSalePrice.compareTo(decimalRegularPrice) == -1){
+        if(decimalSalePrice.compareTo(decimalRegularPrice) < 0){
             return true;
         }
         logger.info("sale price equals or greater than regular");
