@@ -7,21 +7,8 @@
         <error-code>404</error-code>
         <location>/pages/error/404-error.jsp</location>
     </error-page>
-        <error-page>
-            <error-code>500</error-code>
-            <location>/pages/error/500-error.jsp</location>
-        </error-page>
-
-    <filter-mapping>
-        <filter-name>CommandFilter</filter-name>
-        <url-pattern>/controller</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>FORWARD</dispatcher>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>AccessFilter</filter-name>
-        <url-pattern>/pages/admin/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>FORWARD</dispatcher>
-    </filter-mapping>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/pages/error/500-error.jsp</location>
+    </error-page>
 </web-app>

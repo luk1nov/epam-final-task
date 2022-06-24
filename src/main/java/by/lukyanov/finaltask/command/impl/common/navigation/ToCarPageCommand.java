@@ -30,27 +30,22 @@ public class ToCarPageCommand implements Command {
         String carId = request.getParameter(CAR_ID);
         HttpSession session = request.getSession();
         String currentPage = (String) session.getAttribute(CURRENT_PAGE);
-        User loggedUser = (User) session.getAttribute(LOGGED_USER);
         Router router = new Router(currentPage);
-        if (loggedUser != null){
-            try {
-                Optional<Car> optionalCar = carServiceImpl.findCarById(carId);
-                if (optionalCar.isPresent()){
-                    Car car = optionalCar.get();
-                    List<Order> orderList = orderServiceImpl.findActiveOrderDatesByCarId(String.valueOf(car.getId()));
-                    request.setAttribute(LIST, orderList);
-                    request.setAttribute(CAR, optionalCar.get());
-                    router.setPagePath(CAR_PAGE);
-                    session.setAttribute(CURRENT_PAGE, generateUrlWithAttr(TO_CAR_PAGE, CAR_ID_ATTR, carId));
-                } else {
-                    request.setAttribute(MESSAGE, CAR_NOT_EXISTS);
-                }
-            } catch (ServiceException e) {
-                logger.error("Command exception trying navigate to car page", e);
-                throw new CommandException(e);
+        try {
+            Optional<Car> optionalCar = carServiceImpl.findCarById(carId);
+            if (optionalCar.isPresent()){
+                Car car = optionalCar.get();
+                List<Order> orderList = orderServiceImpl.findActiveOrderDatesByCarId(String.valueOf(car.getId()));
+                request.setAttribute(LIST, orderList);
+                request.setAttribute(CAR, optionalCar.get());
+                router.setPagePath(CAR_PAGE);
+                session.setAttribute(CURRENT_PAGE, generateUrlWithAttr(TO_CAR_PAGE, CAR_ID_ATTR, carId));
+            } else {
+                request.setAttribute(MESSAGE, CAR_NOT_EXISTS);
             }
-        } else {
-            router.setPagePath(TO_LOG_OUT);
+        } catch (ServiceException e) {
+            logger.error("Command exception trying navigate to car page", e);
+            throw new CommandException(e);
         }
         return router;
     }
