@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="pagecontent"/>
 <div class="app-sidebar">
@@ -32,30 +33,25 @@
                     <input type="submit" value="<fmt:message key="label.completed_orders"/>">
                 </form>
             </li>
-            <li class="sidebar-title">
-                <fmt:message key="label.users"/>
-            </li>
-            <li>
-                <form action="/controller" method="POST">
-                    <input type="hidden" name="command" value="admin_to_add_new_user">
-                    <i class="material-icons-two-tone">person_add</i>
-                    <input type="submit" class="wrapped-submit" value="<fmt:message key="label.add_new_user"/>">
-                </form>
-            </li>
-            <li>
-                <form action="/controller" method="POST">
-                    <input type="hidden" name="command" value="admin_to_all_users">
-                    <i class="material-icons-two-tone">people</i>
-                    <input type="submit" value="<fmt:message key="label.all_users"/>">
-                </form>
-            </li>
-            <li>
-                <form action="/controller" method="POST">
-                    <input type="hidden" name="command" value="admin_to_unverified_users">
-                    <i class="material-icons-two-tone">manage_accounts</i>
-                    <input type="submit" class="wrapped-submit" value="<fmt:message key="label.unverified_users"/>">
-                </form>
-            </li>
+            <c:if test="${sessionScope.loggedUser.role eq 'ADMIN'}">
+                <li class="sidebar-title">
+                    <fmt:message key="label.users"/>
+                </li>
+                <li>
+                    <form action="/controller" method="POST">
+                        <input type="hidden" name="command" value="admin_to_all_users">
+                        <i class="material-icons-two-tone">people</i>
+                        <input type="submit" value="<fmt:message key="label.all_users"/>">
+                    </form>
+                </li>
+                <li>
+                    <form action="/controller" method="POST">
+                        <input type="hidden" name="command" value="admin_to_unverified_users">
+                        <i class="material-icons-two-tone">manage_accounts</i>
+                        <input type="submit" class="wrapped-submit" value="<fmt:message key="label.unverified_users"/>">
+                    </form>
+                </li>
+            </c:if>
             <li class="sidebar-title">
                 <fmt:message key="label.cars"/>
             </li>
