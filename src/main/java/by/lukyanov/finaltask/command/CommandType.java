@@ -19,14 +19,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public enum CommandType {
-    //USERS
-    DEFAULT(new DefaultCommand()), 
-    CHANGE_LOCALE(new ChangeLocaleCommand()), 
+    /* ONLY FOR NOT LOGGED */
     SIGN_UP(new SignUpCommand()),
     SIGN_IN(new SignInCommand()),
-    LOG_OUT(new LogOutCommand()), 
     TO_SIGN_IN_PAGE(new ToSignInCommand()),
     TO_SIGN_UP_PAGE(new ToSignUpCommand()),
+
+    /* COMMON */
+    DEFAULT(new DefaultCommand()),
+    LOG_OUT(new LogOutCommand()),
+    CHANGE_LOCALE(new ChangeLocaleCommand()),
     TO_ALL_CATEGORIES(new ToAllCategoriesCommand()),
     TO_ALL_CARS(new ToAllCarsCommand()),
     TO_CAR_CATEGORY_PAGE(new ToCategoryCommand()),
@@ -43,40 +45,42 @@ public enum CommandType {
     TO_RETURN_CAR(new ToReturnCarCommand()),
     FINISH_RENT(new ReturnCarCommand()), 
 
-    //ADMIN
+    /* MANAGER & ADMIN */
     ADMIN_TO_USER_INFO(new ToUserInfoCommand()),
+    ADMIN_TO_ALL_CARS(new FindAllCarsCommand()),
+    ADMIN_TO_REPAIRING_CARS(new FindCarsOnRepairCommand()),
+    ADMIN_TO_ADD_NEW_CAR(new ToAddNewCarCommand()),
+    ADMIN_ADD_NEW_CAR(new AddNewCarCommand()),
+    ADMIN_SEARCH_CAR(new SearchCarsCommand()),
+    ADMIN_TO_EDIT_CAR(new ToEditCarCommand()),
+    ADMIN_EDIT_CAR(new EditCarCommand()),
+    ADMIN_DELETE_CAR(new DeleteCarCommand()),
+    ADMIN_CHANGE_CAR_ACTIVE_STATUS(new ChangeCarActiveCommand()),
+    ADMIN_TO_ADD_NEW_CAR_CATEGORY(new ToAddNewCarCategoryCommand()),
+    ADMIN_ADD_NEW_CAR_CATEGORY(new AddNewCarCategoryCommand()),
+    ADMIN_TO_ALL_CAR_CATEGORIES(new FindAllCarCategoriesCommand()),
+    ADMIN_TO_EDIT_CAR_CATEGORY(new ToEditCarCategoryCommand()),
+    ADMIN_DELETE_CAR_CATEGORY(new DeleteCarCategoryCommand()),
+    ADMIN_FIND_ALL_ORDERS(new FinaAllOrdersCommand()),
+    ADMIN_SEARCH_ORDER(new SearchOrdersCommand()),
+    ADMIN_FIND_COMPLETED_ORDERS(new FindCompletedOrdersCommand()),
+    ADMIN_SHOW_ORDER_REPORT(new ShowOrderReportCommand()),
+    ADMIN_FIND_PROCESSING_ORDERS(new FindProcessingOrdersCommand()),
+    ADMIN_DELETE_ORDER(new DeleteOrderCommand()),
+    ADMIN_ACCEPT_ORDER(new AcceptOrderCommand()),
+    ADMIN_TO_DECLINE_ORDER(new ToDeclineOrderCommand()),
+    ADMIN_DECLINE_ORDER(new DeclineOrderCommand()),
+    ADMIN_EDIT_CAR_CATEGORY(new EditCarCategoryCommand()),
+
+    /* ADMIN ONLY */
     ADMIN_TO_ALL_USERS(new FindAllUsersCommand()),
-    ADMIN_SEARCH_USER(new SearchUsersCommand()), 
-    ADMIN_TO_EDIT_USER(new ToEditUserCommand()), 
-    ADMIN_EDIT_USER(new EditUserCommand()), 
+    ADMIN_SEARCH_USER(new SearchUsersCommand()),
+    ADMIN_TO_EDIT_USER(new ToEditUserCommand()),
+    ADMIN_EDIT_USER(new EditUserCommand()),
     ADMIN_DELETE_USER(new DeleteUserCommand()), 
     ADMIN_TO_UNVERIFIED_USERS(new ToUnverifiedUsersCommand()), 
     ADMIN_VERIFY_USER(new VerifyUserCommand()), 
-    ADMIN_DECLINE_USER(new DeclineUserVerificationCommand()), 
-    ADMIN_TO_ALL_CARS(new FindAllCarsCommand()), 
-    ADMIN_TO_REPAIRING_CARS(new FindCarsOnRepairCommand()), 
-    ADMIN_TO_ADD_NEW_CAR(new ToAddNewCarCommand()), 
-    ADMIN_ADD_NEW_CAR(new AddNewCarCommand()), 
-    ADMIN_SEARCH_CAR(new SearchCarsCommand()), 
-    ADMIN_TO_EDIT_CAR(new ToEditCarCommand()),
-    ADMIN_EDIT_CAR(new EditCarCommand()),
-    ADMIN_DELETE_CAR(new DeleteCarCommand()), 
-    ADMIN_CHANGE_CAR_ACTIVE_STATUS(new ChangeCarActiveCommand()), 
-    ADMIN_TO_ADD_NEW_CAR_CATEGORY(new ToAddNewCarCategoryCommand()), 
-    ADMIN_ADD_NEW_CAR_CATEGORY(new AddNewCarCategoryCommand()), 
-    ADMIN_TO_ALL_CAR_CATEGORIES(new FindAllCarCategoriesCommand()), 
-    ADMIN_TO_EDIT_CAR_CATEGORY(new ToEditCarCategoryCommand()), 
-    ADMIN_DELETE_CAR_CATEGORY(new DeleteCarCategoryCommand()),  
-    ADMIN_FIND_ALL_ORDERS(new FinaAllOrdersCommand()), 
-    ADMIN_SEARCH_ORDER(new SearchOrdersCommand()), 
-    ADMIN_FIND_COMPLETED_ORDERS(new FindCompletedOrdersCommand()),  
-    ADMIN_SHOW_ORDER_REPORT(new ShowOrderReportCommand()), 
-    ADMIN_FIND_PROCESSING_ORDERS(new FindProcessingOrdersCommand()),  
-    ADMIN_DELETE_ORDER(new DeleteOrderCommand()),  
-    ADMIN_ACCEPT_ORDER(new AcceptOrderCommand()), 
-    ADMIN_TO_DECLINE_ORDER(new ToDeclineOrderCommand()), 
-    ADMIN_DECLINE_ORDER(new DeclineOrderCommand()), 
-    ADMIN_EDIT_CAR_CATEGORY(new EditCarCategoryCommand()); 
+    ADMIN_DECLINE_USER(new DeclineUserVerificationCommand());
 
     private static final Logger logger = LogManager.getLogger();
     private final Command command;
