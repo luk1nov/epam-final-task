@@ -57,7 +57,7 @@
                     <c:if test="${sessionScope.loggedUser.role eq 'ADMIN' or sessionScope.loggedUser.role eq 'MANAGER'}" >
                         <li class="nav-item hidden-on-mobile" style="align-self: center;padding: 0 10px;">
                             <form action="/controller" method="POST">
-                                <input type="hidden" name="command" value="admin_to_all_users">
+chan                                <input type="hidden" name="command" value="admin_find_all_orders">
                                 <input type="submit" class="btn btn-outline-info admin-panel-btn" value="">
                             </form>
                         </li>
