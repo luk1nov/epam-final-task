@@ -1,19 +1,19 @@
 package by.lukyanov.finaltask.command;
 
 public final class PagePath {
-    public static final String MAIN_PAGE = "index.jsp";
-    public static final String SIGN_UP_PAGE = "pages/login/signup.jsp";
-    public static final String SIGN_IN_PAGE = "pages/login/signin.jsp";
-    public static final String ADMIN_ALL_USERS = "pages/admin/users/all-users.jsp";
-    public static final String ADMIN_SEARCH_USERS_RESULTS = "pages/admin/users/user-search-results.jsp";
+    public static final String MAIN_PAGE = "/index.jsp";
+    public static final String SIGN_UP_PAGE = "/pages/login/signup.jsp";
+    public static final String SIGN_IN_PAGE = "/pages/login/signin.jsp";
+    public static final String ADMIN_ALL_USERS = "/pages/admin/users/all-users.jsp";
+    public static final String ADMIN_SEARCH_USERS_RESULTS = "/pages/admin/users/user-search-results.jsp";
     public static final String ADMIN_ALL_ORDERS = "pages/admin/orders/all-orders.jsp";
     public static final String ADMIN_SEARCH_ORDERS_RESULTS = "pages/admin/orders/order-search-results.jsp";
     public static final String ADMIN_COMPLETED_ORDERS = "pages/admin/orders/completed-orders.jsp";
     public static final String ADMIN_PROCESSING_ORDERS = "pages/admin/orders/rental_requests.jsp";
     public static final String ADMIN_DECLINE_ORDER = "pages/admin/orders/decline-order.jsp";
     public static final String ADMIN_ORDER_REPORT = "pages/admin/orders/order-report.jsp";
-    public static final String ADMIN_ADD_EDIT_USER = "pages/admin/users/add-edit-user.jsp";
-    public static final String UNVERIFIED_USERS = "pages/admin/users/unverified-users.jsp";
+    public static final String ADMIN_ADD_EDIT_USER = "/pages/admin/users/add-edit-user.jsp";
+    public static final String UNVERIFIED_USERS = "/pages/admin/users/unverified-users.jsp";
     public static final String ADMIN_ALL_CARS = "pages/admin/cars/all-cars.jsp";
     public static final String ADMIN_SEARCH_CARS_RESULTS = "pages/admin/cars/car-search-results.jsp";
     public static final String ADMIN_REPAIRING_CARS = "pages/admin/cars/repairing-cars.jsp";
@@ -26,12 +26,13 @@ public final class PagePath {
     public static final String REFILL_BALANCE = "pages/user/refill-balance.jsp";
     public static final String USER_ACCOUNT = "pages/user/user-account.jsp";
     public static final String USER_ACCOUNT_ORDERS = "pages/user/user-account-orders.jsp";
-    public static final String CAR_PAGE = "pages/product/car-page.jsp";
+    public static final String CAR_PAGE = "/pages/product/car-page.jsp";
     public static final String CATEGORIES_PAGE = "pages/product/shop-categories.jsp";
     public static final String SUCCESSFUL_ORDER = "pages/order/successful-order.jsp";
     public static final String FAILED_ORDER = "pages/order/failed-order.jsp";
     public static final String ORDER_REPORT = "pages/order/return-order-form.jsp";
-    public static final String ADMIN_USER_INFO = "pages/admin/users/user-info.jsp";
+    public static final String ADMIN_USER_INFO = "/pages/admin/users/user-info.jsp";
+
 
     public static final String TO_LOG_OUT = "controller?command=log_out";
     public static final String TO_CAR_PAGE = "controller?command=to_car_page";
