@@ -2,21 +2,17 @@ package by.lukyanov.finaltask.controller.filter;
 
 import by.lukyanov.finaltask.command.Command;
 import by.lukyanov.finaltask.command.CommandType;
-import by.lukyanov.finaltask.command.ParameterAttributeName;
 import by.lukyanov.finaltask.entity.User;
-import by.lukyanov.finaltask.entity.UserRole;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.EnumSet;
 import java.util.List;
 
+import static by.lukyanov.finaltask.command.CommandType.*;
 import static by.lukyanov.finaltask.command.PagePath.MAIN_PAGE;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.COMMAND;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.LOGGED_USER;
@@ -24,40 +20,49 @@ import static by.lukyanov.finaltask.command.ParameterAttributeName.LOGGED_USER;
 @WebFilter(filterName = "CommandFilter", urlPatterns = {"/controller"},
         dispatcherTypes = {DispatcherType.FORWARD, DispatcherType.REQUEST})
 public class CommandFilter implements Filter {
-    private static final Logger logger = LogManager.getLogger();
-    private static List<Command> notAccessibleCommands;
+    private List<Command> adminCommands;
+    private List<Command> managerCommands;
+    private List<Command> commonCommands;
+    private List<Command> onlyGuestCommands;
 
-    public CommandFilter() {
-        EnumSet<CommandType> notAccessibleCommandTypes = EnumSet.range(CommandType.ADMIN_TO_ALL_USERS, CommandType.ADMIN_EDIT_CAR_CATEGORY);
-        notAccessibleCommands = notAccessibleCommandTypes.stream().map(CommandType::getCommand).toList();
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        commonCommands = getCommandList(DEFAULT, FINISH_RENT);
+        managerCommands = getCommandList(DEFAULT, ADMIN_EDIT_CAR_CATEGORY);
+        adminCommands = getCommandList(DEFAULT, ADMIN_DECLINE_USER);
+        onlyGuestCommands = getCommandList(SIGN_UP, TO_CAR_CATEGORY_PAGE);
     }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        boolean access;
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         HttpSession session = httpServletRequest.getSession(false);
         String commandParameter = request.getParameter(COMMAND);
         Command command = CommandType.of(commandParameter);
-
-        boolean loggedIn = (session != null && session.getAttribute(LOGGED_USER) != null);
-
-        if (notAccessibleCommands.contains(command)){
-            if(loggedIn){
-                User user = (User) session.getAttribute(ParameterAttributeName.LOGGED_USER);
-                if(user.getRole() == UserRole.ADMIN || user.getRole() == UserRole.MANAGER){
-                    chain.doFilter(request, response);
-                } else {
-                    logger.debug("user not admin");
-                    httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + MAIN_PAGE);
-                }
-            } else {
-                logger.debug("user not logged in");
-                httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + MAIN_PAGE);
-            }
+        if(session != null && session.getAttribute(LOGGED_USER) != null){
+            User user = (User) session.getAttribute(LOGGED_USER);
+            access = switch (user.getRole()) {
+                case USER -> commonCommands.contains(command);
+                case MANAGER -> managerCommands.contains(command);
+                case ADMIN -> adminCommands.contains(command);
+                default -> false;
+            };
         } else {
-            chain.doFilter(request, response);
+            access = onlyGuestCommands.contains(command);
         }
 
+        if(access){
+            chain.doFilter(request, response);
+        } else {
+            httpServletRequest.getRequestDispatcher(MAIN_PAGE)
+                    .forward(request, response);
+        }
+    }
+
+
+    private List<Command> getCommandList(CommandType firstCommandType, CommandType secondCommandType){
+        EnumSet<CommandType> commandTypes = EnumSet.range(firstCommandType, secondCommandType);
+        return commandTypes.stream().map(CommandType::getCommand).toList();
     }
 }
