@@ -7,12 +7,30 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class DateRangeParser {
+public class DateRangeCounter {
     private static final String DATE_PATTERN = "\\d{4}-\\d{2}-\\d{2}";
     public static final int BEGIN_DATE_INDEX = 0;
     public static final int END_DATE_INDEX = 1;
+    private LocalDate beginDate;
+    private LocalDate endDate;
 
-    public static List<LocalDate> parse(String dateRange){
+    public DateRangeCounter(String dateRange) {
+        init(dateRange);
+    }
+
+    public LocalDate getBeginDate() {
+        return beginDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public int countDays(){
+        return Math.toIntExact(ChronoUnit.DAYS.between(beginDate, endDate)) + 1;
+    }
+
+    private void init(String dateRange){
         List<LocalDate> foundDateList = new ArrayList<>();
         Pattern pattern = Pattern.compile(DATE_PATTERN);
         Matcher matcher = pattern.matcher(dateRange);
@@ -20,10 +38,7 @@ public class DateRangeParser {
             LocalDate foundDate = LocalDate.parse(matcher.group());
             foundDateList.add(foundDate);
         }
-        return foundDateList;
-    }
-
-    public static int countDays(LocalDate beginDate, LocalDate endDate){
-        return Math.toIntExact(ChronoUnit.DAYS.between(beginDate, endDate)) + 1;
+        this.beginDate = foundDateList.get(BEGIN_DATE_INDEX);
+        this.endDate = foundDateList.size() > 1 ? foundDateList.get(END_DATE_INDEX) : foundDateList.get(BEGIN_DATE_INDEX);
     }
 }
