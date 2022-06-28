@@ -23,12 +23,13 @@ import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class CarServiceImpl implements CarService {
     private static final Logger logger = LogManager.getLogger();
-    private static final CarDaoImpl carDao = CarDaoImpl.getInstance();
     private static final ValidatorImpl validator = ValidatorImpl.getInstance();
     private static final int DEFAULT_RESULT_PAGE = 1;
     private static final CarServiceImpl instance = new CarServiceImpl();
+    private CarDaoImpl carDao;
 
     private CarServiceImpl() {
+        carDao = CarDaoImpl.getInstance();
     }
 
     public static CarServiceImpl getInstance(){

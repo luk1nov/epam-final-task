@@ -16,12 +16,13 @@ import java.util.Optional;
 
 public class CarCategoryServiceImpl implements CarCategoryService {
     private static final Logger logger = LogManager.getLogger();
-    private static final CarCategoryDaoImpl carCategoryDao = CarCategoryDaoImpl.getInstance();
     private static final ValidatorImpl validator = ValidatorImpl.getInstance();
     private static final String DEFAULT_CAR_CATEGORY_ID = "1";
     private static final CarCategoryServiceImpl instance = new CarCategoryServiceImpl();
+    private CarCategoryDaoImpl carCategoryDao;
 
     private CarCategoryServiceImpl() {
+        carCategoryDao = CarCategoryDaoImpl.getInstance();
     }
 
     static public CarCategoryServiceImpl getInstance(){
@@ -51,7 +52,7 @@ public class CarCategoryServiceImpl implements CarCategoryService {
         try {
             carCategories = carCategoryDao.findAll(Integer.MAX_VALUE, 0);
         } catch (DaoException e) {
-            logger.error("Service exception trying find all users");
+            logger.error("Service exception trying find all users", e);
             throw new ServiceException(e);
         }
         return carCategories;
