@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static factory.UserFactory.*;
+import static by.lukyanov.finaltask.factory.UserFactory.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -43,19 +43,19 @@ class UserServiceImplTest {
     @Test
     void addUserShouldReturnTrue() throws DaoException, ServiceException {
         given(userDao.insert(any(User.class))).willReturn(true);
-        assertTrue(userService.addUser(createValidUserData()));
+        assertTrue(userService.addUser(createUserData()));
     }
 
     @Test
     void addUserShouldReturnFalse() throws DaoException, ServiceException {
         given(userDao.insert(any(User.class))).willReturn(false);
-        assertFalse(userService.addUser(createInvalidUserData()));
+        assertFalse(userService.addUser(createUserData()));
     }
 
     @Test
     void addUserShouldThrowException() throws DaoException {
         given(userDao.insert(any(User.class))).willThrow(DaoException.class);
-        assertThrows(ServiceException.class, () -> userService.addUser(createValidUserData()));
+        assertThrows(ServiceException.class, () -> userService.addUser(createUserData()));
     }
 
     @Test
@@ -82,14 +82,16 @@ class UserServiceImplTest {
     void findUserByEmailShouldExists() throws DaoException, ServiceException {
         User user = createUser();
         given(userDao.findUserByEmail(anyString())).willReturn(Optional.of(user));
-        assertEquals(user, userService.findUserByEmail(user.getEmail()).get());
+        assertThat(userService.findUserByEmail(user.getEmail())).isPresent()
+                .get()
+                .isEqualTo(user);
     }
 
     @Test
     void findUserByEmailShouldNotExists() throws DaoException, ServiceException {
         User user = createUser();
         given(userDao.findUserByEmail(anyString())).willReturn(Optional.empty());
-        assertThat(userService.findUserByEmail(user.getEmail())).isEmpty();
+        assertThat(userService.findUserByEmail(user.getEmail())).isNotPresent();
     }
 
     @Test
@@ -104,14 +106,16 @@ class UserServiceImplTest {
     void findUserByPhoneShouldExists() throws DaoException, ServiceException {
         User user = createUser();
         given(userDao.findUserByPhone(anyString())).willReturn(Optional.of(user));
-        assertEquals(user, userService.findUserByPhone(user.getPhone()).get());
+        assertThat(userService.findUserByPhone(user.getPhone())).isPresent()
+                .get()
+                .isEqualTo(user);
     }
 
     @Test
     void findUserByPhoneShouldNotExists() throws DaoException, ServiceException {
         User user = createUser();
         given(userDao.findUserByPhone(anyString())).willReturn(Optional.empty());
-        assertThat(userService.findUserByPhone(user.getPhone())).isEmpty();
+        assertThat(userService.findUserByPhone(user.getPhone())).isNotPresent();
     }
 
     @Test
@@ -147,7 +151,9 @@ class UserServiceImplTest {
         User user = createUser();
         String id = String.valueOf(user.getId());
         given(userDao.findUserById(anyLong())).willReturn(Optional.of(user));
-        assertEquals(user, userService.findUserById(id).get());
+        assertThat(userService.findUserById(id)).isPresent()
+                .get()
+                .isEqualTo(user);
     }
 
     @Test
@@ -155,7 +161,7 @@ class UserServiceImplTest {
         User user = createUser();
         String id = String.valueOf(user.getId());
         given(userDao.findUserById(anyLong())).willReturn(Optional.empty());
-        assertThat(userService.findUserById(id)).isEmpty();
+        assertThat(userService.findUserById(id)).isNotPresent();
     }
 
     @Test
@@ -167,19 +173,19 @@ class UserServiceImplTest {
     @Test
     void updateUserShouldReturnTrue() throws DaoException, ServiceException {
         given(userDao.update(any(User.class))).willReturn(true);
-        assertTrue(userService.updateUser(createValidUserData()));
+        assertTrue(userService.updateUser(createUserData()));
     }
 
     @Test
     void updateUserShouldReturnFalse() throws DaoException, ServiceException {
         given(userDao.update(any(User.class))).willReturn(false);
-        assertFalse(userService.updateUser(createValidUserData()));
+        assertFalse(userService.updateUser(createUserData()));
     }
 
     @Test
     void updateUserShouldThrowException() throws DaoException {
         given(userDao.update(any(User.class))).willThrow(DaoException.class);
-        assertThrows(ServiceException.class, () -> userService.updateUser(createValidUserData()));
+        assertThrows(ServiceException.class, () -> userService.updateUser(createUserData()));
     }
 
     @Test
@@ -203,19 +209,19 @@ class UserServiceImplTest {
     @Test
     void updateUserInfoShouldReturnTrue() throws DaoException, ServiceException {
         given(userDao.updateUserInfo(any(User.class))).willReturn(true);
-        assertTrue(userService.updateUserInfo(DIGIT_ONE_LONG, createValidUserData()));
+        assertTrue(userService.updateUserInfo(DIGIT_ONE_LONG, createUserData()));
     }
 
     @Test
     void updateUserInfoShouldReturnFalse() throws DaoException, ServiceException {
         given(userDao.updateUserInfo(any(User.class))).willReturn(false);
-        assertFalse(userService.updateUserInfo(DIGIT_ONE_LONG, createValidUserData()));
+        assertFalse(userService.updateUserInfo(DIGIT_ONE_LONG, createUserData()));
     }
 
     @Test
     void updateUserInfoShouldThrowException() throws DaoException {
         given(userDao.updateUserInfo(any(User.class))).willThrow(DaoException.class);
-        assertThrows(ServiceException.class, () -> userService.updateUserInfo(DIGIT_ONE_LONG, createValidUserData()));
+        assertThrows(ServiceException.class, () -> userService.updateUserInfo(DIGIT_ONE_LONG, createUserData()));
     }
 
     @Test
@@ -270,9 +276,8 @@ class UserServiceImplTest {
 
     @Test
     void findUsersByStatusShouldReturnEmpty() throws DaoException, ServiceException {
-        User user = createUser();
         given(userDao.findUsersByStatus(any(UserStatus.class), anyInt(), anyInt())).willReturn(new ArrayList<>());
-        assertThat(userService.findUsersByStatus(user.getStatus(), DIGIT_ONE_STR, DIGIT_TEN_INT)).isEmpty();
+        assertThat(userService.findUsersByStatus(UserStatus.ACTIVE, DIGIT_ONE_STR, DIGIT_TEN_INT)).isEmpty();
     }
 
     @Test

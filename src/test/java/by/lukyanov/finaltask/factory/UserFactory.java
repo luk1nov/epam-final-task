@@ -1,4 +1,4 @@
-package factory;
+package by.lukyanov.finaltask.factory;
 
 import by.lukyanov.finaltask.entity.User;
 import by.lukyanov.finaltask.entity.UserRole;
@@ -36,7 +36,7 @@ public class UserFactory {
                 .build();
     }
 
-    public static Map<String, String> createValidUserData(){
+    public static Map<String, String> createUserData(){
         Map<String, String> userData = new HashMap<>();
         userData.put(USER_ID, id.toString());
         userData.put(USER_EMAIL, email);
@@ -46,19 +46,6 @@ public class UserFactory {
         userData.put(USER_ROLE, role.name());
         userData.put(USER_STATUS, status.name());
         userData.put(USER_PHONE, phone);
-        return userData;
-    }
-
-    public static Map<String, String> createInvalidUserData(){
-        Map<String, String> userData = new HashMap<>();
-        userData.put(USER_ID, id.toString());
-        userData.put(USER_EMAIL, password);
-        userData.put(USER_PASS, password);
-        userData.put(USER_NAME, email);
-        userData.put(USER_SURNAME, email);
-        userData.put(USER_ROLE, role.name());
-        userData.put(USER_STATUS, status.name());
-        userData.put(USER_PHONE, email);
         return userData;
     }
 }

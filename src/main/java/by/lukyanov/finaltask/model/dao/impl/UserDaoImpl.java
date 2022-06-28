@@ -65,7 +65,6 @@ public class UserDaoImpl implements UserDao {
 
 
     public boolean insert(User user) throws DaoException {
-        logger.info("adding user");
         boolean inserted = false;
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_ADD_USER)){
@@ -73,8 +72,8 @@ public class UserDaoImpl implements UserDao {
             statement.setString(2, user.getPassword());
             statement.setString(3, user.getName());
             statement.setString(4, user.getSurname());
-            statement.setString(5, String.valueOf(user.getStatus()));
-            statement.setString(6, String.valueOf(user.getRole()));
+            statement.setString(5, user.getStatus().name());
+            statement.setString(6, user.getRole().name());
             statement.setString(7, user.getPhone());
             if (statement.executeUpdate() != 0){
                 inserted = true;
@@ -130,8 +129,8 @@ public class UserDaoImpl implements UserDao {
             statement.setString(1, user.getEmail());
             statement.setString(2, user.getName());
             statement.setString(3, user.getSurname());
-            statement.setString(4, String.valueOf(user.getStatus()));
-            statement.setString(5, String.valueOf(user.getRole()));
+            statement.setString(4, user.getStatus().name());
+            statement.setString(5, user.getRole().name());
             statement.setString(6, user.getPhone());
             statement.setLong(7, user.getId());
             if (statement.executeUpdate() != 0){
@@ -282,7 +281,7 @@ public class UserDaoImpl implements UserDao {
         try (Connection connection = pool.getConnection();
              PreparedStatement updateLicenseStmt = connection.prepareStatement(SQL_UPDATE_DRIVER_LICENSE_AND_STATUS_BY_ID)) {
             updateLicenseStmt.setBlob(1, image);
-            updateLicenseStmt.setString(2, UserStatus.VERIFICATION.toString());
+            updateLicenseStmt.setString(2, UserStatus.VERIFICATION.name());
             updateLicenseStmt.setLong(3, id);
             if (updateLicenseStmt.executeUpdate() != 0){
                 result = true;
@@ -343,7 +342,7 @@ public class UserDaoImpl implements UserDao {
         boolean result = false;
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_USER_STATUS_BY_ID)){
-            statement.setString(1, String.valueOf(status));
+            statement.setString(1, status.name());
             statement.setLong(2, id);
             if(statement.executeUpdate() != 0){
                 result = true;
@@ -376,7 +375,7 @@ public class UserDaoImpl implements UserDao {
         int usersCount = 0;
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_COUNT_USERS_BY_STATUS)){
-            statement.setString(1, String.valueOf(status));
+            statement.setString(1, status.name());
             try (ResultSet rs = statement.executeQuery()){
                 if (rs.next()) {
                     usersCount = rs.getInt(1);
