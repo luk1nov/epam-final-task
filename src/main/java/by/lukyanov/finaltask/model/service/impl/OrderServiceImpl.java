@@ -5,7 +5,7 @@ import by.lukyanov.finaltask.exception.DaoException;
 import by.lukyanov.finaltask.exception.ServiceException;
 import by.lukyanov.finaltask.model.dao.impl.OrderDaoImpl;
 import by.lukyanov.finaltask.model.service.OrderService;
-import by.lukyanov.finaltask.util.DateRangeParser;
+import by.lukyanov.finaltask.util.DateRangeCounter;
 import by.lukyanov.finaltask.util.ResultCounter;
 import by.lukyanov.finaltask.validation.impl.ValidatorImpl;
 import org.apache.logging.log4j.LogManager;
@@ -20,18 +20,19 @@ import java.util.Map;
 import java.util.Optional;
 
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
-import static by.lukyanov.finaltask.util.DateRangeParser.BEGIN_DATE_INDEX;
-import static by.lukyanov.finaltask.util.DateRangeParser.END_DATE_INDEX;
+import static by.lukyanov.finaltask.util.DateRangeCounter.BEGIN_DATE_INDEX;
+import static by.lukyanov.finaltask.util.DateRangeCounter.END_DATE_INDEX;
 
 public class OrderServiceImpl implements OrderService {
     private static final Logger logger = LogManager.getLogger();
-    private static final OrderDaoImpl orderDaoImpl = OrderDaoImpl.getInstance();
     private static final ValidatorImpl validator = ValidatorImpl.getInstance();
     private static final int DEFAULT_RESULT_PAGE = 1;
     private static final int MIN_RENT_DAYS = 1;
     private static final OrderServiceImpl instance = new OrderServiceImpl();
+    private OrderDaoImpl orderDaoImpl;
 
     private OrderServiceImpl() {
+        orderDaoImpl = OrderDaoImpl.getInstance();
     }
 
     static public OrderServiceImpl getInstance(){
@@ -85,15 +86,13 @@ public class OrderServiceImpl implements OrderService {
         boolean result = false;
         if(validator.isValidDateRange(orderDateRange)){
             try {
-                List<LocalDate> dateRange = DateRangeParser.parse(orderDateRange);
-                LocalDate beginDate = dateRange.get(BEGIN_DATE_INDEX);
-                LocalDate endDate = dateRange.size() > 1 ? dateRange.get(END_DATE_INDEX) : dateRange.get(BEGIN_DATE_INDEX);
-                int orderDays = DateRangeParser.countDays(beginDate, endDate);
+                DateRangeCounter counter = new DateRangeCounter(orderDateRange);
+                int orderDays = counter.countDays();
                 BigDecimal orderPrice = calculateOrderPrice(car, orderDays);
-                if (orderDays >= MIN_RENT_DAYS && orderDaoImpl.checkCarAvailabilityByDateRange(beginDate, endDate, car.getId())){
+                if (orderDays >= MIN_RENT_DAYS && orderDaoImpl.checkCarAvailabilityByDateRange(counter.getBeginDate(), counter.getEndDate(), car.getId())){
                     Order order = new Order.OrderBuilder()
-                            .beginDate(beginDate)
-                            .endDate(endDate)
+                            .beginDate(counter.getBeginDate())
+                            .endDate(counter.getEndDate())
                             .car(car)
                             .user(user)
                             .price(orderPrice)

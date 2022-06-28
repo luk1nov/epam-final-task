@@ -10,7 +10,7 @@ import by.lukyanov.finaltask.exception.ServiceException;
 import by.lukyanov.finaltask.model.service.impl.CarServiceImpl;
 import by.lukyanov.finaltask.model.service.impl.OrderServiceImpl;
 import by.lukyanov.finaltask.model.service.impl.UserServiceImpl;
-import by.lukyanov.finaltask.util.DateRangeParser;
+import by.lukyanov.finaltask.util.DateRangeCounter;
 import by.lukyanov.finaltask.validation.impl.ValidatorImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -18,15 +18,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 import static by.lukyanov.finaltask.command.Message.*;
 import static by.lukyanov.finaltask.command.PagePath.*;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
-import static by.lukyanov.finaltask.util.DateRangeParser.BEGIN_DATE_INDEX;
-import static by.lukyanov.finaltask.util.DateRangeParser.END_DATE_INDEX;
 
 public class CreateOrderCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -80,10 +76,8 @@ public class CreateOrderCommand implements Command {
     }
 
     private int compareBalanceAndPrice(Car car, User user, String orderDateRange){
-        List<LocalDate> dateRange = DateRangeParser.parse(orderDateRange);
-        LocalDate beginDate = dateRange.get(BEGIN_DATE_INDEX);
-        LocalDate endDate = dateRange.size() > 1 ? dateRange.get(END_DATE_INDEX) : dateRange.get(BEGIN_DATE_INDEX);
-        int orderDays = DateRangeParser.countDays(beginDate, endDate);
+        DateRangeCounter counter = new DateRangeCounter(orderDateRange);
+        int orderDays = counter.countDays();
         BigDecimal orderPrice = orderService.calculateOrderPrice(car, orderDays);
         return user.getBalance().compareTo(orderPrice);
     }
