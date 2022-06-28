@@ -162,10 +162,6 @@ li.admin-home-link form input[type="submit"], .accordion-menu li form input[type
     background-size: contain;
 }
 
-.admin-panel-btn{
-    background: url("../images/icons/admin_panel_settings.svg");
-}
-
 .order-car-link{
     border: none;
     background: none;
@@ -185,23 +181,22 @@ li.admin-home-link form input[type="submit"], .accordion-menu li form input[type
 }
 
 .profile-btn{
-    background: #ffb042 url("../images/profile.svg") center no-repeat;
+    background: #ffb042 url("../images/icons/profile.svg") center no-repeat;
     border-color: #ffb042;
 }
 
 .admin-panel-btn{
-    background: #8ac2ff url("../images/admin.svg") center no-repeat;
+    background: #8ac2ff url("../images/icons/admin.svg") center no-repeat;
     border-color: #8ac2ff;
 }
 
 .balance-btn{
-    background: #5bc558 url("../images/balance.svg") left 5px center no-repeat;
+    background: #5bc558 url("../images/icons/balance.svg") left 5px center no-repeat;
     border-color: #5bc558;
     color: #FFF;
-    padding-left: 0;
+    padding-left: 35px;
     padding-right: 10px;
-    width: 90px;
-    text-align: right;
+    text-align: center;
 }
 
 .user-info-description h1{
