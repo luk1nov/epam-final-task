@@ -26,13 +26,14 @@ import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class UserServiceImpl implements UserService {
     private static final Logger logger = LogManager.getLogger();
-    private static final UserDaoImpl userDao = UserDaoImpl.getInstance();
     private static final ValidatorImpl validator = ValidatorImpl.getInstance();
     private static final String PHONE_CODE_BY = "+375-";
     private static final int DEFAULT_RESULT_PAGE = 1;
     private static final UserServiceImpl instance = new UserServiceImpl();
+    private UserDaoImpl userDao;
 
     private UserServiceImpl() {
+        userDao = UserDaoImpl.getInstance();
     }
 
     public static UserServiceImpl getInstance(){
@@ -47,8 +48,7 @@ public class UserServiceImpl implements UserService {
         String email = userData.get(USER_EMAIL);
         String phone = userData.get(USER_PHONE);
         String pass = userData.get(USER_PASS);
-        boolean addUserResult;
-
+        boolean addUserResult = false;
         if(validator.isOneWord(name) && validator.isValidSurname(surname) && validator.isValidEmail(email) &&
                 validator.isValidPassword(pass) && validator.isValidPhone(phone)){
             String encodedPass = encoder.encode(pass);
@@ -69,8 +69,7 @@ public class UserServiceImpl implements UserService {
                 throw new ServiceException("Service exception trying add user", e);
             }
         } else {
-            logger.info("provided data didn't pass validation");
-            addUserResult = false;
+            logger.info("invalid data");
         }
         return addUserResult;
     }
@@ -103,13 +102,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findUserByPhone(String phone) throws ServiceException {
-        Optional<User> user;
+        Optional<User> user = Optional.empty();
         try {
             if(validator.isValidPhone(phone)){
                 String phoneWithCountryCode = PHONE_CODE_BY + phone;
                 user = userDao.findUserByPhone(phoneWithCountryCode);
             } else {
-                user = Optional.empty();
+                logger.info("invalid phone");
             }
         } catch (DaoException e) {
             logger.error("Service exception trying find user by phone", e);
@@ -195,8 +194,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean updateUserInfo(long id, Map<String, String> userData) throws ServiceException {
         boolean updated = false;
-        String name = userData.get(ParameterAttributeName.USER_NAME);
-        String surname = userData.get(ParameterAttributeName.USER_SURNAME);
+        String name = userData.get(USER_NAME);
+        String surname = userData.get(USER_SURNAME);
         String email = userData.get(USER_EMAIL);
         String phone = userData.get(USER_PHONE);
         if(validator.isOneWord(name) && validator.isValidSurname(surname) &&
