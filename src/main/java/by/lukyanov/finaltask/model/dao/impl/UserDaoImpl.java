@@ -1,19 +1,21 @@
 package by.lukyanov.finaltask.model.dao.impl;
 
-import by.lukyanov.finaltask.entity.Car;
-import by.lukyanov.finaltask.entity.UserStatus;
-import by.lukyanov.finaltask.model.dao.mapper.impl.UserRowMapper;
-import by.lukyanov.finaltask.model.dao.UserDao;
 import by.lukyanov.finaltask.entity.User;
+import by.lukyanov.finaltask.entity.UserStatus;
 import by.lukyanov.finaltask.exception.DaoException;
 import by.lukyanov.finaltask.model.connection.ConnectionPool;
+import by.lukyanov.finaltask.model.dao.UserDao;
+import by.lukyanov.finaltask.model.dao.mapper.impl.UserRowMapper;
 import by.lukyanov.finaltask.util.ImageEncoder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -63,6 +65,7 @@ public class UserDaoImpl implements UserDao {
 
 
     public boolean insert(User user) throws DaoException {
+        logger.info("adding user");
         boolean inserted = false;
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_ADD_USER)){
