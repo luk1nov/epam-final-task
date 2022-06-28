@@ -1,8 +1,8 @@
 package by.lukyanov.finaltask.util;
 
 public class ResultCounter {
-    private int postsPerPage;
-    private int page;
+    private final int postsPerPage;
+    private final int page;
 
     public ResultCounter(int page, int postsPerPage) {
         this.page = page;
