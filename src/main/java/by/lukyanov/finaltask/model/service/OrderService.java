@@ -4,6 +4,7 @@ import by.lukyanov.finaltask.entity.*;
 import by.lukyanov.finaltask.exception.ServiceException;
 
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -40,4 +41,6 @@ public interface OrderService {
     int countOrdersByUserId(long userId) throws ServiceException;
 
     List<Order> searchOrders(String searchQuery) throws ServiceException;
+
+    BigDecimal calculateOrderPrice(Car car, int orderDays);
 }
