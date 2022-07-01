@@ -13,7 +13,7 @@ public class OrderFactory {
     public static final long id = 1L;
     public static final LocalDate beginDate = LocalDate.now();
     public static final LocalDate endDate = LocalDate.now();
-    public static final OrderStatus status = OrderStatus.ACTIVE;
+    public static final OrderStatus status = OrderStatus.FINISHED;
     public static final String message = "message";
     public static final BigDecimal price = new BigDecimal(1000);
 
