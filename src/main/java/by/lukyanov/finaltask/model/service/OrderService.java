@@ -16,7 +16,7 @@ public interface OrderService {
 
     List<Order> findActiveOrderDatesByCarId(String carId) throws ServiceException;
 
-    boolean addOrder(Car car, User user, String orderDateRange) throws ServiceException;
+    boolean addOrder(Order order, String orderDateRange) throws ServiceException;
 
     List<Order> findOrdersByOrderStatus(OrderStatus status, String pageNumber, int postsPerPage) throws ServiceException;
 

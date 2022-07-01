@@ -13,15 +13,12 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
-import static by.lukyanov.finaltask.util.DateRangeCounter.BEGIN_DATE_INDEX;
-import static by.lukyanov.finaltask.util.DateRangeCounter.END_DATE_INDEX;
 
 public class OrderServiceImpl implements OrderService {
     private static final Logger logger = LogManager.getLogger();
@@ -35,7 +32,7 @@ public class OrderServiceImpl implements OrderService {
         orderDaoImpl = OrderDaoImpl.getInstance();
     }
 
-    static public OrderServiceImpl getInstance(){
+    public static OrderServiceImpl getInstance(){
         return instance;
     }
 
@@ -82,15 +79,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public boolean addOrder(Car car, User user, String orderDateRange) throws ServiceException {
+    public boolean addOrder(Order order, String orderDateRange) throws ServiceException {
         boolean result = false;
+        Car car = order.getCar();
+        User user = order.getUser();
         if(validator.isValidDateRange(orderDateRange)){
             try {
                 DateRangeCounter counter = new DateRangeCounter(orderDateRange);
                 int orderDays = counter.countDays();
                 BigDecimal orderPrice = calculateOrderPrice(car, orderDays);
                 if (orderDays >= MIN_RENT_DAYS && orderDaoImpl.checkCarAvailabilityByDateRange(counter.getBeginDate(), counter.getEndDate(), car.getId())){
-                    Order order = new Order.OrderBuilder()
+                    order = new Order.OrderBuilder()
                             .beginDate(counter.getBeginDate())
                             .endDate(counter.getEndDate())
                             .car(car)
@@ -102,7 +101,8 @@ public class OrderServiceImpl implements OrderService {
                     logger.warn("invalid date range or car unavailable");
                 }
             } catch (DaoException e) {
-                logger.error("Service exception trying create order");
+                logger.error("Service exception trying create order", e);
+                throw new ServiceException(e);
             }
         } else {
             logger.warn("invalid data provided");

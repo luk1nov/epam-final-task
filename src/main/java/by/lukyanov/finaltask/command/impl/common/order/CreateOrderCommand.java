@@ -3,6 +3,7 @@ package by.lukyanov.finaltask.command.impl.common.order;
 import by.lukyanov.finaltask.command.Command;
 import by.lukyanov.finaltask.command.Router;
 import by.lukyanov.finaltask.entity.Car;
+import by.lukyanov.finaltask.entity.Order;
 import by.lukyanov.finaltask.entity.User;
 import by.lukyanov.finaltask.entity.UserStatus;
 import by.lukyanov.finaltask.exception.CommandException;
@@ -66,7 +67,11 @@ public class CreateOrderCommand implements Command {
 
     private Router addOrder(Car car, User user, String orderDateRange) throws ServiceException {
         Router router = new Router();
-        if (orderService.addOrder(car, user, orderDateRange)) {
+        Order order = new Order.OrderBuilder()
+                .car(car)
+                .user(user)
+                .build();
+        if (orderService.addOrder(order, orderDateRange)) {
             router.setType(Router.Type.REDIRECT);
             router.setPagePath(SUCCESSFUL_ORDER);
         } else {
