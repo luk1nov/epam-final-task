@@ -26,26 +26,24 @@ public class OrderDaoImpl implements OrderDao {
             INSERT INTO orders (begin_date, end_date, price, cars_car_id, users_user_id)
             VALUES (?,?,?,?,?);
             """;
-    private static final String SQL_FIND_USER_BALANCE_BY_ID = "SELECT users.balance FROM users WHERE user_id = ?";
-    private static final String SQL_UPDATE_USER_BALANCE_BY_ID = "UPDATE users SET balance = ? WHERE user_id = ?";
     private static final String SQL_FIND_ALL_ORDERS_BY_USER_ID = """
-            SELECT o.order_id, o.begin_date, o.end_date, o.order_status, o.message, o.price, c.car_id, c.brand, c.model
+            SELECT o.order_id, o.begin_date, o.end_date, o.order_status, o.message, o.price,
+                   c.car_id, c.brand, c.model
             FROM orders AS o
-            JOIN cars AS c
-            ON o.cars_car_id = c.car_id
+            JOIN cars AS c ON o.cars_car_id = c.car_id
             WHERE o.users_user_id = ?
             LIMIT ?
             OFFSET ?
             """;
     private static final String SQL_FIND_ALL_ORDERS = """
-            SELECT o.order_id, o.begin_date, o.end_date, o.order_status, o.message, u.user_id, u.name, u.surname, u.user_status, c.car_id, c.brand, c.model, c.is_active, o.price, r.report_id
+            SELECT o.order_id, o.begin_date, o.end_date, o.order_status, o.message, o.price,
+                   u.user_id, u.name, u.surname, u.user_status,
+                   c.car_id, c.brand, c.model, c.is_active,
+                   r.report_id
             FROM orders as o
-                    JOIN users as u
-                         ON u.user_id = o.users_user_id
-                    JOIN cars as c
-                         ON c.car_id = o.cars_car_id
-                    LEFT JOIN order_report as r
-                              ON o.order_id = r.orders_order_id
+            JOIN users as u ON u.user_id = o.users_user_id
+            JOIN cars as c ON c.car_id = o.cars_car_id
+            LEFT JOIN order_report as r ON o.order_id = r.orders_order_id
             ORDER BY o.order_id
             LIMIT ?
             OFFSET ?
@@ -70,36 +68,30 @@ public class OrderDaoImpl implements OrderDao {
     private static final String SQL_FIND_ORDERS_BY_ORDER_STATUS = """
             SELECT o.order_id, o.begin_date, o.end_date, o.order_status, o.message, u.user_id, u.name, u.surname, u.user_status, c.car_id, c.brand, c.model, c.is_active, o.price, r.report_id
             FROM orders as o
-            JOIN users as u
-            ON u.user_id = o.users_user_id
-            JOIN cars as c
-            ON c.car_id = o.cars_car_id
-            LEFT JOIN order_report as r
-            ON o.order_id = r.orders_order_id
+            JOIN users as u ON u.user_id = o.users_user_id
+            JOIN cars as c ON c.car_id = o.cars_car_id
+            LEFT JOIN order_report as r ON o.order_id = r.orders_order_id
             WHERE o.order_status = ?
             LIMIT ?
             OFFSET ?
             """;
     private static final String SQL_FIND_ORDERS_BETWEEN_DATES_BY_CAR_ID = """
-            SELECT order_id from orders WHERE ? < end_date AND begin_date < ? AND cars_car_id = ? AND order_status = ?
+            SELECT order_id
+            FROM orders
+            WHERE ? < end_date
+                AND begin_date < ?
+                AND cars_car_id = ?
+                AND order_status = ?
             """;
-    private static final String SQL_UPDATE_ORDER_STATUS_BY_ID = "UPDATE orders SET order_status = ? WHERE order_id = ?";
-    private static final String SQL_DELETE_ORDER_BY_ID = "DELETE FROM orders WHERE order_id = ?";
-    private static final String SQL_UPDATE_ORDER_STATUS_AND_MESSAGE = "UPDATE orders SET order_status = ?, message = ? WHERE order_id = ?";
-    private static final String SQL_ADD_ORDER_REPORT = "INSERT INTO order_report (report_photo, report_text, report_status, orders_order_id) values (?,?,?,?)";
-    private static final String SQL_FIND_ORDER_REPORT_BY_ID = "SELECT report_photo, report_text, report_status FROM order_report WHERE report_id = ?";
-    private static final String SQL_COUNT_ORDERS = "SELECT COUNT(order_id) from orders";
-    private static final String SQL_COUNT_ORDERS_BY_STATUS = "SELECT COUNT(order_id) from orders WHERE order_status = ?";
-    private static final String SQL_COUNT_ORDERS_BY_USER_ID = "SELECT COUNT(order_id) from orders WHERE users_user_id = ?";
     private static final String SQL_SEARCH_ORDERS = """
-            SELECT o.order_id, o.begin_date, o.end_date, o.order_status, o.message, u.user_id, u.name, u.surname, u.user_status, u.email, c.car_id, c.brand, c.model, c.is_active, c.vin_code, o.price, r.report_id
-            FROM orders as o
-                    JOIN users as u
-                         ON u.user_id = o.users_user_id
-                    JOIN cars as c
-                         ON c.car_id = o.cars_car_id
-                    LEFT JOIN order_report as r
-                              ON o.order_id = r.orders_order_id
+            SELECT o.order_id, o.begin_date, o.end_date, o.order_status, o.message, o.price,
+                   u.user_id, u.name, u.surname, u.user_status, u.email,
+                   c.car_id, c.brand, c.model, c.is_active, c.vin_code,
+                   r.report_id
+            FROM orders AS o
+                    JOIN users AS u ON u.user_id = o.users_user_id
+                    JOIN cars AS c ON c.car_id = o.cars_car_id
+                    LEFT JOIN order_report as r ON o.order_id = r.orders_order_id
             WHERE INSTR(u.name, ?) > 0
                     OR INSTR(u.surname, ?) > 0
                     OR INSTR(u.email, ?) > 0
@@ -108,6 +100,16 @@ public class OrderDaoImpl implements OrderDao {
                     OR INSTR(c.vin_code, ?) > 0
                     OR INSTR(o.order_id, ?) > 0
             """;
+    private static final String SQL_FIND_USER_BALANCE_BY_ID = "SELECT users.balance FROM users WHERE user_id = ?";
+    private static final String SQL_UPDATE_USER_BALANCE_BY_ID = "UPDATE users SET balance = ? WHERE user_id = ?";
+    private static final String SQL_UPDATE_ORDER_STATUS_BY_ID = "UPDATE orders SET order_status = ? WHERE order_id = ?";
+    private static final String SQL_DELETE_ORDER_BY_ID = "DELETE FROM orders WHERE order_id = ?";
+    private static final String SQL_UPDATE_ORDER_STATUS_AND_MESSAGE = "UPDATE orders SET order_status = ?, message = ? WHERE order_id = ?";
+    private static final String SQL_ADD_ORDER_REPORT = "INSERT INTO order_report (report_photo, report_text, report_status, orders_order_id) values (?,?,?,?)";
+    private static final String SQL_FIND_ORDER_REPORT_BY_ID = "SELECT report_photo, report_text, report_status FROM order_report WHERE report_id = ?";
+    private static final String SQL_COUNT_ORDERS = "SELECT COUNT(order_id) from orders";
+    private static final String SQL_COUNT_ORDERS_BY_STATUS = "SELECT COUNT(order_id) from orders WHERE order_status = ?";
+    private static final String SQL_COUNT_ORDERS_BY_USER_ID = "SELECT COUNT(order_id) from orders WHERE users_user_id = ?";
     private static final ConnectionPool pool = ConnectionPool.getInstance();
     private static final OrderRowMapper mapper = OrderRowMapper.getInstance();
     private static OrderDaoImpl instance;
@@ -375,24 +377,28 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public boolean completeOrder(Order order, InputStream reportPhoto) throws DaoException {
-        boolean result;
+        boolean result = false;
         try (Connection connection = pool.getConnection()){
             try (PreparedStatement orderStmt = connection.prepareStatement(SQL_UPDATE_ORDER_STATUS_BY_ID);
                  PreparedStatement reportStmt = connection.prepareStatement(SQL_ADD_ORDER_REPORT)) {
                 connection.setAutoCommit(false); // 1
-                orderStmt.setString(1, String.valueOf(order.getOrderStatus()));
+                orderStmt.setString(1, order.getOrderStatus().name());
                 orderStmt.setLong(2, order.getId());
                 orderStmt.executeUpdate();
                 reportStmt.setBlob(1, reportPhoto.available() != 0 ? reportPhoto : null);
-                OrderReport orderReport = order.getReport().get();
-                Optional<String> reportText = orderReport.getReportText();
-                reportStmt.setString(2, reportText.orElse(null));
-                reportStmt.setString(3, String.valueOf(orderReport.getReportStatus()));
-                reportStmt.setLong(4, order.getId());
-                reportStmt.executeUpdate();
-                result = true;
-                connection.commit();
-                logger.info("successful query - commit");
+                if (order.getReport().isPresent()){
+                    OrderReport orderReport = order.getReport().get();
+                    Optional<String> reportText = orderReport.getReportText();
+                    reportStmt.setString(2, reportText.orElse(null));
+                    reportStmt.setString(3, orderReport.getReportStatus().name());
+                    reportStmt.setLong(4, order.getId());
+                    reportStmt.executeUpdate();
+                    result = true;
+                    connection.commit();
+                    logger.info("successful query - commit");
+                } else {
+                    connection.rollback();
+                }
             } catch (SQLException | IOException e) {
                 logger.error("SQL exception trying complete order - rollback", e);
                 connection.rollback();

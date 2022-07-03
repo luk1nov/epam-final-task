@@ -20,33 +20,98 @@ import static by.lukyanov.finaltask.model.dao.ColumnName.CAR_ID;
 
 public class CarDaoImpl implements CarDao {
     private static final Logger logger = LogManager.getLogger();
-    private static final String SQL_FIND_ALL_CARS = "SELECT cars.car_id, cars.brand, cars.model, cars.vin_code, cars.regular_price, cars.sale_price, cars.is_active, cars.image, car_info.acceleration, car_info.power, car_info.drivetrain, car_category.car_category_title FROM cars LEFT JOIN car_info ON cars.car_id = car_info.cars_car_id INNER JOIN car_category on cars.car_category_car_category_id = car_category.car_category_id ORDER BY cars.car_id LIMIT ? OFFSET ?";
-    private static final String SQL_FIND_CARS_BY_ACTIVE_STATUS = "SELECT cars.car_id, cars.brand, cars.model, cars.vin_code, cars.regular_price, cars.sale_price, cars.is_active, cars.image, car_info.acceleration, car_info.power, car_info.drivetrain, car_category.car_category_title FROM cars LEFT JOIN car_info ON cars.car_id = car_info.cars_car_id INNER JOIN car_category on cars.car_category_car_category_id = car_category.car_category_id WHERE cars.is_active = ? ORDER BY cars.car_id LIMIT ? OFFSET ?";
-    private static final String SQL_FIND_CAR_BY_ID = "SELECT cars.car_id, cars.brand, cars.model, cars.vin_code, cars.regular_price, cars.sale_price, cars.is_active, cars.image, car_info.acceleration, car_info.power, car_info.drivetrain, car_category.car_category_title FROM cars LEFT JOIN car_info ON cars.car_id = car_info.cars_car_id INNER JOIN car_category on cars.car_category_car_category_id = car_category.car_category_id WHERE car_id = ?";
-    private static final String SQL_FIND_CAR_BY_VIN_CODE = "SELECT cars.car_id, cars.brand, cars.model, cars.vin_code, cars.regular_price, cars.sale_price, cars.is_active, cars.image, car_info.acceleration, car_info.power, car_info.drivetrain, car_category.car_category_title FROM cars LEFT JOIN car_info ON cars.car_id = car_info.cars_car_id INNER JOIN car_category on cars.car_category_car_category_id = car_category.car_category_id WHERE cars.vin_code = ?";
-    private static final String SQL_INSERT_NEW_CAR = "INSERT INTO cars (brand,model,vin_code,regular_price,sale_price,is_active, image, car_category_car_category_id) values(?,?,?,?,?,?,?,?)";
-    private static final String SQL_INSERT_NEW_CAR_INFO = "INSERT INTO car_info (acceleration,power,drivetrain,cars_car_id) values(?,?,?,?)";
-    private static final String SQL_UPDATE_CAR_BY_ID = "UPDATE cars SET brand = ?, model = ?, vin_code = ?, regular_price = ?, sale_price = ?, is_active = ?, car_category_car_category_id = ? WHERE car_id = ?";
-    private static final String SQL_UPDATE_CAR_WITH_IMAGE_BY_ID = "UPDATE cars SET brand = ?, model = ?, vin_code = ?, regular_price = ?, sale_price = ?, is_active = ?, car_category_car_category_id = ?, image = ? WHERE car_id = ?";
-    private static final String SQL_UPDATE_CAR_INFO_BY_CAR_ID = "UPDATE car_info SET acceleration = ?, power = ?, drivetrain = ? WHERE cars_car_id = ?";
-    private static final String SQL_FIND_CARS_BY_CATEGORY_ID = "SELECT cars.car_id, cars.brand, cars.model, cars.vin_code, cars.regular_price, cars.sale_price, cars.is_active, cars.image, car_info.acceleration, car_info.power, car_info.drivetrain, car_category.car_category_title FROM cars LEFT JOIN car_info ON cars.car_id = car_info.cars_car_id INNER JOIN car_category on cars.car_category_car_category_id = car_category.car_category_id WHERE car_category_car_category_id = ? LIMIT ? OFFSET ?";
-    private static final String SQL_DELETE_CAR_BY_ID = "DELETE FROM cars WHERE car_id = ?";
-    private static final String SQL_UPDATE_STATUS_CAR_BY_ID = "UPDATE cars SET is_active = ? WHERE car_id = ?";
-    private static final String SQL_COUNT_ALL_CARS = "SELECT COUNT(car_id) from cars";
-    private static final String SQL_COUNT_ALL_CARS_BY_ACTIVE = "SELECT COUNT(car_id) from cars WHERE is_active = ?";
-    private static final String SQL_COUNT_ALL_CARS_BY_CATEGORY = "SELECT COUNT(car_id) from cars WHERE car_category_car_category_id = ?";
+    private static final String SQL_FIND_ALL_CARS = """
+            SELECT c.car_id, c.brand, c.model, c.vin_code, c.regular_price, c.sale_price, c.is_active, c.image,
+                   info.acceleration, info.power, info.drivetrain,
+                   cat.car_category_title
+            FROM cars AS c
+            LEFT JOIN car_info AS info ON c.car_id = info.cars_car_id
+            INNER JOIN car_category AS cat ON c.car_category_car_category_id = cat.car_category_id
+            ORDER BY c.car_id
+            LIMIT ?
+            OFFSET ?
+            """;
+    private static final String SQL_FIND_CARS_BY_ACTIVE_STATUS = """
+            SELECT c.car_id, c.brand, c.model, c.vin_code, c.regular_price, c.sale_price, c.is_active, c.image,
+                   info.acceleration, info.power, info.drivetrain,
+                   cat.car_category_title
+            FROM cars AS c
+            LEFT JOIN car_info AS info ON c.car_id = info.cars_car_id
+            INNER JOIN car_category AS cat ON c.car_category_car_category_id = cat.car_category_id
+            WHERE c.is_active = ?
+            ORDER BY c.car_id
+            LIMIT ?
+            OFFSET ?
+            """;
+    private static final String SQL_FIND_CAR_BY_ID = """
+            SELECT c.car_id, c.brand, c.model, c.vin_code, c.regular_price, c.sale_price, c.is_active, c.image,
+                   info.acceleration, info.power, info.drivetrain,
+                   cat.car_category_title
+            FROM cars AS c
+            LEFT JOIN car_info AS info ON c.car_id = info.cars_car_id
+            INNER JOIN car_category AS cat ON c.car_category_car_category_id = cat.car_category_id
+            WHERE car_id = ?
+            """;
+    private static final String SQL_FIND_CAR_BY_VIN_CODE = """
+            SELECT c.car_id, c.brand, c.model, c.vin_code, c.regular_price, c.sale_price, c.is_active, c.image,
+                   info.acceleration, info.power, info.drivetrain,
+                   cat.car_category_title
+            FROM cars AS c
+            LEFT JOIN car_info AS info ON c.car_id = info.cars_car_id
+            INNER JOIN car_category AS cat ON c.car_category_car_category_id = cat.car_category_id
+            WHERE c.vin_code = ?
+            """;
+    private static final String SQL_INSERT_NEW_CAR = """
+            INSERT INTO cars (brand, model, vin_code, regular_price, sale_price, is_active, image, car_category_car_category_id)
+            VALUES(?,?,?,?,?,?,?,?)
+            """;
+    private static final String SQL_INSERT_NEW_CAR_INFO = """
+            INSERT INTO car_info (acceleration, power, drivetrain, cars_car_id)
+            VALUES(?,?,?,?)
+            """;
+    private static final String SQL_UPDATE_CAR_BY_ID = """
+            UPDATE cars
+            SET brand = ?, model = ?, vin_code = ?, regular_price = ?, sale_price = ?, is_active = ?, car_category_car_category_id = ?
+            WHERE car_id = ?
+            """;
+    private static final String SQL_UPDATE_CAR_WITH_IMAGE_BY_ID = """
+            UPDATE cars
+            SET brand = ?, model = ?, vin_code = ?, regular_price = ?, sale_price = ?, is_active = ?, car_category_car_category_id = ?, image = ?
+            WHERE car_id = ?
+            """;
+    private static final String SQL_UPDATE_CAR_INFO_BY_CAR_ID = """
+            UPDATE car_info
+            SET acceleration = ?, power = ?, drivetrain = ?
+            WHERE cars_car_id = ?
+            """;
+    private static final String SQL_FIND_CARS_BY_CATEGORY_ID = """
+            SELECT c.car_id, c.brand, c.model, c.vin_code, c.regular_price, c.sale_price, c.is_active, c.image,
+                   info.acceleration, info.power, info.drivetrain,
+                   cat.car_category_title
+            FROM cars AS c
+            LEFT JOIN car_info AS info ON c.car_id = info.cars_car_id
+            INNER JOIN car_category AS cat ON c.car_category_car_category_id = cat.car_category_id
+            WHERE car_category_car_category_id = ?
+            LIMIT ?
+            OFFSET ?
+            """;
     private static final String SQL_SEARCH_CARS = """
             SELECT c.car_id, c.brand, c.model, c.vin_code, c.regular_price, c.sale_price, c.is_active, c.image,
-            info.acceleration, info.power, info.drivetrain, cat.car_category_title
+                   info.acceleration, info.power, info.drivetrain, cat.car_category_title
             FROM cars as c
             LEFT JOIN car_info as info
-            ON c.car_id = info.cars_car_id 
+            ON c.car_id = info.cars_car_id
             INNER JOIN car_category as cat
             ON c.car_category_car_category_id = cat.car_category_id
             WHERE INSTR(c.brand, ?) > 0
                     OR INSTR(c.model, ?) > 0
                     OR INSTR(c.vin_code, ?) > 0
-    """;
+            """;
+    private static final String SQL_DELETE_CAR_BY_ID = "DELETE FROM cars WHERE car_id = ?";
+    private static final String SQL_UPDATE_STATUS_CAR_BY_ID = "UPDATE cars SET is_active = ? WHERE car_id = ?";
+    private static final String SQL_COUNT_ALL_CARS = "SELECT COUNT(car_id) FROM cars";
+    private static final String SQL_COUNT_ALL_CARS_BY_ACTIVE = "SELECT COUNT(car_id) FROM cars WHERE is_active = ?";
+    private static final String SQL_COUNT_ALL_CARS_BY_CATEGORY = "SELECT COUNT(car_id) FROM cars WHERE car_category_car_category_id = ?";
     private static final CarRowMapper mapper = CarRowMapper.getInstance();
     private final ConnectionPool pool = ConnectionPool.getInstance();
     private static final CarDaoImpl instance = new CarDaoImpl();

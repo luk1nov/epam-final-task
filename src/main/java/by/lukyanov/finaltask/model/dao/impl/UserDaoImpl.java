@@ -26,10 +26,43 @@ import static by.lukyanov.finaltask.model.dao.ColumnName.*;
 public class UserDaoImpl implements UserDao {
     private static final Logger logger = LogManager.getLogger();
     private static final String SQL_ADD_USER = "INSERT INTO users (email,password,name,surname,user_status,user_role,phone) values(?,?,?,?,?,?,?)";
-    private static final String SQL_FIND_USER_BY_EMAIL = "SELECT users.user_id, users.email, users.password, users.name, users.surname, users.user_status, users.user_role, users.phone, users.balance FROM users WHERE email = ?";
-    private static final String SQL_FIND_USER_BY_PHONE = "SELECT users.user_id, users.email, users.password, users.name, users.surname, users.user_status, users.user_role, users.phone, users.balance FROM users WHERE phone = ?";
-    private static final String SQL_FIND_ALL_USERS = "SELECT users.user_id, users.email, users.name, users.surname , users.user_status , users.user_role, users.phone, users.balance FROM users order by user_id LIMIT ? OFFSET ?";
-    private static final String SQL_FIND_USER_BY_ID = "SELECT users.user_id, users.email, users.name, users.surname, users.user_status, users.user_role, users.phone, users.balance, users.driver_license_photo FROM users WHERE user_id = ?";
+    private static final String SQL_FIND_USER_BY_EMAIL = """
+            SELECT u.user_id, u.email, u.password, u.name, u.surname, u.user_status, u.user_role, u.phone, u.balance
+            FROM users AS u
+            WHERE email = ?
+            """;
+    private static final String SQL_FIND_USER_BY_PHONE = """
+            SELECT u.user_id, u.email, u.password, u.name, u.surname, u.user_status, u.user_role, u.phone, u.balance
+            FROM users AS u
+            WHERE phone = ?
+            """;
+    private static final String SQL_FIND_ALL_USERS = """
+            SELECT u.user_id, u.email, u.name, u.surname, u.user_status, u.user_role, u.phone, u.balance
+            FROM users AS u
+            ORDER BY user_id
+            LIMIT ?
+            OFFSET ?
+            """;
+    private static final String SQL_FIND_USER_BY_ID = """
+            SELECT u.user_id, u.email, u.name, u.surname, u.user_status, u.user_role, u.phone, u.balance, u.driver_license_photo
+            FROM users AS u
+            WHERE user_id = ?
+            """;
+    private static final String SQL_FIND_USERS_BY_STATUS = """
+            SELECT user_id, email, name, surname, driver_license_photo
+            FROM users
+            WHERE user_status = ?
+            ORDER BY user_id
+            LIMIT ?
+            OFFSET ?
+            """;
+    private static final String SQL_SEARCH_USERS = """
+            SELECT u.user_id, u.email, u.name, u.surname , u.user_status , u.user_role, u.phone, u.balance
+            FROM users as u
+            WHERE INSTR(u.email, ?) > 0
+                    OR INSTR(u.name, ?) > 0
+                    OR INSTR(u.surname, ?) > 0
+            """;
     private static final String SQL_EDIT_USER_BY_ID = "UPDATE users SET email = ?, name = ?, surname = ?, user_status = ?, user_role = ?, phone = ? WHERE user_id = ?";
     private static final String SQL_EDIT_USER_INFO_BY_ID = "UPDATE users SET name = ?, surname = ?, email = ?, phone = ? WHERE user_id = ?";
     private static final String SQL_DELETE_USER_BY_ID = "DELETE FROM users WHERE user_id = ?";
@@ -38,16 +71,8 @@ public class UserDaoImpl implements UserDao {
     private static final String SQL_UPDATE_DRIVER_LICENSE_AND_STATUS_BY_ID = "UPDATE users SET driver_license_photo = ?, user_status = ? WHERE user_id = ?";
     private static final String SQL_UPDATE_USER_STATUS_BY_ID = "UPDATE users SET user_status = ? WHERE user_id = ?";
     private static final String SQL_UPDATE_USER_PASSWORD_BY_ID = "UPDATE users SET password = ? WHERE user_id = ?";
-    private static final String SQL_FIND_USERS_BY_STATUS = "SELECT user_id, email, name, surname, driver_license_photo FROM users WHERE user_status = ? order by user_id limit ? offset ?";
     private static final String SQL_COUNT_USERS = "SELECT COUNT(user_id) FROM users";
     private static final String SQL_COUNT_USERS_BY_STATUS = "SELECT COUNT(user_id) FROM users WHERE user_status = ?";
-    private static final String SQL_SEARCH_USERS = """
-            SELECT u.user_id, u.email, u.name, u.surname , u.user_status , u.user_role, u.phone, u.balance
-            FROM users as u
-            WHERE INSTR(u.email, ?) > 0
-                    OR INSTR(u.name, ?) > 0
-                    OR INSTR(u.surname, ?) > 0
-            """;
     private static final ConnectionPool pool = ConnectionPool.getInstance();
     private static final ImageEncoder imageEncoder = ImageEncoder.getInstance();
     private static final UserRowMapper mapper = UserRowMapper.getInstance();
