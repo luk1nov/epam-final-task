@@ -25,8 +25,8 @@ public class CarDaoImpl implements CarDao {
                    info.acceleration, info.power, info.drivetrain,
                    cat.car_category_title
             FROM cars AS c
-            LEFT JOIN car_info AS info ON c.car_id = info.cars_car_id
-            INNER JOIN car_category AS cat ON c.car_category_car_category_id = cat.car_category_id
+                    LEFT JOIN car_info AS info ON c.car_id = info.cars_car_id
+                    INNER JOIN car_category AS cat ON c.car_category_car_category_id = cat.car_category_id
             ORDER BY c.car_id
             LIMIT ?
             OFFSET ?
@@ -36,8 +36,8 @@ public class CarDaoImpl implements CarDao {
                    info.acceleration, info.power, info.drivetrain,
                    cat.car_category_title
             FROM cars AS c
-            LEFT JOIN car_info AS info ON c.car_id = info.cars_car_id
-            INNER JOIN car_category AS cat ON c.car_category_car_category_id = cat.car_category_id
+                    LEFT JOIN car_info AS info ON c.car_id = info.cars_car_id
+                    INNER JOIN car_category AS cat ON c.car_category_car_category_id = cat.car_category_id
             WHERE c.is_active = ?
             ORDER BY c.car_id
             LIMIT ?
@@ -48,8 +48,8 @@ public class CarDaoImpl implements CarDao {
                    info.acceleration, info.power, info.drivetrain,
                    cat.car_category_title
             FROM cars AS c
-            LEFT JOIN car_info AS info ON c.car_id = info.cars_car_id
-            INNER JOIN car_category AS cat ON c.car_category_car_category_id = cat.car_category_id
+                    LEFT JOIN car_info AS info ON c.car_id = info.cars_car_id
+                    INNER JOIN car_category AS cat ON c.car_category_car_category_id = cat.car_category_id
             WHERE car_id = ?
             """;
     private static final String SQL_FIND_CAR_BY_VIN_CODE = """
@@ -57,8 +57,8 @@ public class CarDaoImpl implements CarDao {
                    info.acceleration, info.power, info.drivetrain,
                    cat.car_category_title
             FROM cars AS c
-            LEFT JOIN car_info AS info ON c.car_id = info.cars_car_id
-            INNER JOIN car_category AS cat ON c.car_category_car_category_id = cat.car_category_id
+                    LEFT JOIN car_info AS info ON c.car_id = info.cars_car_id
+                    INNER JOIN car_category AS cat ON c.car_category_car_category_id = cat.car_category_id
             WHERE c.vin_code = ?
             """;
     private static final String SQL_INSERT_NEW_CAR = """
@@ -89,8 +89,8 @@ public class CarDaoImpl implements CarDao {
                    info.acceleration, info.power, info.drivetrain,
                    cat.car_category_title
             FROM cars AS c
-            LEFT JOIN car_info AS info ON c.car_id = info.cars_car_id
-            INNER JOIN car_category AS cat ON c.car_category_car_category_id = cat.car_category_id
+                    LEFT JOIN car_info AS info ON c.car_id = info.cars_car_id
+                    INNER JOIN car_category AS cat ON c.car_category_car_category_id = cat.car_category_id
             WHERE car_category_car_category_id = ?
             LIMIT ?
             OFFSET ?
@@ -98,11 +98,9 @@ public class CarDaoImpl implements CarDao {
     private static final String SQL_SEARCH_CARS = """
             SELECT c.car_id, c.brand, c.model, c.vin_code, c.regular_price, c.sale_price, c.is_active, c.image,
                    info.acceleration, info.power, info.drivetrain, cat.car_category_title
-            FROM cars as c
-            LEFT JOIN car_info as info
-            ON c.car_id = info.cars_car_id
-            INNER JOIN car_category as cat
-            ON c.car_category_car_category_id = cat.car_category_id
+            FROM cars AS c
+                    LEFT JOIN car_info as info ON c.car_id = info.cars_car_id
+                    INNER JOIN car_category as cat ON c.car_category_car_category_id = cat.car_category_id
             WHERE INSTR(c.brand, ?) > 0
                     OR INSTR(c.model, ?) > 0
                     OR INSTR(c.vin_code, ?) > 0

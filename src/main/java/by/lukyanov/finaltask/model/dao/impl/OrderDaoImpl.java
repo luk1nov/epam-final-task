@@ -30,7 +30,7 @@ public class OrderDaoImpl implements OrderDao {
             SELECT o.order_id, o.begin_date, o.end_date, o.order_status, o.message, o.price,
                    c.car_id, c.brand, c.model
             FROM orders AS o
-            JOIN cars AS c ON o.cars_car_id = c.car_id
+                    JOIN cars AS c ON o.cars_car_id = c.car_id
             WHERE o.users_user_id = ?
             LIMIT ?
             OFFSET ?
@@ -41,9 +41,9 @@ public class OrderDaoImpl implements OrderDao {
                    c.car_id, c.brand, c.model, c.is_active,
                    r.report_id
             FROM orders as o
-            JOIN users as u ON u.user_id = o.users_user_id
-            JOIN cars as c ON c.car_id = o.cars_car_id
-            LEFT JOIN order_report as r ON o.order_id = r.orders_order_id
+                    JOIN users as u ON u.user_id = o.users_user_id
+                    JOIN cars as c ON c.car_id = o.cars_car_id
+                    LEFT JOIN order_report as r ON o.order_id = r.orders_order_id
             ORDER BY o.order_id
             LIMIT ?
             OFFSET ?
@@ -56,21 +56,18 @@ public class OrderDaoImpl implements OrderDao {
             """;
     private static final String SQL_FIND_ORDER_BY_ID = """
             SELECT o.order_id, o.begin_date, o.end_date, o.order_status, o.message, u.user_id, u.name, u.surname, u.user_status, c.car_id, c.brand, c.model, c.is_active, o.price, r.report_id
-            FROM orders as o
-            JOIN users as u
-            ON u.user_id = o.users_user_id
-            JOIN cars as c
-            ON c.car_id = o.cars_car_id
-            LEFT JOIN order_report as r
-            ON o.order_id = r.orders_order_id
+            FROM orders AS o
+                    JOIN users as u ON u.user_id = o.users_user_id
+                    JOIN cars as c ON c.car_id = o.cars_car_id
+                    LEFT JOIN order_report as r ON o.order_id = r.orders_order_id
             WHERE o.order_id = ?;
             """;
     private static final String SQL_FIND_ORDERS_BY_ORDER_STATUS = """
             SELECT o.order_id, o.begin_date, o.end_date, o.order_status, o.message, u.user_id, u.name, u.surname, u.user_status, c.car_id, c.brand, c.model, c.is_active, o.price, r.report_id
-            FROM orders as o
-            JOIN users as u ON u.user_id = o.users_user_id
-            JOIN cars as c ON c.car_id = o.cars_car_id
-            LEFT JOIN order_report as r ON o.order_id = r.orders_order_id
+            FROM orders AS o
+                    JOIN users as u ON u.user_id = o.users_user_id
+                    JOIN cars as c ON c.car_id = o.cars_car_id
+                    LEFT JOIN order_report as r ON o.order_id = r.orders_order_id
             WHERE o.order_status = ?
             LIMIT ?
             OFFSET ?
