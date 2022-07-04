@@ -9,23 +9,33 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DateRangeCounterTest {
-    private static final String FIRST_DATE = "2022-03-20";
-    private static final String SECOND_DATE = "2022-03-25";
-    private static final String DATE_RANGE = "2022-03-20 to 2022-03-25";
-    private static final LocalDate firstDate = LocalDate.parse(FIRST_DATE);
-    private static final LocalDate secondDate = LocalDate.parse(SECOND_DATE);
+    private static final String DATE = "2022-03-20";
+    private static final String MULTIPLE_DATE_RANGE = "2022-03-20:2022-03-25";
+    private static final LocalDate FIRST_DATE = LocalDate.parse(DATE);
 
-//    @Test
-//    void countDays() {
-//        int expectedDays = 6;
-//        assertEquals(expectedDays, DateRangeCounter.countDays(firstDate, secondDate));
-//    }
-//
-//    @Test
-//    void parse() {
-//        List<LocalDate> localDateList = new ArrayList<>();
-//        localDateList.add(LocalDate.parse(FIRST_DATE));
-//        localDateList.add(LocalDate.parse(SECOND_DATE));
-//        assertEquals(localDateList, DateRangeCounter.parse(DATE_RANGE));
-//    }
+    @Test
+    void countMultipleDays() {
+        DateRangeCounter counter = new DateRangeCounter(MULTIPLE_DATE_RANGE);
+        int expectedDays = 6;
+        assertEquals(expectedDays, counter.countDays());
+    }
+
+    @Test
+    void countOneDay() {
+        DateRangeCounter counter = new DateRangeCounter(DATE);
+        int expectedDays = 1;
+        assertEquals(expectedDays, counter.countDays());
+    }
+
+    @Test
+    void getBeginDateTest() {
+        DateRangeCounter counter = new DateRangeCounter(DATE);
+        assertEquals(FIRST_DATE, counter.getBeginDate());
+    }
+
+    @Test
+    void getEndDateTest() {
+        DateRangeCounter counter = new DateRangeCounter(DATE);
+        assertEquals(FIRST_DATE, counter.getEndDate());
+    }
 }
