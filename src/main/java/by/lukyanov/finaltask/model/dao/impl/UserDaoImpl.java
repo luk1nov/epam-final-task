@@ -73,18 +73,17 @@ public class UserDaoImpl implements UserDao {
     private static final String SQL_UPDATE_USER_PASSWORD_BY_ID = "UPDATE users SET password = ? WHERE user_id = ?";
     private static final String SQL_COUNT_USERS = "SELECT COUNT(user_id) FROM users";
     private static final String SQL_COUNT_USERS_BY_STATUS = "SELECT COUNT(user_id) FROM users WHERE user_status = ?";
-    private static final ConnectionPool pool = ConnectionPool.getInstance();
     private static final ImageEncoder imageEncoder = ImageEncoder.getInstance();
     private static final UserRowMapper mapper = UserRowMapper.getInstance();
-    private static UserDaoImpl instance;
+    private static final UserDaoImpl instance = new UserDaoImpl();
+    private ConnectionPool pool;
+
 
     private UserDaoImpl() {
+        pool = ConnectionPool.getInstance();
     }
 
     public static UserDaoImpl getInstance(){
-        if (instance == null){
-            instance = new UserDaoImpl();
-        }
         return instance;
     }
 

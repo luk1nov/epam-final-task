@@ -17,6 +17,7 @@ import java.util.List;
 
 import static by.lukyanov.finaltask.command.PagePath.*;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
+import static by.lukyanov.finaltask.util.ResultCounter.countPages;
 
 public class FindAllUserOrdersCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -31,7 +32,7 @@ public class FindAllUserOrdersCommand implements Command {
         request.setAttribute(MESSAGE, request.getParameter(MESSAGE));
         String currentResultPage = request.getParameter(RESULT_PAGE);
         try {
-            int pagesCount = ResultCounter.countPages(orderService.countOrdersByUserId(loggedUser.getId()), POSTS_PER_PAGE);
+            int pagesCount = countPages(orderService.countOrdersByUserId(loggedUser.getId()), POSTS_PER_PAGE);
             List<Order> orderList = orderService.findAllOrdersByUserId(loggedUser.getId(), currentResultPage, POSTS_PER_PAGE);
             request.setAttribute(PAGES_COUNT, pagesCount);
             request.setAttribute(RESULT_PAGE, currentResultPage);

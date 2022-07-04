@@ -17,6 +17,7 @@ import java.util.List;
 import static by.lukyanov.finaltask.command.PagePath.ADMIN_ALL_USERS;
 import static by.lukyanov.finaltask.command.PagePath.TO_ADMIN_ALL_USERS;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
+import static by.lukyanov.finaltask.util.ResultCounter.countPages;
 
 public class FindAllUsersCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -30,7 +31,7 @@ public class FindAllUsersCommand implements Command {
         String currentResultPage = request.getParameter(RESULT_PAGE);
         session.setAttribute(CURRENT_PAGE, generateUrlWithAttr(TO_ADMIN_ALL_USERS, RESULT_PAGE_ATTR, currentResultPage));
         try {
-            int pagesCount = ResultCounter.countPages(userService.countAllUsers(), POSTS_PER_PAGE);
+            int pagesCount = countPages(userService.countAllUsers(), POSTS_PER_PAGE);
             request.setAttribute(PAGES_COUNT, pagesCount);
             request.setAttribute(RESULT_PAGE, currentResultPage);
             List<User> users = userService.findAllUsers(currentResultPage, POSTS_PER_PAGE);

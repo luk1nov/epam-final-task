@@ -18,6 +18,7 @@ import java.util.List;
 import static by.lukyanov.finaltask.command.PagePath.ADMIN_COMPLETED_ORDERS;
 import static by.lukyanov.finaltask.command.PagePath.TO_ADMIN_COMPLETED_ORDERS;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
+import static by.lukyanov.finaltask.util.ResultCounter.countPages;
 
 public class FindCompletedOrdersCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -31,7 +32,7 @@ public class FindCompletedOrdersCommand implements Command {
         String currentResultPage = request.getParameter(RESULT_PAGE);
         session.setAttribute(CURRENT_PAGE, generateUrlWithAttr(TO_ADMIN_COMPLETED_ORDERS, RESULT_PAGE_ATTR, currentResultPage));
         try {
-            int pagesCount = ResultCounter.countPages(orderService.countOrdersByStatus(OrderStatus.FINISHED), POSTS_PER_PAGE);
+            int pagesCount = countPages(orderService.countOrdersByStatus(OrderStatus.FINISHED), POSTS_PER_PAGE);
             request.setAttribute(PAGES_COUNT, pagesCount);
             request.setAttribute(RESULT_PAGE, currentResultPage);
             List<Order> orders = orderService.findOrdersByOrderStatus(OrderStatus.FINISHED, currentResultPage, POSTS_PER_PAGE);

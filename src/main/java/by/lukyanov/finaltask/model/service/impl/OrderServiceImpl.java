@@ -96,7 +96,7 @@ public class OrderServiceImpl implements OrderService {
                             .user(user)
                             .price(orderPrice)
                             .build();
-                    result = orderDaoImpl.create(order);
+                    result = orderDaoImpl.insert(order);
                 } else {
                     logger.warn("invalid date range or car unavailable");
                 }

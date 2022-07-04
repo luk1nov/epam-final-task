@@ -107,21 +107,19 @@ public class OrderDaoImpl implements OrderDao {
     private static final String SQL_COUNT_ORDERS = "SELECT COUNT(order_id) from orders";
     private static final String SQL_COUNT_ORDERS_BY_STATUS = "SELECT COUNT(order_id) from orders WHERE order_status = ?";
     private static final String SQL_COUNT_ORDERS_BY_USER_ID = "SELECT COUNT(order_id) from orders WHERE users_user_id = ?";
-    private static final ConnectionPool pool = ConnectionPool.getInstance();
     private static final OrderRowMapper mapper = OrderRowMapper.getInstance();
-    private static OrderDaoImpl instance;
+    private static final OrderDaoImpl instance = new OrderDaoImpl();
+    private ConnectionPool pool;
 
     private OrderDaoImpl() {
+        pool = ConnectionPool.getInstance();
     }
 
     public static OrderDaoImpl getInstance(){
-        if (instance == null){
-            instance = new OrderDaoImpl();
-        }
         return instance;
     }
 
-    public boolean create(Order order) throws DaoException{
+    public boolean insert(Order order) throws DaoException{
         boolean result = false;
         long userId = order.getUser().getId();
         try (Connection connection = pool.getConnection()){

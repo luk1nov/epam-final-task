@@ -26,19 +26,16 @@ public class CarCategoryDaoImpl implements CarCategoryDao {
     private static final String SQL_SELECT_CAR_CATEGORY_BY_TITLE = "SELECT car_category_id, car_category_title FROM car_category WHERE car_category_title = ?";
     private static final String SQL_DELETE_CAR_CATEGORY_BY_ID = "DELETE FROM car_category WHERE car_category_id = ?";
     private static final String SQL_UPDATE_CAR_CATEGORY = "UPDATE car_category SET car_category_title = ? WHERE car_category_id = ?";
-    private static CarCategoryDaoImpl instance;
-    private final ConnectionPool pool = ConnectionPool.getInstance();
+    private static final CarCategoryDaoImpl instance = new CarCategoryDaoImpl();
+    private ConnectionPool pool;
 
     private CarCategoryDaoImpl() {
+        pool = ConnectionPool.getInstance();
     }
 
     public static CarCategoryDaoImpl getInstance(){
-        if (instance == null){
-            instance = new CarCategoryDaoImpl();
-        }
         return instance;
     }
-
 
     public boolean insert(CarCategory category) throws DaoException {
         boolean result = false;

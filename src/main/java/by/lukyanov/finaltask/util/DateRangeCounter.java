@@ -9,8 +9,8 @@ import java.util.regex.Pattern;
 
 public class DateRangeCounter {
     private static final String DATE_PATTERN = "\\d{4}-\\d{2}-\\d{2}";
-    public static final int BEGIN_DATE_INDEX = 0;
-    public static final int END_DATE_INDEX = 1;
+    private static final int BEGIN_DATE_INDEX = 0;
+    private static final int END_DATE_INDEX = 1;
     private LocalDate beginDate;
     private LocalDate endDate;
 

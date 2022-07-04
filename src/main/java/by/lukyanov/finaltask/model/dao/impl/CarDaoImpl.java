@@ -111,11 +111,12 @@ public class CarDaoImpl implements CarDao {
     private static final String SQL_COUNT_ALL_CARS_BY_ACTIVE = "SELECT COUNT(car_id) FROM cars WHERE is_active = ?";
     private static final String SQL_COUNT_ALL_CARS_BY_CATEGORY = "SELECT COUNT(car_id) FROM cars WHERE car_category_car_category_id = ?";
     private static final CarRowMapper mapper = CarRowMapper.getInstance();
-    private final ConnectionPool pool = ConnectionPool.getInstance();
     private static final CarDaoImpl instance = new CarDaoImpl();
+    private ConnectionPool pool;
 
 
     private CarDaoImpl() {
+        pool = ConnectionPool.getInstance();
     }
 
     public static CarDaoImpl getInstance(){

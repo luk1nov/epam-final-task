@@ -17,6 +17,7 @@ import java.util.List;
 import static by.lukyanov.finaltask.command.PagePath.ADMIN_REPAIRING_CARS;
 import static by.lukyanov.finaltask.command.PagePath.TO_ADMIN_REPAIRING_CARS;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
+import static by.lukyanov.finaltask.util.ResultCounter.countPages;
 
 public class FindCarsOnRepairCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -30,7 +31,7 @@ public class FindCarsOnRepairCommand implements Command {
         request.setAttribute(MESSAGE, request.getParameter(MESSAGE));
         session.setAttribute(CURRENT_PAGE, generateUrlWithAttr(TO_ADMIN_REPAIRING_CARS, RESULT_PAGE_ATTR, currentResultPage));
         try {
-            int pagesCount = ResultCounter.countPages(carService.countAllCarsByActive(false), POSTS_PER_PAGE);
+            int pagesCount = countPages(carService.countAllCarsByActive(false), POSTS_PER_PAGE);
             request.setAttribute(PAGES_COUNT, pagesCount);
             request.setAttribute(RESULT_PAGE, currentResultPage);
             List<Car> cars = carService.findCarsByActiveStatus(false, currentResultPage, POSTS_PER_PAGE);

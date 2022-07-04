@@ -12,7 +12,7 @@ import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class CarFactory {
     private static final long id = 1L;
-    private static final String categoryTitle = "Car";
+    private static final String categoryTitle = "Cars";
     private static final String brand = "Audi";
     private static final String model = "A5";
     private static final BigDecimal regularPrice = new BigDecimal(1000);

@@ -20,6 +20,7 @@ import java.util.Optional;
 import static by.lukyanov.finaltask.command.PagePath.CAR_CATEGORY_PAGE;
 import static by.lukyanov.finaltask.command.PagePath.TO_CAR_CATEGORY_PAGE;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
+import static by.lukyanov.finaltask.util.ResultCounter.countPages;
 
 public class ToCategoryCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -38,7 +39,7 @@ public class ToCategoryCommand implements Command {
             Optional<CarCategory> optionalCarCategory = categoryService.findCarCategoryById(catId);
             if(optionalCarCategory.isPresent()){
                 CarCategory category = optionalCarCategory.get();
-                int pagesCount = ResultCounter.countPages(carService.countAllCarsByCategoryId(category.getId()), POSTS_PER_PAGE);
+                int pagesCount = countPages(carService.countAllCarsByCategoryId(category.getId()), POSTS_PER_PAGE);
                 request.setAttribute(PAGES_COUNT, pagesCount);
                 request.setAttribute(RESULT_PAGE, currentResultPage);
                 request.setAttribute(CAR_CATEGORY, category);

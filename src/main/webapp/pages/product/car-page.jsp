@@ -108,17 +108,18 @@
             </c:forEach>
         ],
         onChange: function(selectedDates, dateStr, instance) {
-            instance.element.value = dateStr.replace('to', '—');
-            var price_text = default_price_text;
+            instance.element.value = dateStr.replace(' to ', ':').replace(' — ', ':');
+            let price_text = default_price_text;
+            let price;
             console.log(dateStr);
             if (selectedDates.length === 2){
-                var time_difference = selectedDates[1] - selectedDates[0];
-                var days = (time_difference / (1000 * 60 * 60 * 24)) + 1;
+                let time_difference = selectedDates[1] - selectedDates[0];
+                let days = (time_difference / (1000 * 60 * 60 * 24)) + 1;
                 <c:if test="${car.salePrice.isEmpty()}">
-                var price = days * <c:out value="${car.regularPrice}"/>;
+                price = days * <c:out value="${car.regularPrice}"/>;
                 </c:if>
                 <c:if test="${car.salePrice.isPresent()}">
-                var price = days * <c:out value="${car.salePrice.get()}"/>;
+                price = days * <c:out value="${car.salePrice.get()}"/>;
                 </c:if>
                 price_text = "<fmt:message key='label.final_price'/>: $" + price;
                 hidden_price.val(price).change();

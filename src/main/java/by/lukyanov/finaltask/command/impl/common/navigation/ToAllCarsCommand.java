@@ -17,6 +17,7 @@ import java.util.List;
 import static by.lukyanov.finaltask.command.PagePath.CAR_CATEGORY_PAGE;
 import static by.lukyanov.finaltask.command.PagePath.TO_ALL_CARS_CATEGORY_PAGE;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
+import static by.lukyanov.finaltask.util.ResultCounter.countPages;
 
 public class ToAllCarsCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -28,7 +29,7 @@ public class ToAllCarsCommand implements Command {
         HttpSession session = request.getSession();
         String currentResultPage = request.getParameter(RESULT_PAGE);
         try {
-            int pagesCount = ResultCounter.countPages(carService.countAllCars(), POSTS_PER_PAGE);
+            int pagesCount = countPages(carService.countAllCars(), POSTS_PER_PAGE);
             request.setAttribute(PAGES_COUNT, pagesCount);
             request.setAttribute(RESULT_PAGE, currentResultPage);
             List<Car> cars = carService.findAllCars(currentResultPage, POSTS_PER_PAGE);
