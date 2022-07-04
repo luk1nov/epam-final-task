@@ -1,6 +1,5 @@
 package by.lukyanov.finaltask.model.connection;
 
-import by.lukyanov.finaltask.command.Message;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,19 +54,15 @@ public class ConnectionPool {
             for (int i = 0; i < POOL_SIZE; i++) {
                 createConnection();
             }
-        } catch (InterruptedException | SQLException e) {
-            logger.error("connection didn't created");
-        }
-        if(freeConnections.size() != POOL_SIZE){
-            logger.warn("Connection pool not full filled. Trying again.");
-            try {
+            if(freeConnections.size() != POOL_SIZE){
+                logger.warn("Connection pool not full filled. Trying again.");
                 for (int i = freeConnections.size(); i < POOL_SIZE; i++) {
                     createConnection();
                 }
-            } catch (InterruptedException | SQLException e) {
-                logger.error("connection didn't created again", e);
-                throw new RuntimeException(e);
             }
+        } catch (InterruptedException | SQLException e) {
+            logger.error("connection didn't created again", e);
+            throw new RuntimeException(e);
         }
         logger.info("Connection pool init " + freeConnections.size());
     }

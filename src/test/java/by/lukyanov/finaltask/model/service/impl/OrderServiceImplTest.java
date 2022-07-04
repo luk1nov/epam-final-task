@@ -108,7 +108,7 @@ class OrderServiceImplTest {
     void addOrderShouldReturnTrue() throws DaoException, ServiceException {
         Order order = createOrder();
         given(orderDao.checkCarAvailabilityByDateRange(any(LocalDate.class), any(LocalDate.class), anyLong())).willReturn(true);
-        given(orderDao.create(any(Order.class))).willReturn(true);
+        given(orderDao.insert(any(Order.class))).willReturn(true);
         assertTrue(orderService.addOrder(order, dateRange));
     }
 
@@ -116,7 +116,7 @@ class OrderServiceImplTest {
     void addOrderShouldReturnFalse() throws DaoException, ServiceException {
         Order order = createOrder();
         given(orderDao.checkCarAvailabilityByDateRange(any(LocalDate.class), any(LocalDate.class), anyLong())).willReturn(true);
-        given(orderDao.create(any(Order.class))).willReturn(false);
+        given(orderDao.insert(any(Order.class))).willReturn(false);
         assertFalse(orderService.addOrder(order, dateRange));
     }
 
@@ -124,7 +124,7 @@ class OrderServiceImplTest {
     void addOrderShouldThrowException() throws DaoException {
         Order order = createOrder();
         given(orderDao.checkCarAvailabilityByDateRange(any(LocalDate.class), any(LocalDate.class), anyLong())).willReturn(true);
-        given(orderDao.create(any(Order.class))).willThrow(DaoException.class);
+        given(orderDao.insert(any(Order.class))).willThrow(DaoException.class);
         assertThrows(ServiceException.class, () -> orderService.addOrder(order, dateRange));
     }
 

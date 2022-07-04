@@ -22,8 +22,6 @@ import static org.mockito.MockitoAnnotations.openMocks;
 class CarCategoryServiceImplTest {
     private static final String title = "Category";
     private static final long id = 2L;
-    private static final int DEFAULT_OFFSET = 0;
-    private static final int DEFAULT_PAGE_NUMBER = 10;
     private CarCategory carCategory;
 
     @Mock
