@@ -18,6 +18,7 @@ import java.sql.SQLException;
 
 import static by.lukyanov.finaltask.factory.CarFactory.createCar;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
@@ -61,8 +62,7 @@ class CarDaoImplTest {
     @Test
     void findAll() throws DaoException {
         assertThat(carDao.findAll(100, 0))
-                .filteredOn(car -> car.getVinCode().equals(firstCar.getVinCode())
-                        || car.getVinCode().equals(secondCar.getVinCode()))
+                .filteredOn("vinCode", in(firstCar.getVinCode(), secondCar.getVinCode()))
                 .hasSize(2);
     }
 
@@ -103,8 +103,7 @@ class CarDaoImplTest {
     @Test
     void findCarsByCategoryId() throws DaoException {
         assertThat(carDao.findCarsByCategoryId(firstCar.getCarCategory().getId(), 100, 0))
-                .filteredOn(car -> car.getVinCode().equals(firstCar.getVinCode())
-                        || car.getVinCode().equals(secondCar.getVinCode()))
+                .filteredOn("vinCode", in(firstCar.getVinCode(), secondCar.getVinCode()))
                 .hasSize(2);
     }
 
