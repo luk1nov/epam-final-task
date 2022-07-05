@@ -202,7 +202,7 @@ public class OrderDaoImpl implements OrderDao {
         boolean result;
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_ORDER_STATUS_BY_ID)){
-            statement.setString(1, String.valueOf(order.getOrderStatus()));
+            statement.setString(1, order.getOrderStatus().name());
             statement.setLong(2, order.getId());
             result = statement.executeUpdate() != 0;
         } catch (SQLException e) {
@@ -277,7 +277,7 @@ public class OrderDaoImpl implements OrderDao {
             statement.setDate(1, Date.valueOf(beginDate));
             statement.setDate(2, Date.valueOf(endDate));
             statement.setLong(3, carId);
-            statement.setString(4, String.valueOf(OrderStatus.ACTIVE));
+            statement.setString(4, OrderStatus.ACTIVE.name());
             try (ResultSet rs = statement.executeQuery()){
                 result = !rs.next();
             }
@@ -293,7 +293,7 @@ public class OrderDaoImpl implements OrderDao {
         List<Order> orderList = new ArrayList<>();
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_FIND_ORDERS_BY_ORDER_STATUS)){
-            statement.setString(1, String.valueOf(orderStatus));
+            statement.setString(1, orderStatus.name());
             statement.setInt(2, limit);
             statement.setInt(3, offset);
             try (ResultSet rs = statement.executeQuery()){
@@ -345,7 +345,7 @@ public class OrderDaoImpl implements OrderDao {
                         updateBalanceStmt.setLong(2, userId);
                         updateBalanceStmt.executeUpdate();
                         Optional<String> orderMessage = order.getMessage();
-                        updOrderStmt.setString(1, String.valueOf(order.getOrderStatus()));
+                        updOrderStmt.setString(1, order.getOrderStatus().name());
                         updOrderStmt.setString(2, orderMessage.orElse(null));
                         updOrderStmt.setLong(3, order.getId());
                         updOrderStmt.executeUpdate();
@@ -411,13 +411,13 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public Optional<OrderReport> findOrderReportById(long id) throws DaoException {
         Optional<OrderReport> optionalOrderReport = Optional.empty();
-        OrderReportMapper mapper = OrderReportMapper.getInstance();
+        OrderReportMapper reportMapper = OrderReportMapper.getInstance();
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_FIND_ORDER_REPORT_BY_ID)){
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()){
                 if(rs.next()){
-                    optionalOrderReport = mapper.mapRow(rs);
+                    optionalOrderReport = reportMapper.mapRow(rs);
                 }
             }
         } catch (SQLException e) {
@@ -448,7 +448,7 @@ public class OrderDaoImpl implements OrderDao {
         int orderCount = 0;
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL_COUNT_ORDERS_BY_STATUS)){
-            statement.setString(1, String.valueOf(status));
+            statement.setString(1, status.name());
             try (ResultSet rs = statement.executeQuery()){
                 if(rs.next()){
                     orderCount = rs.getInt(1);
