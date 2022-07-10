@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static by.lukyanov.finaltask.model.dao.ColumnName.CAR_ID;
-
 public class CarDaoImpl implements CarDao {
     private static final Logger logger = LogManager.getLogger();
     private static final String SQL_FIND_ALL_CARS = """
@@ -177,7 +175,7 @@ public class CarDaoImpl implements CarDao {
                 carStatement.executeUpdate();
                 carInfoStatement.setDouble(1, car.getInfo().getAcceleration());
                 carInfoStatement.setInt(2, car.getInfo().getPower());
-                carInfoStatement.setString(3, car.getInfo().getDrivetrain().toString());
+                carInfoStatement.setString(3, car.getInfo().getDrivetrain().name());
                 carInfoStatement.setLong(4, car.getId());
                 carInfoStatement.executeUpdate();
                 updated = true;
@@ -238,7 +236,7 @@ public class CarDaoImpl implements CarDao {
                         long carId = resultSetCarId.getLong(1);
                         addCarInfoStatement.setDouble(1, car.getInfo().getAcceleration());
                         addCarInfoStatement.setInt(2, car.getInfo().getPower());
-                        addCarInfoStatement.setString(3, car.getInfo().getDrivetrain().toString());
+                        addCarInfoStatement.setString(3, car.getInfo().getDrivetrain().name());
                         addCarInfoStatement.setLong(4, carId);
                         addCarInfoStatement.executeUpdate();
                         result = true;
@@ -280,7 +278,7 @@ public class CarDaoImpl implements CarDao {
                 carStatement.executeUpdate();
                 carInfoStatement.setDouble(1, car.getInfo().getAcceleration());
                 carInfoStatement.setInt(2, car.getInfo().getPower());
-                carInfoStatement.setString(3, car.getInfo().getDrivetrain().toString());
+                carInfoStatement.setString(3, car.getInfo().getDrivetrain().name());
                 carInfoStatement.setLong(4, car.getId());
                 carInfoStatement.executeUpdate();
                 updated = true;

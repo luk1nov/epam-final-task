@@ -19,24 +19,30 @@ public class ConnectionPool {
     private static final Logger logger = LogManager.getLogger();
     private static final Lock locker = new ReentrantLock();
     private static final int POOL_SIZE = 8;
+    private static final AtomicBoolean isInstanceInitialized = new AtomicBoolean(false);
+    private static final String PROP_DB_PATH = "database.properties";
+    private static final String PROP_DB_URL = "db.url";
+    private static final String PROP_DB_USER = "db.user";
+    private static final String PROP_DB_PASS = "db.password";
+    private static final String PROP_DB_DRIVER = "db.driver";
+
     private static final String DB_URL;
     private static final String DB_PASSWORD;
     private static final String DB_USER;
     private static final String DB_DRIVER;
     private static final Properties properties = new Properties();
-    private static final AtomicBoolean isInstanceInitialized = new AtomicBoolean(false);
     private static ConnectionPool instance;
     private final BlockingQueue<ProxyConnection> freeConnections;
     private final BlockingQueue<ProxyConnection> usedConnections;
 
     static {
         try (InputStream inputStream = ConnectionPool.class.getClassLoader()
-                .getResourceAsStream("database.properties")) {
+                .getResourceAsStream(PROP_DB_PATH)) {
             properties.load(inputStream);
-            DB_URL = properties.getProperty("db.url");
-            DB_USER = properties.getProperty("db.user");
-            DB_PASSWORD = properties.getProperty("db.password");
-            DB_DRIVER = properties.getProperty("db.driver");
+            DB_URL = properties.getProperty(PROP_DB_URL);
+            DB_USER = properties.getProperty(PROP_DB_USER);
+            DB_PASSWORD = properties.getProperty(PROP_DB_PASS);
+            DB_DRIVER = properties.getProperty(PROP_DB_DRIVER);
             Class.forName(DB_DRIVER);
         } catch (IOException e) {
             logger.fatal("Error reading properties for db", e);
