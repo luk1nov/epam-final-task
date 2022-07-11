@@ -41,6 +41,6 @@
 7. if the deadlines were violated or the car was damaged administrator may decide to block the client.
 
 ------------
-###Screenshots of the app
+### Screenshots of the app
 ![catalog](https://github.com/luk1nov/Final_Task/blob/master/resources/image/catalog.png?raw=true)
 ![orders](https://github.com/luk1nov/Final_Task/blob/master/resources/image/orders.png?raw=true)
