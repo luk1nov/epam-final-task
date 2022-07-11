@@ -11,6 +11,9 @@ import static by.lukyanov.finaltask.command.PagePath.CAR_PAGE;
 import static by.lukyanov.finaltask.command.PagePath.SIGN_IN_PAGE;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.LOGGED_USER;
 
+/**
+ * Filter for accessing only for logged user pages.
+ */
 @WebFilter(filterName = "ForLoggedPageFilter", urlPatterns = {"/pages/order/*", "/pages/user/*", CAR_PAGE},
 dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD})
 public class ForLoggedPageFilter implements Filter {

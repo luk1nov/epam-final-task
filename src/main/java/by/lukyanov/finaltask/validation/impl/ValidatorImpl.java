@@ -98,18 +98,13 @@ public class ValidatorImpl implements Validator {
     }
 
     @Override
-    public boolean isValidMessage(String declineMessage) {
-        return declineMessage != null && declineMessage.matches(MESSAGE_PATTERN);
+    public boolean isValidMessage(String message) {
+        return message != null && message.matches(MESSAGE_PATTERN);
     }
 
     @Override
     public boolean isValidNumber(String number) {
         return number != null && number.matches(NUMBER_PATTERN);
-    }
-
-    @Override
-    public boolean isValidSearchCarPattern(String searchQuery) {
-        return searchQuery != null && searchQuery.matches(SEARCH_CAR_PATTERN);
     }
 
     @Override

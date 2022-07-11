@@ -13,6 +13,9 @@ import static by.lukyanov.finaltask.command.PagePath.ADMIN_USER_INFO;
 import static by.lukyanov.finaltask.command.PagePath.MAIN_PAGE;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.LOGGED_USER;
 
+/**
+ * Filter for accessing only for manager and admin pages.
+ */
 @WebFilter(filterName = "ManagerPageFilter", urlPatterns = {"/pages/admin/cars/*", "/pages/admin/orders/*",
         ADMIN_USER_INFO, "/pages/admin/template-parts/*"},
         dispatcherTypes = {DispatcherType.FORWARD, DispatcherType.REQUEST})

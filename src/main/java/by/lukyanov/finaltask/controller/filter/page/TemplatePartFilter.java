@@ -8,6 +8,9 @@ import java.io.IOException;
 
 import static by.lukyanov.finaltask.command.PagePath.MAIN_PAGE;
 
+/**
+ * Filter for denying access to service pages (header, footer, etc.)
+ */
 @WebFilter(filterName = "TemplatePartFilter", urlPatterns = {"/pages/admin/template-parts/*", "/pages/components/*"},
 dispatcherTypes = DispatcherType.REQUEST)
 public class TemplatePartFilter implements Filter {

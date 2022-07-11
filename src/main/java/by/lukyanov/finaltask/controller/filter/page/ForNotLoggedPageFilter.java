@@ -10,6 +10,9 @@ import java.io.IOException;
 import static by.lukyanov.finaltask.command.PagePath.MAIN_PAGE;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.LOGGED_USER;
 
+/**
+ * Filter for accessing only for not logged user pages.
+ */
 @WebFilter(filterName = "ForNotLoggedPageFilter", urlPatterns = {"/pages/login/*"})
 public class ForNotLoggedPageFilter implements Filter {
 

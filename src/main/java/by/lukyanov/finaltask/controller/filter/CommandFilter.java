@@ -17,6 +17,9 @@ import static by.lukyanov.finaltask.command.PagePath.MAIN_PAGE;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.COMMAND;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.LOGGED_USER;
 
+/**
+ * Web filter for accessing commands.
+ */
 @WebFilter(filterName = "CommandFilter", urlPatterns = {"/controller"},
         dispatcherTypes = {DispatcherType.FORWARD, DispatcherType.REQUEST})
 public class CommandFilter implements Filter {
@@ -46,7 +49,6 @@ public class CommandFilter implements Filter {
                 case USER -> commonCommands.contains(command);
                 case MANAGER -> managerCommands.contains(command);
                 case ADMIN -> adminCommands.contains(command);
-                default -> false;
             };
         } else {
             access = onlyGuestCommands.contains(command);

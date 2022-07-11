@@ -12,6 +12,9 @@ import java.io.IOException;
 import static by.lukyanov.finaltask.command.PagePath.*;
 import static by.lukyanov.finaltask.command.ParameterAttributeName.LOGGED_USER;
 
+/**
+ * Filter for accessing only for admin pages.
+ */
 @WebFilter(filterName = "AdminPageFilter", urlPatterns = {ADMIN_ADD_EDIT_USER, ADMIN_ALL_USERS, UNVERIFIED_USERS,
         ADMIN_SEARCH_USERS_RESULTS},
         dispatcherTypes = {DispatcherType.FORWARD, DispatcherType.REQUEST})

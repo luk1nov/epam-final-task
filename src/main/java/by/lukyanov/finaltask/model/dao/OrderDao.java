@@ -95,9 +95,9 @@ public interface OrderDao extends BaseDao<Order>{
     boolean completeOrder(Order order, InputStream reportPhoto) throws DaoException;
 
     /**
-     * Finds order report of specified order id.
+     * Finds order report of specified report id.
      *
-     * @param id order id
+     * @param id report id
      * @return optional object of OrderReport
      * @throws DaoException if there is a problem with data access
      */
