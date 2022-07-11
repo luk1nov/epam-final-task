@@ -39,3 +39,8 @@
 5. Manager or administrator check all information about the order and may accept or reject it with a reason.
 6. At the end of the rent user should send order report about the rent and capture the photo.
 7. if the deadlines were violated or the car was damaged administrator may decide to block the client.
+
+------------
+###Screenshots of the app
+![catalog](https://github.com/luk1nov/Final_Task/blob/master/resources/image/catalog.png?raw=true)
+![orders](https://github.com/luk1nov/Final_Task/blob/master/resources/image/orders.png?raw=true)
