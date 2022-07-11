@@ -25,7 +25,7 @@ public interface Validator {
     boolean isValidSurname(String surname);
 
     /**
-     * Checks if password is valid
+     * Checks if password is valid.
      * Must contain at least 1 uppercase letter, 1 lowercase letter, 1 digit
      * Min length - 8, max length - 20.
      * Example: "123456Ab"
@@ -36,7 +36,7 @@ public interface Validator {
     boolean isValidPassword(String password);
 
     /**
-     * Checks is valid email
+     * Checks is valid email.
      * Example: "email@mail.com"
      *
      * @param email email
@@ -111,7 +111,7 @@ public interface Validator {
     boolean isValidPower(String power);
 
     /**
-     * Checks is locale exists
+     * Checks is locale exists.
      * Example: "ru", "en"
      *
      * @param locale locale string
@@ -120,7 +120,7 @@ public interface Validator {
     boolean isLocaleExists(String locale);
 
     /**
-     * Checks is valid date range
+     * Checks is valid date range.
      * Example: "2022-01-01", "2022-01-01:2022-02-01"
      *
      * @param dateRange date range
@@ -129,7 +129,7 @@ public interface Validator {
     boolean isValidDateRange(String dateRange);
 
     /**
-     * Checks is valid message
+     * Checks is valid message.
      * Min length - 1, max length - 200
      * Example: "Hello, welcome to los pollos hermanos"
      *
@@ -139,7 +139,7 @@ public interface Validator {
     boolean isValidMessage(String message);
 
     /**
-     * Checks is string contains only digits
+     * Checks is string contains only digits.
      * Example: "53"
      *
      * @param number number string
