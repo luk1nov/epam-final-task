@@ -246,7 +246,7 @@ public class CarServiceImpl implements CarService {
     public List<Car> searchCars(String searchQuery) throws ServiceException {
         List<Car> cars = new ArrayList<>();
         try {
-            if (validator.isValidSearchPattern(searchQuery)){
+            if (validator.isValidSearchQuery(searchQuery)){
                 cars = carDao.searchCars(searchQuery.strip());
             }
         } catch (DaoException e) {

@@ -289,7 +289,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> searchUsers(String searchQuery) throws ServiceException {
         try {
-            return validator.isValidSearchPattern(searchQuery) ? userDao.searchUsers(searchQuery.strip()) : new ArrayList<>();
+            return validator.isValidSearchQuery(searchQuery) ? userDao.searchUsers(searchQuery.strip()) : new ArrayList<>();
         } catch (DaoException e) {
             logger.error("Service exception trying search users", e);
             throw new ServiceException(e);

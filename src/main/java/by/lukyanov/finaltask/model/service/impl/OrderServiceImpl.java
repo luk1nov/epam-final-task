@@ -286,7 +286,7 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> searchOrders(String searchQuery) throws ServiceException {
         List<Order> orders = new ArrayList<>();
         try {
-            if (validator.isValidSearchPattern(searchQuery)){
+            if (validator.isValidSearchQuery(searchQuery)){
                 orders = orderDaoImpl.searchOrders(searchQuery.strip());
             }
         } catch (DaoException e) {
