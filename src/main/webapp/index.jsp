@@ -28,9 +28,9 @@
                     <div class="row">
                         <div class="col">
                             <div class="page-description">
-                                <h1><fmt:message key="label.main_page"/></h1>
+                                <h1 class="text-center"><fmt:message key="label.main_page"/></h1>
                             </div>
-                            ${message}
+                            <img src="https://cdn.myportfolio.com/e7232561-1f8e-4515-908b-9b04007d433b/d2088f8b-38fa-4958-95b0-e78b92ccaebc_rw_1920.gif?h=3ba511f6562577bdaf18e271c44d0625" alt="" style="width: inherit">
                         </div>
                     </div>
                 </div>
