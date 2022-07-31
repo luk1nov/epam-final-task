@@ -31,6 +31,7 @@ public class Controller extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        preventBackToPreviousPage(response);
         try {
             String commandParameter = request.getParameter(COMMAND);
             Command command = CommandType.of(commandParameter);
@@ -51,5 +52,12 @@ public class Controller extends HttpServlet {
         } catch (CommandException e){
             response.sendError(SC_INTERNAL_SERVER_ERROR, e.getCause().getMessage());
         }
+    }
+
+    private void preventBackToPreviousPage(HttpServletResponse response){
+        response.setHeader("Cache-Control","no-cache, no-store, must-revalidate");
+        response.addHeader("Cache-Control", "post-check=0, pre-check=0");
+        response.setHeader("Pragma","no-cache");
+        response.setDateHeader ("Expires", 0);
     }
 }
