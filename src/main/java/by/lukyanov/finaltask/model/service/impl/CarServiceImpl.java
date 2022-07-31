@@ -8,6 +8,8 @@ import by.lukyanov.finaltask.exception.ServiceException;
 import by.lukyanov.finaltask.model.dao.impl.CarDaoImpl;
 import by.lukyanov.finaltask.model.service.CarService;
 import by.lukyanov.finaltask.util.ResultCounter;
+import by.lukyanov.finaltask.validation.CarValidator;
+import by.lukyanov.finaltask.validation.CommonValidator;
 import by.lukyanov.finaltask.validation.impl.ValidatorImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,7 +25,7 @@ import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class CarServiceImpl implements CarService {
     private static final Logger logger = LogManager.getLogger();
-    private static final ValidatorImpl validator = ValidatorImpl.getInstance();
+    private static final CommonValidator validator = ValidatorImpl.getInstance();
     private static final int DEFAULT_RESULT_PAGE = 1;
     private static final CarServiceImpl instance = new CarServiceImpl();
     private CarDaoImpl carDao;
@@ -39,6 +41,8 @@ public class CarServiceImpl implements CarService {
     @Override
     public boolean addCar(Map<String, String> carData, InputStream carImage) throws ServiceException {
         boolean result = false;
+        CarValidator carValidator = ValidatorImpl.getInstance();
+
         String brand = carData.get(CAR_BRAND);
         String model = carData.get(CAR_MODEL);
         String vinCode = carData.get(CAR_VIN_CODE);
@@ -50,8 +54,8 @@ public class CarServiceImpl implements CarService {
         String drivetrain = carData.get(CAR_INFO_DRIVETRAIN);
         Optional<String> salePrice = Optional.ofNullable(carData.get(CAR_SALE_PRICE));
 
-        if (validator.isOneWord(brand) && validator.isValidCarModel(model) && validator.isValidVinCode(vinCode) &&
-                validator.isValidPrice(regularPrice) && validator.isValidAcceleration(acceleration) && validator.isValidPower(power) &&
+        if (validator.isOneWord(brand) && carValidator.isValidCarModel(model) && carValidator.isValidVinCode(vinCode) &&
+                validator.isValidPrice(regularPrice) && carValidator.isValidAcceleration(acceleration) && carValidator.isValidPower(power) &&
                 validator.isValidId(categoryId) && (salePrice.isEmpty() || validator.isValidPrice(salePrice.get()) && comparePrices(regularPrice, salePrice.get()))){
             try {
                 CarInfo carInfo = new CarInfo(Double.parseDouble(acceleration), Integer.parseInt(power), CarInfo.Drivetrain.valueOf(drivetrain.toUpperCase()));
@@ -109,6 +113,8 @@ public class CarServiceImpl implements CarService {
     @Override
     public boolean updateCar(Map<String, String> carData, InputStream carImage) throws ServiceException {
         boolean result = false;
+        CarValidator carValidator = ValidatorImpl.getInstance();
+
         String carId = carData.get(CAR_ID);
         String brand = carData.get(CAR_BRAND);
         String model = carData.get(CAR_MODEL);
@@ -122,8 +128,8 @@ public class CarServiceImpl implements CarService {
         Optional<String> salePrice = Optional.ofNullable(carData.get(CAR_SALE_PRICE));
         String changeImg = carData.get(UPLOAD_IMAGE);
 
-        if (validator.isOneWord(brand) && validator.isValidCarModel(model) && validator.isValidVinCode(vinCode) &&
-                validator.isValidPrice(regularPrice) && validator.isValidAcceleration(acceleration) && validator.isValidPower(power) &&
+        if (validator.isOneWord(brand) && carValidator.isValidCarModel(model) && carValidator.isValidVinCode(vinCode) &&
+                validator.isValidPrice(regularPrice) && carValidator.isValidAcceleration(acceleration) && carValidator.isValidPower(power) &&
                 validator.isValidId(categoryId) && (salePrice.isEmpty() || validator.isValidPrice(salePrice.get()) && comparePrices(regularPrice, salePrice.get()))){
             try {
                 CarInfo carInfo = new CarInfo(Double.parseDouble(acceleration), Integer.parseInt(power), CarInfo.Drivetrain.valueOf(drivetrain.toUpperCase()));
@@ -258,8 +264,9 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Optional<Car> findCarByVinCode(String vinCode) throws ServiceException {
+        CarValidator carValidator = ValidatorImpl.getInstance();
         Optional<Car> car = Optional.empty();
-        if (validator.isValidVinCode(vinCode)){
+        if (carValidator.isValidVinCode(vinCode)){
             try {
                 car = carDao.findCarByVinCode(vinCode);
             } catch (DaoException e) {

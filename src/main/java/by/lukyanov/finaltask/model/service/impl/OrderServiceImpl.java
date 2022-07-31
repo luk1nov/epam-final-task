@@ -7,6 +7,7 @@ import by.lukyanov.finaltask.model.dao.impl.OrderDaoImpl;
 import by.lukyanov.finaltask.model.service.OrderService;
 import by.lukyanov.finaltask.util.DateRangeCounter;
 import by.lukyanov.finaltask.util.ResultCounter;
+import by.lukyanov.finaltask.validation.CommonValidator;
 import by.lukyanov.finaltask.validation.impl.ValidatorImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +23,7 @@ import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class OrderServiceImpl implements OrderService {
     private static final Logger logger = LogManager.getLogger();
-    private static final ValidatorImpl validator = ValidatorImpl.getInstance();
+    private static final CommonValidator validator = ValidatorImpl.getInstance();
     private static final int DEFAULT_RESULT_PAGE = 1;
     private static final int MIN_RENT_DAYS = 1;
     private static final OrderServiceImpl instance = new OrderServiceImpl();

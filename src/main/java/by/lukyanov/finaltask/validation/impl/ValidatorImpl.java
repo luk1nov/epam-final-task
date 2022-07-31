@@ -1,8 +1,10 @@
 package by.lukyanov.finaltask.validation.impl;
 
-import by.lukyanov.finaltask.validation.Validator;
+import by.lukyanov.finaltask.validation.CarValidator;
+import by.lukyanov.finaltask.validation.UserValidator;
+import by.lukyanov.finaltask.validation.CommonValidator;
 
-public class ValidatorImpl implements Validator {
+public class ValidatorImpl implements CommonValidator, CarValidator, UserValidator {
     private static final String ONE_WORD_PATTERN = "^[\\p{Alpha}А-яЁё]{2,40}$";
     private static final String SURNAME_PATTERN = "^[\\p{Alpha}А-яЁё]{2,20}-[\\p{Alpha}А-яЁё]{2,20}$|^[\\p{Alpha}А-яЁё]{2,45}$";
     private static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,20}$";

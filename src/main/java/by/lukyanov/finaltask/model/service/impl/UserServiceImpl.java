@@ -10,6 +10,8 @@ import by.lukyanov.finaltask.model.dao.impl.UserDaoImpl;
 import by.lukyanov.finaltask.model.service.UserService;
 import by.lukyanov.finaltask.util.PasswordEncoder;
 import by.lukyanov.finaltask.util.ResultCounter;
+import by.lukyanov.finaltask.validation.CommonValidator;
+import by.lukyanov.finaltask.validation.UserValidator;
 import by.lukyanov.finaltask.validation.impl.ValidatorImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,7 +28,7 @@ import static by.lukyanov.finaltask.command.ParameterAttributeName.*;
 
 public class UserServiceImpl implements UserService {
     private static final Logger logger = LogManager.getLogger();
-    private static final ValidatorImpl validator = ValidatorImpl.getInstance();
+    private static final CommonValidator validator = ValidatorImpl.getInstance();
     private static final String PHONE_CODE_BY = "+375-";
     private static final int DEFAULT_RESULT_PAGE = 1;
     private static final UserServiceImpl instance = new UserServiceImpl();
@@ -42,6 +44,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean addUser(Map<String, String> userData) throws ServiceException {
+        UserValidator userValidator = ValidatorImpl.getInstance();
         PasswordEncoder encoder = PasswordEncoder.getInstance();
         String name = userData.get(USER_NAME);
         String surname = userData.get(USER_SURNAME);
@@ -49,8 +52,8 @@ public class UserServiceImpl implements UserService {
         String phone = userData.get(USER_PHONE);
         String pass = userData.get(USER_PASS);
         boolean addUserResult = false;
-        if(validator.isOneWord(name) && validator.isValidSurname(surname) && validator.isValidEmail(email) &&
-                validator.isValidPassword(pass) && validator.isValidPhone(phone)){
+        if(validator.isOneWord(name) && userValidator.isValidSurname(surname) && userValidator.isValidEmail(email) &&
+                userValidator.isValidPassword(pass) && userValidator.isValidPhone(phone)){
             String encodedPass = encoder.encode(pass);
             String phoneWithCountryCode = PHONE_CODE_BY + phone;
             User user = new User.UserBuilder()
@@ -92,8 +95,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findUserByEmail(String email) throws ServiceException {
+        UserValidator userValidator = ValidatorImpl.getInstance();
         try {
-            return validator.isValidEmail(email) ? userDao.findUserByEmail(email) : Optional.empty();
+            return userValidator.isValidEmail(email) ? userDao.findUserByEmail(email) : Optional.empty();
         } catch (DaoException e) {
             logger.error("Service exception trying find user by email", e);
             throw new ServiceException(e);
@@ -102,9 +106,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findUserByPhone(String phone) throws ServiceException {
+        UserValidator userValidator = ValidatorImpl.getInstance();
         Optional<User> user = Optional.empty();
         try {
-            if(validator.isValidPhone(phone)){
+            if(userValidator.isValidPhone(phone)){
                 String phoneWithCountryCode = PHONE_CODE_BY + phone;
                 user = userDao.findUserByPhone(phoneWithCountryCode);
             } else {
@@ -145,6 +150,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean updateUser(Map<String, String> userData) throws ServiceException {
+        UserValidator userValidator = ValidatorImpl.getInstance();
         boolean updated;
         String userId = userData.get(ParameterAttributeName.USER_ID);
         String name = userData.get(ParameterAttributeName.USER_NAME);
@@ -153,8 +159,8 @@ public class UserServiceImpl implements UserService {
         String phone = userData.get(USER_PHONE);
         String role = userData.get(ParameterAttributeName.USER_ROLE).toUpperCase();
         String status = userData.get(ParameterAttributeName.USER_STATUS).toUpperCase();
-        if(validator.isValidId(userId) && validator.isOneWord(name) && validator.isValidSurname(surname) &&
-                validator.isValidEmail(email) && validator.isValidPhone(phone)){
+        if(validator.isValidId(userId) && validator.isOneWord(name) && userValidator.isValidSurname(surname) &&
+                userValidator.isValidEmail(email) && userValidator.isValidPhone(phone)){
             try{
                 String phoneWithCountryCode = PHONE_CODE_BY + phone;
                 User user = new User.UserBuilder()
@@ -193,13 +199,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean updateUserInfo(long id, Map<String, String> userData) throws ServiceException {
+        UserValidator userValidator = ValidatorImpl.getInstance();
         boolean updated = false;
         String name = userData.get(USER_NAME);
         String surname = userData.get(USER_SURNAME);
         String email = userData.get(USER_EMAIL);
         String phone = userData.get(USER_PHONE);
-        if(validator.isOneWord(name) && validator.isValidSurname(surname) &&
-                validator.isValidEmail(email) && validator.isValidPhone(phone)){
+        if(validator.isOneWord(name) && userValidator.isValidSurname(surname) &&
+                userValidator.isValidEmail(email) && userValidator.isValidPhone(phone)){
             try{
                 String phoneWithCountryCode = PHONE_CODE_BY + phone;
                 User user = new User.UserBuilder()
@@ -233,8 +240,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean changeUserPassword(long id, String password) throws ServiceException {
         PasswordEncoder passEncoder = PasswordEncoder.getInstance();
+        UserValidator userValidator = ValidatorImpl.getInstance();
         try {
-            return validator.isValidPassword(password) && userDao.updatePassword(id, passEncoder.encode(password));
+            return userValidator.isValidPassword(password) && userDao.updatePassword(id, passEncoder.encode(password));
         } catch (DaoException e) {
             logger.error("Service exception trying update driver license", e);
             throw new ServiceException(e);

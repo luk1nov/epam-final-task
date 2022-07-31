@@ -7,6 +7,8 @@ import by.lukyanov.finaltask.model.connection.ConnectionPool;
 import by.lukyanov.finaltask.model.dao.impl.CarCategoryDaoImpl;
 import by.lukyanov.finaltask.model.service.CarCategoryService;
 import by.lukyanov.finaltask.util.ResultCounter;
+import by.lukyanov.finaltask.validation.CarValidator;
+import by.lukyanov.finaltask.validation.CommonValidator;
 import by.lukyanov.finaltask.validation.impl.ValidatorImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +18,7 @@ import java.util.Optional;
 
 public class CarCategoryServiceImpl implements CarCategoryService {
     private static final Logger logger = LogManager.getLogger();
-    private static final ValidatorImpl validator = ValidatorImpl.getInstance();
+    private static final CommonValidator validator = ValidatorImpl.getInstance();
     private static final String DEFAULT_CAR_CATEGORY_ID = "1";
     private static final CarCategoryServiceImpl instance = new CarCategoryServiceImpl();
     private CarCategoryDaoImpl carCategoryDao;
